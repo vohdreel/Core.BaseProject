@@ -5,16 +5,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Global.DAO.Model
 {
-    public partial class Machine
+    public partial class User
     {
+        public User()
+        {
+            Machine = new HashSet<Machine>();
+        }
+
         [Key]
         public int Id { get; set; }
         public int Name { get; set; }
-        public bool IsActive { get; set; }
-        public int IdUser { get; set; }
 
-        [ForeignKey(nameof(IdUser))]
-        [InverseProperty(nameof(User.Machine))]
-        public virtual User IdUserNavigation { get; set; }
+        [InverseProperty("IdUserNavigation")]
+        public virtual ICollection<Machine> Machine { get; set; }
     }
 }

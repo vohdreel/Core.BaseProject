@@ -25,6 +25,7 @@ namespace Global.DAO.Context
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<Machine> Machine { get; set; }
+        public virtual DbSet<User> User { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -37,8 +38,16 @@ namespace Global.DAO.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Machine>(entity =>
+            {
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.Machine)
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Machine_User");
+            });
 
             OnModelCreatingPartial(modelBuilder);
         }

@@ -8,29 +8,28 @@ using System.Threading.Tasks;
 
 namespace Global.DAO.Service
 {
-    public class UnidadeService : IDisposable
+    public class MachineService : IDisposable
     {
-        private UnidadRepository Repository { get; set; }
+        private MachineRepository Repository { get; set; }
 
-        public UnidadeService()
+        public MachineService()
         {
 
-            Repository = new UnidadRepository();
+            Repository = new MachineRepository();
 
         }
 
-        public UnidadeService(GlobalContext context)
+        public MachineService(GlobalContext context)
         {
-            Repository = new UnidadRepository(context);
+            Repository = new MachineRepository(context);
+        }
 
-
+        public Machine[] GetMachines() 
+        {
+            return Repository.Get().ToArray();
         }
 
 
-        public Unidade[] Todos()
-        {
-            return Repository.Get();
-        }
 
         public GlobalContext GetContext()
         {
@@ -41,7 +40,5 @@ namespace Global.DAO.Service
         {
             Repository.Dispose();
         }
-
-
     }
 }

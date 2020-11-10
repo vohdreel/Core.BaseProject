@@ -26,7 +26,6 @@ using Global.API.Data;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Gyan.Web.Identity.Data.Authentication;
-//using Global.DAO.Identity;
 
 namespace Global.API
 {
