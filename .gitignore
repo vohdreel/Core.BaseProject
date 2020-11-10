@@ -3,3 +3,7 @@
 ################################################################################
 
 /Global.DAO/bin
+/Global.API/obj
+/.vs
+/Global.DAO/obj
+/Global.API/bin
