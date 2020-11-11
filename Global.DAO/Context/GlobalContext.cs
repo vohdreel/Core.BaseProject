@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Global.DAO.Model;
+using Global.DAO.Procedure.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Global.DAO.Context
@@ -16,16 +17,8 @@ namespace Global.DAO.Context
             : base(options)
         {
         }
-
-        public virtual DbSet<AspNetRoleClaims> AspNetRoleClaims { get; set; }
-        public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
-        public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
-        public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
-        public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
-        public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
-        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<Machine> Machine { get; set; }
-        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<MechaUser> MechaUser { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -38,15 +31,25 @@ namespace Global.DAO.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<MachineUser>().HasNoKey();
 
             modelBuilder.Entity<Machine>(entity =>
             {
-                entity.HasOne(d => d.IdUserNavigation)
+                entity.Property(e => e.Name).IsUnicode(false);
+
+                entity.HasOne(d => d.IdMechaUserNavigation)
                     .WithMany(p => p.Machine)
                     .HasForeignKey(d => d.IdUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Machine_User");
+            });
+
+            modelBuilder.Entity<MechaUser>(entity =>
+            {
+                entity.Property(e => e.Name).IsUnicode(false);
             });
 
             OnModelCreatingPartial(modelBuilder);

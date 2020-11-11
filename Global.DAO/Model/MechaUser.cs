@@ -5,16 +5,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Global.DAO.Model
 {
-    public partial class User
+    public partial class MechaUser
     {
-        public User()
+        public MechaUser()
         {
             Machine = new HashSet<Machine>();
         }
 
         [Key]
         public int Id { get; set; }
-        public int Name { get; set; }
+        [Required]
+        public string Name { get; set; }
 
         [InverseProperty("IdUserNavigation")]
         public virtual ICollection<Machine> Machine { get; set; }

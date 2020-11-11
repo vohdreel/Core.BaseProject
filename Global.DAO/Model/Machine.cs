@@ -9,12 +9,13 @@ namespace Global.DAO.Model
     {
         [Key]
         public int Id { get; set; }
-        public int Name { get; set; }
+        [Required]
+        public string Name { get; set; }
         public bool IsActive { get; set; }
         public int IdUser { get; set; }
 
         [ForeignKey(nameof(IdUser))]
-        [InverseProperty(nameof(User.Machine))]
-        public virtual User IdUserNavigation { get; set; }
+        [InverseProperty(nameof(MechaUser.Machine))]
+        public virtual MechaUser IdMechaUserNavigation { get; set; }
     }
 }

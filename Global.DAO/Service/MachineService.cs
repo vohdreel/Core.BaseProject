@@ -1,6 +1,8 @@
 ﻿using Global.DAO.Context;
 using Global.DAO.Model;
+using Global.DAO.Procedure.Models;
 using Global.DAO.Repository;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +28,15 @@ namespace Global.DAO.Service
 
         public Machine[] GetMachines() 
         {
-            return Repository.Get().ToArray();
+            return Repository.Get(null, null, includeProperties: "IdMechaUserNavigation").ToArray();
+        }
+        public MachineUser[] GetMachinesByProcudeure()
+        {
+            return Repository
+                .GetContext()
+                .Set<MachineUser>()
+                .FromSqlInterpolated($"EXEC [SelectAllMachinesAndUsers]")
+                .ToArray();           
         }
 
 

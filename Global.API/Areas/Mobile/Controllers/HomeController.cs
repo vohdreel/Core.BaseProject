@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-//using Global.DAO.Service;
+using Global.DAO.Model;
+using Global.DAO.Procedure.Models;
+using Global.DAO.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,17 +36,26 @@ namespace Global.API.Areas.Mobile.Controllers
 
         [HttpGet("ServiceTest")]
         [Authorize]
-        public int ServiceTest()
+        public Machine[] ServiceTest()
         {
-            //using (var service = new UnidadeService())
-            //{
+            using (var service = new MachineService())
+            {
+                return service.GetMachines();
 
+            }
 
+        }
 
+        [HttpGet("ProcedureTest")]
+        [Authorize]
+        public MachineUser[] ProcedureTest()
+        {
+            using (var service = new MachineService())
+            {
+                return service.GetMachinesByProcudeure();
 
-            //}
+            }
 
-            return 0;
         }
 
     }
