@@ -16,6 +16,6 @@ namespace Global.DAO.Model
 
         [ForeignKey(nameof(IdUser))]
         [InverseProperty(nameof(MechaUser.Machine))]
-        public virtual MechaUser IdMechaUserNavigation { get; set; }
+        public virtual MechaUser IdUserNavigation { get; set; }
     }
 }

@@ -67,7 +67,10 @@ namespace Global.API
             });
 
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
 
             if (ApiConfiguration.GetValue<bool>("useMVC"))
             {
@@ -176,7 +179,8 @@ namespace Global.API
             });
 
             //Configuração SWAGGER UI
-            services.AddSwaggerGen(c => {
+            services.AddSwaggerGen(c =>
+            {
 
                 c.EnableAnnotations();
                 c.SwaggerDoc("v1",
@@ -229,7 +233,8 @@ namespace Global.API
             }
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => {
+            app.UseSwaggerUI(c =>
+            {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Versão Pré-Alpha");
             });
 

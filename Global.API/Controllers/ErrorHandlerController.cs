@@ -33,13 +33,6 @@ namespace Global.API.Controllers
             ViewData["ErrorMessage"] = $"Error occurred. The ErrorCode is: {code}";
             return Json(ViewData["ErrorMessage"]);
         }
-
-        //[Route("HttpError/{code:int}")]
-        //public IActionResult HandleError(int code)
-        //{
-        //    ViewData["ErrorMessage"] = $"Error occurred. The ErrorCode is: {code}";
-        //    return View("~/Views/Shared/Error.cshtml");
-        //}
     }
 
     public class ErrorResponse

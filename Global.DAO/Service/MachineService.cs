@@ -28,7 +28,7 @@ namespace Global.DAO.Service
 
         public Machine[] GetMachines() 
         {
-            return Repository.Get(null, null, includeProperties: "IdMechaUserNavigation").ToArray();
+            return Repository.Get(null, null, includeProperties: "IdUserNavigation").ToArray();
         }
         public MachineUser[] GetMachinesByProcudeure()
         {

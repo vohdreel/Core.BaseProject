@@ -5,12 +5,17 @@
     <UserSecretsId>aspnet-Global.API-2E3DD2B9-AAE3-46FA-B96D-4B30F6F01AC7</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="Areas\Identity\Pages\_ViewStart.cshtml" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.9" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.9" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0" />
@@ -21,14 +26,14 @@
 
 
   <ItemGroup>
-    <Folder Include="Areas\Mobile\Data\" />
-    <Folder Include="Areas\Mobile\Models\" />
-    <Folder Include="Areas\Mobile\Views\" />
+    <ProjectReference Include="..\Global.DAO\Global.DAO.csproj" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <ProjectReference Include="..\Global.DAO\Global.DAO.csproj" />
+    <Folder Include="Areas\Mobile\Data\" />
+    <Folder Include="Areas\Mobile\Models\" />
+    <Folder Include="Areas\Mobile\Views\" />
   </ItemGroup>
 
 </Project>

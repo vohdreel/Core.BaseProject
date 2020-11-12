@@ -36,11 +36,11 @@ namespace Global.API.Areas.Mobile.Controllers
 
         [HttpGet("ServiceTest")]
         [Authorize]
-        public Machine[] ServiceTest()
+        public Machine ServiceTest()
         {
             using (var service = new MachineService())
             {
-                return service.GetMachines();
+                return service.GetMachines().First();
 
             }
 
