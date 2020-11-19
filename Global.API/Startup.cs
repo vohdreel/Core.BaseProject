@@ -60,7 +60,7 @@ namespace Global.API
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                    builder => builder.WithOrigins("http://localhost:8100")
+                    builder => builder.WithOrigins("http://localhost:8100", "https://globalempregosapi.azurewebsites.net/")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials());
@@ -76,7 +76,9 @@ namespace Global.API
             {
                 services.AddMvc(options => options.EnableEndpointRouting = false);
                 services.AddRazorPages();
-                services.AddControllersWithViews();
+                services.AddControllersWithViews().AddNewtonsoftJson(options =>
+                   options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
                 //.AddRazorRuntimeCompilation()
             }
 
@@ -117,12 +119,13 @@ namespace Global.API
                       {
                           options.ExpireTimeSpan = TimeSpan.FromDays(1);
                           options.SlidingExpiration = true;
-                          options.Cookie.Name = "access_token";
                           options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                           options.LoginPath = "/Account/Login";
                           options.LogoutPath = "/Account/Logout";
                           options.AccessDeniedPath = "/Account/AccessDenied";
                           options.SlidingExpiration = true;
+
+                          //Configuração geral dos cookies para validar no Azure Dev Ops
                           options.Cookie.SameSite = SameSiteMode.None;
 
                           if (ApiConfiguration.GetValue<bool>("useEntityCore"))
@@ -281,11 +284,11 @@ namespace Global.API
                     endpoints.MapControllers();
                     endpoints.MapControllerRoute(
                        name: "areaRoute",
-                       pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}",
-                       defaults: new { action = "Index" });
+                       pattern: "{area:exists}/{controller}/{action}/{id?}");
+                    //defaults: new { action = "Index" });
                     endpoints.MapControllerRoute(
                         name: "default",
-                        pattern: "{controller=Redirect}/{action=Redirect}/{id?}");
+                        pattern: "{controller}/{action=swagger}/{id?}");
 
                 });
             }

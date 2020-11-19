@@ -46,6 +46,20 @@ namespace Global.API.Areas.Mobile.Controllers
 
         }
 
+
+        [HttpGet("UnreachableMethod")]
+        [Authorize(Roles = "Overlord")]
+        public Machine Unreachable()
+        {
+            using (var service = new MachineService())
+            {
+                return service.GetMachines().First();
+
+            }
+
+        }
+
+
         [HttpGet("ProcedureTest")]
         [Authorize]
         public MachineUser[] ProcedureTest()
@@ -53,6 +67,18 @@ namespace Global.API.Areas.Mobile.Controllers
             using (var service = new MachineService())
             {
                 return service.GetMachinesByProcudeure();
+
+            }
+
+        }
+
+        [HttpGet("UnitProcedure")]
+        [Authorize]
+        public EgressUnit Procedure()
+        {
+            using (var service = new MachineService())
+            {
+                return service.GetEgressByProcudeure();
 
             }
 

@@ -31,7 +31,9 @@ namespace Global.API.Controllers
         public JsonResult HandleError(int code)
         {
             ViewData["ErrorMessage"] = $"Error occurred. The ErrorCode is: {code}";
-            return Json(ViewData["ErrorMessage"]);
+            var json = Json(ViewData["ErrorMessage"]);
+            json.StatusCode = code;
+            return json;
         }
     }
 

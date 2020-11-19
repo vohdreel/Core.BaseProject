@@ -39,6 +39,16 @@ namespace Global.DAO.Service
                 .ToArray();           
         }
 
+        public EgressUnit GetEgressByProcudeure()
+        {
+            return Repository
+                .GetContext()
+                .Set<EgressUnit>()
+                .FromSqlInterpolated($"EXEC [SelectAllBattleUnits]")
+                .AsEnumerable()
+                .FirstOrDefault();
+        }
+
 
 
         public GlobalContext GetContext()

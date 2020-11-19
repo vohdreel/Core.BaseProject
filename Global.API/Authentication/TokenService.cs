@@ -5,9 +5,12 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 namespace Gyan.Web.Identity.Data.Authentication
 {
+
+    public enum Environment { Development, Production }
 
     public static class Settings
     {
@@ -38,5 +41,20 @@ namespace Gyan.Web.Identity.Data.Authentication
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
+
+
+        public static CookieOptions GenerateCookies(Environment enviorment)
+        {
+            CookieOptions cookie = new CookieOptions();
+            cookie.HttpOnly = true;
+            if (enviorment == Environment.Production)
+            {
+                cookie.SameSite = SameSiteMode.None;
+                cookie.Secure = true;
+            }
+            return cookie;
+        }
     }
+
+
 }

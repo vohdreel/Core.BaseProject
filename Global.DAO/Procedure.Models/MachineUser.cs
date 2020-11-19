@@ -11,4 +11,11 @@ namespace Global.DAO.Procedure.Models
         public string UserName { get; set; }
 
     }
+
+    public class EgressUnit
+    {
+        public string MachineAlias { get; set; }
+        public string beingName { get; set; }
+
+    }
 }

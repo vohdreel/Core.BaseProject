@@ -1,1 +1,0 @@
-﻿modelBuilder.Entity<MachineUser>().HasNoKey();
