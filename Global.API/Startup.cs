@@ -26,6 +26,7 @@ using Global.API.Data;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Gyan.Web.Identity.Data.Authentication;
+using Global.Util;
 
 namespace Global.API
 {
@@ -41,9 +42,7 @@ namespace Global.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            IConfigurationSection ApiConfiguration = Configuration.GetSection("ApiConfig");
-
-            if (ApiConfiguration.GetValue<bool>("useEntityCore"))
+            if (Configuration.GetProperty<bool>("ApiConfig", "useEntityCore"))
             {
                 //seviços relacionados ao ASP .NET Identity
 
@@ -72,14 +71,13 @@ namespace Global.API
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
 
-            if (ApiConfiguration.GetValue<bool>("useMVC"))
+            if (Configuration.GetProperty<bool>("ApiConfig", "useMVC"))
             {
                 services.AddMvc(options => options.EnableEndpointRouting = false);
                 services.AddRazorPages();
                 services.AddControllersWithViews().AddNewtonsoftJson(options =>
                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
-                //.AddRazorRuntimeCompilation()
             }
 
             //Chave JWT (talvez colocar no ConfigurationManager??)            
@@ -104,13 +102,18 @@ namespace Global.API
                     ClockSkew = TimeSpan.Zero
                 };
                 x.Events = new JwtBearerEvents
+
                 {
                     OnMessageReceived = context =>
                     {
                         context.Token = context.Request.Cookies["access_token"];
                         return Task.CompletedTask;
-                    }
+                    },
+                    OnAuthenticationFailed = context => 
+                    {
 
+                        return Task.CompletedTask;
+                    }
                 };
             });
             //Configuração do Cookie Authentication
@@ -128,7 +131,7 @@ namespace Global.API
                           //Configuração geral dos cookies para validar no Azure Dev Ops
                           options.Cookie.SameSite = SameSiteMode.None;
 
-                          if (ApiConfiguration.GetValue<bool>("useEntityCore"))
+                          if (Configuration.GetProperty<bool>("ApiConfig", "useEntityCore"))
                           {
                               //Trata todos od eventos relacionados ao Cookies Authetication
                               options.Events = new CookieAuthenticationEvents()
@@ -221,7 +224,6 @@ namespace Global.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            IConfigurationSection ApiConfiguration = Configuration.GetSection("ApiConfig");
 
             if (env.IsDevelopment())
             {
@@ -245,11 +247,11 @@ namespace Global.API
 
             app.UseStatusCodePages(context =>
             {
-                if (ApiConfiguration.GetValue<bool>("useMVC"))
-                {
+                //if (Configuration.GetProperty<bool>("ApiConfig", "useMVC"))
+                //{
                     var response = context.HttpContext.Response;
                     response.Redirect($"/HttpError/{response.StatusCode}");
-                }
+                //}
                 return Task.CompletedTask;
 
             });
@@ -265,7 +267,7 @@ namespace Global.API
             app.UseAuthentication();
             app.UseAuthorization();
 
-            if (ApiConfiguration.GetValue<bool>("useMVC"))
+            if (Configuration.GetProperty<bool>("ApiConfig", "useMVC"))
             {
                 app.UseMvc(routes =>
                 {

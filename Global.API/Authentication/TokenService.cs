@@ -29,19 +29,16 @@ namespace Gyan.Web.Identity.Data.Authentication
                 {
                     new Claim(ClaimTypes.Name, user.UserName.ToString()),
                 }),
-                Expires = DateTime.UtcNow.AddHours(2),
+                Expires = DateTime.UtcNow.AddMinutes(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
             foreach (string role in CurrentRoles)
                 tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, role));
 
-
-
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
-
 
         public static CookieOptions GenerateCookies(Environment enviorment)
         {

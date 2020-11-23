@@ -190,10 +190,10 @@ namespace Global.API.Controllers
         {
             foreach (var cookie in HttpContext.Request.Cookies)
             {
-                CookieOptions cookieOptions = TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment"));
-                cookieOptions.Expires = DateTime.Now.AddDays(-1);
-                HttpContext.Response.Cookies.Append(cookie.Key, "", TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment")));
-
+                //CookieOptions cookieOptions = TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment"));
+                //cookieOptions.Expires = DateTime.Now.AddDays(-1);
+                //HttpContext.Response.Cookies.Append(cookie.Key, "", TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment")));
+                HttpContext.Response.Cookies.Delete(cookie.Key);
             }
             return Json("Logged Out");
         }

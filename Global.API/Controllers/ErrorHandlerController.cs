@@ -31,7 +31,17 @@ namespace Global.API.Controllers
         public JsonResult HandleError(int code)
         {
             ViewData["ErrorMessage"] = $"Error occurred. The ErrorCode is: {code}";
-            var json = Json(ViewData["ErrorMessage"]);
+            var json = Json(new {ok = false, message = ViewData["ErrorMessage"] });
+            json.StatusCode = code;
+            return json;
+        }
+
+        [HttpGet]
+        [Route("TokenExpired")]
+        public JsonResult HandleExpiredToken(int code)
+        {
+            ViewData["ErrorMessage"] = $"Error occurred. The ErrorCode is: {code}";
+            var json = Json(new { ok = false, message = ViewData["ErrorMessage"] });
             json.StatusCode = code;
             return json;
         }
