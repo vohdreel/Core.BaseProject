@@ -38,10 +38,11 @@ namespace Global.API.Areas.Mobile.Controllers
         }
 
         [HttpGet("Login")]
-        public async Task<object> appLogin(string email, [FromUri]string password)
+        public async Task<object> appLogin(string email, string password)
         {
+            password = System.Uri.UnescapeDataString(password);
             IdentityUser user = new IdentityUser();
-            user = await _userManager.FindByNameAsync(email);
+            user = await _userManager.FindByEmailAsync(email);
             if (user != null && await _userManager.CheckPasswordAsync(user, password))
             {
                 // user is valid do whatever you want
@@ -65,6 +66,27 @@ namespace Global.API.Areas.Mobile.Controllers
 
         }
 
+        [HttpGet("CheckToken")]
+        public bool CheckValidToken()
+        {
+
+            string jwt = HttpContext.Request.Cookies["access_token"];
+            if (string.IsNullOrEmpty(jwt))
+                return false;
+            else
+            {
+                JWTService helper = new JWTService();
+                DateTime expiricy = helper.GetExpiryTimestamp(jwt);
+
+                if (expiricy > DateTime.Now)
+                    return true;
+                else
+                    return false;           
+            
+            }
+
+
+        }
 
 
 

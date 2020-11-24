@@ -111,7 +111,8 @@ namespace Global.API
                     },
                     OnAuthenticationFailed = context => 
                     {
-
+                        var response = context.HttpContext.Response;
+                        //response.Redirect($"/HttpError/{response.StatusCode}");
                         return Task.CompletedTask;
                     }
                 };
@@ -120,9 +121,9 @@ namespace Global.API
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                       .AddCookie(options =>
                       {
-                          options.ExpireTimeSpan = TimeSpan.FromDays(1);
+                          options.ExpireTimeSpan = TimeSpan.FromDays(30);
                           options.SlidingExpiration = true;
-                          options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                          options.ExpireTimeSpan = TimeSpan.FromDays(30);
                           options.LoginPath = "/Account/Login";
                           options.LogoutPath = "/Account/Logout";
                           options.AccessDeniedPath = "/Account/AccessDenied";

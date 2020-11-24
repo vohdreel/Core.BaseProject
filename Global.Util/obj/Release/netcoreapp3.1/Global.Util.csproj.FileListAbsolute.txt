@@ -1,0 +1,8 @@
+C:\Users\Lucas Paranhos\source\repos\GlobalEmpregosAPI\Global.Util\bin\Release\netcoreapp3.1\Global.Util.deps.json
+C:\Users\Lucas Paranhos\source\repos\GlobalEmpregosAPI\Global.Util\bin\Release\netcoreapp3.1\Global.Util.dll
+C:\Users\Lucas Paranhos\source\repos\GlobalEmpregosAPI\Global.Util\bin\Release\netcoreapp3.1\Global.Util.pdb
+C:\Users\Lucas Paranhos\source\repos\GlobalEmpregosAPI\Global.Util\obj\Release\netcoreapp3.1\Global.Util.csprojAssemblyReference.cache
+C:\Users\Lucas Paranhos\source\repos\GlobalEmpregosAPI\Global.Util\obj\Release\netcoreapp3.1\Global.Util.AssemblyInfoInputs.cache
+C:\Users\Lucas Paranhos\source\repos\GlobalEmpregosAPI\Global.Util\obj\Release\netcoreapp3.1\Global.Util.AssemblyInfo.cs
+C:\Users\Lucas Paranhos\source\repos\GlobalEmpregosAPI\Global.Util\obj\Release\netcoreapp3.1\Global.Util.dll
+C:\Users\Lucas Paranhos\source\repos\GlobalEmpregosAPI\Global.Util\obj\Release\netcoreapp3.1\Global.Util.pdb
