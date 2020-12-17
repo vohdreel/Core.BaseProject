@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "ffT4b2mZ0URMYMHeCVrsHiuP3Wr6EQPbLWfwVc1llhE1q+07FickqR02Npfpwwdk3712tCFeKwGEbrdBsdMncA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Pro4Tech\\source\\repos\\GlobalEmpregosAPI\\Global.Util\\Global.Util.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Pro4Tech\\.nuget\\packages\\microsoft.extensions.configuration\\3.1.10\\microsoft.extensions.configuration.3.1.10.nupkg.sha512",
+    "C:\\Users\\Pro4Tech\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\3.1.10\\microsoft.extensions.configuration.abstractions.3.1.10.nupkg.sha512",
+    "C:\\Users\\Pro4Tech\\.nuget\\packages\\microsoft.extensions.configuration.binder\\3.1.10\\microsoft.extensions.configuration.binder.3.1.10.nupkg.sha512",
+    "C:\\Users\\Pro4Tech\\.nuget\\packages\\microsoft.extensions.primitives\\3.1.10\\microsoft.extensions.primitives.3.1.10.nupkg.sha512"
+  ],
+  "logs": []
+}

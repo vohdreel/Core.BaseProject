@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lucas Paranhos\\source\\repos\\GlobalEmpregosAPI\\Global.Util\\Global.Util.csproj": {}
+    "C:\\Users\\Pro4Tech\\source\\repos\\GlobalEmpregosAPI\\Global.Util\\Global.Util.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lucas Paranhos\\source\\repos\\GlobalEmpregosAPI\\Global.Util\\Global.Util.csproj": {
+    "C:\\Users\\Pro4Tech\\source\\repos\\GlobalEmpregosAPI\\Global.Util\\Global.Util.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lucas Paranhos\\source\\repos\\GlobalEmpregosAPI\\Global.Util\\Global.Util.csproj",
+        "projectUniqueName": "C:\\Users\\Pro4Tech\\source\\repos\\GlobalEmpregosAPI\\Global.Util\\Global.Util.csproj",
         "projectName": "Global.Util",
-        "projectPath": "C:\\Users\\Lucas Paranhos\\source\\repos\\GlobalEmpregosAPI\\Global.Util\\Global.Util.csproj",
-        "packagesPath": "C:\\Users\\Lucas Paranhos\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lucas Paranhos\\source\\repos\\GlobalEmpregosAPI\\Global.Util\\obj\\",
+        "projectPath": "C:\\Users\\Pro4Tech\\source\\repos\\GlobalEmpregosAPI\\Global.Util\\Global.Util.csproj",
+        "packagesPath": "C:\\Users\\Pro4Tech\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Pro4Tech\\source\\repos\\GlobalEmpregosAPI\\Global.Util\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Lucas Paranhos\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Pro4Tech\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -65,7 +62,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
         }
       }
     }

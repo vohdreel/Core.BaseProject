@@ -18,6 +18,7 @@ using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 using System.Configuration;
 using Microsoft.Extensions.Configuration;
 using Environment = Gyan.Web.Identity.Data.Authentication.Environment;
+using Global.Util;
 
 namespace Global.API.Controllers
 {
@@ -126,7 +127,7 @@ namespace Global.API.Controllers
                     var token = TokenService.GenerateToken(user, roles.ToList());
 
                     HttpContext.Response.Cookies
-                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment")));
+                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("APIConfig", "Environment")));
 
                     return Json("Logged");
                 }
@@ -192,7 +193,7 @@ namespace Global.API.Controllers
             {
                 CookieOptions cookieOptions = TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment"));
                 cookieOptions.Expires = DateTime.Now.AddDays(-1);
-                HttpContext.Response.Cookies.Append(cookie.Key, "", TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment")));
+                HttpContext.Response.Cookies.Append(cookie.Key, null, TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment")));
                 //HttpContext.Response.Cookies.Delete(cookie.Key);
             }
             return Json("Logged Out");

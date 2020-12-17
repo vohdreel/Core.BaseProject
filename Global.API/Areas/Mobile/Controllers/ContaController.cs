@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Global.DAO.Model;
+using Global.DAO.Service;
 using Global.Util;
 using Gyan.Web.Identity.Data.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -38,7 +41,7 @@ namespace Global.API.Areas.Mobile.Controllers
         }
 
         [HttpGet("Login")]
-        public async Task<object> appLogin(string email, string password)
+        public async Task<object> appLogin(string email, string password, bool ManterConectado)
         {
             password = System.Uri.UnescapeDataString(password);
             IdentityUser user = new IdentityUser();
@@ -51,14 +54,30 @@ namespace Global.API.Areas.Mobile.Controllers
 
                 if (result.Succeeded)
                 {
+                    //await _signInManager.SignInAsync(user, true);
                     // adicionar token 
                     var roles = await _userManager.GetRolesAsync(user);
                     var token = TokenService.GenerateToken(user, roles.ToList());
 
                     HttpContext.Response.Cookies
-                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("Environment")));
+                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("APIConfig","Environment")));
+                    CandidatoService service = new CandidatoService();
 
-                    return new { Ok = true, Message = "Logged in" };
+                    if (ManterConectado)
+                    {
+                        service.AlternarMaterConectado(user.Id, true);
+
+                    }
+                    Candidato candidato = service.BuscarCandidato(user.Id);
+
+
+
+                    return new {
+
+                        IdCandidato = candidato.Id,
+                        Ok = true, 
+                        Message = "Logged in" 
+                    };
                 }
 
             }
@@ -67,8 +86,32 @@ namespace Global.API.Areas.Mobile.Controllers
         }
 
         [HttpGet("CheckToken")]
-        public bool CheckValidToken()
+        public async Task<bool> CheckValidToken(int IdCandidato = 0)
         {
+
+            //se o usuario tiver o manterconectado ativo, renova o token
+            if (IdCandidato != 0)
+            {
+                CandidatoService service = new CandidatoService();
+                Candidato candidato = service.BuscarCandidato(IdCandidato);
+                if (candidato != null)
+                {
+                    bool manterConectado = new CandidatoService().VerificarManterConectado(IdCandidato);
+                    if (manterConectado)
+                    {
+                        //await _signInManager.SignInAsync(user, true);
+
+                        IdentityUser user = await _userManager.FindByEmailAsync(candidato.Email);
+                        var roles = await _userManager.GetRolesAsync(user);
+                        var token = TokenService.GenerateToken(user, roles.ToList());
+
+                        HttpContext.Response.Cookies
+                            .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("Environment")));
+
+                        return true;
+                    }
+                }
+            }
 
             string jwt = HttpContext.Request.Cookies["access_token"];
             if (string.IsNullOrEmpty(jwt))
@@ -81,11 +124,35 @@ namespace Global.API.Areas.Mobile.Controllers
                 if (expiricy > DateTime.Now)
                     return true;
                 else
-                    return false;           
-            
+                    return false;
+
             }
 
+        }
+        [Authorize]
+        [HttpGet("Logout")]
+        public async Task<bool> FakeUserLogout()
+        {
 
+            foreach (var cookie in HttpContext.Request.Cookies)
+            {
+                CookieOptions cookieOptions = TokenService.GenerateCookies(_config.GetProperty<Environment>("APIConfig", "Environment"));
+                cookieOptions.Expires = DateTime.Now.AddDays(-1);
+                HttpContext.Response.Cookies.Append(cookie.Key, "", TokenService.GenerateCookies(_config.GetProperty<Environment>("APIConfig", "Environment")));
+                //HttpContext.Response.Cookies.Delete(cookie.Key);
+            }
+            //await _signInManager.SignOutAsync();
+
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            CandidatoService service = new CandidatoService();
+            service.AlternarMaterConectado(userId, false);
+
+
+
+
+
+
+            return true;
         }
 
 
