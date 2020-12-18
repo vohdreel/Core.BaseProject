@@ -60,7 +60,7 @@ namespace Global.API.Areas.Mobile.Controllers
                     var token = TokenService.GenerateToken(user, roles.ToList());
 
                     HttpContext.Response.Cookies
-                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("APIConfig","Environment")));
+                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment")));
                     CandidatoService service = new CandidatoService();
 
                     if (ManterConectado)
@@ -72,11 +72,12 @@ namespace Global.API.Areas.Mobile.Controllers
 
 
 
-                    return new {
+                    return new
+                    {
 
                         IdCandidato = candidato.Id,
-                        Ok = true, 
-                        Message = "Logged in" 
+                        Ok = true,
+                        Message = "Logged in"
                     };
                 }
 
@@ -86,7 +87,7 @@ namespace Global.API.Areas.Mobile.Controllers
         }
 
         [HttpGet("CheckToken")]
-        public async Task<bool> CheckValidToken(int IdCandidato = 0)
+        public async Task<object> CheckValidToken(int IdCandidato = 0)
         {
 
             //se o usuario tiver o manterconectado ativo, renova o token
@@ -106,51 +107,69 @@ namespace Global.API.Areas.Mobile.Controllers
                         var token = TokenService.GenerateToken(user, roles.ToList());
 
                         HttpContext.Response.Cookies
-                            .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("Environment")));
+                            .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment")));
 
-                        return true;
+                        return new
+                        {
+                            ok = true
+                        };
                     }
                 }
             }
 
             string jwt = HttpContext.Request.Cookies["access_token"];
             if (string.IsNullOrEmpty(jwt))
-                return false;
+            {
+                return new
+                {
+                    ok = false,
+                    message = "Session Expired by nullity"
+                };
+            }
             else
             {
                 JWTService helper = new JWTService();
                 DateTime expiricy = helper.GetExpiryTimestamp(jwt);
 
                 if (expiricy > DateTime.Now)
-                    return true;
+                    return new
+                    {
+                        ok = true,
+                        message = "Session Expired"
+                    };
                 else
-                    return false;
+                    return new
+                    {
+                        ok = false,
+                        message = "Session Expired"
+                    };
 
             }
 
         }
+
+        [Authorize]
+
+        
         [Authorize]
         [HttpGet("Logout")]
         public async Task<bool> FakeUserLogout()
         {
 
-            foreach (var cookie in HttpContext.Request.Cookies)
-            {
-                CookieOptions cookieOptions = TokenService.GenerateCookies(_config.GetProperty<Environment>("APIConfig", "Environment"));
-                cookieOptions.Expires = DateTime.Now.AddDays(-1);
-                HttpContext.Response.Cookies.Append(cookie.Key, "", TokenService.GenerateCookies(_config.GetProperty<Environment>("APIConfig", "Environment")));
-                //HttpContext.Response.Cookies.Delete(cookie.Key);
-            }
-            //await _signInManager.SignOutAsync();
-
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = this.User.FindFirstValue(ClaimTypes.Name);
             CandidatoService service = new CandidatoService();
             service.AlternarMaterConectado(userId, false);
 
 
+            foreach (var cookie in HttpContext.Request.Cookies)
+            {
+                CookieOptions cookieOptions = TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"));
+                cookieOptions.Expires = DateTime.Now.AddDays(-1);
+                HttpContext.Response.Cookies.Append(cookie.Key, "", TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment")));
+                //HttpContext.Response.Cookies.Delete(cookie.Key);
+            }         
 
-
-
+            //await _signInManager.SignOutAsync();
 
             return true;
         }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Global.DAO.Model;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Global.DAO.Procedure.Models;
 
 namespace Global.DAO.Context
 {
@@ -47,6 +48,10 @@ namespace Global.DAO.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<MachineUser>().HasNoKey();
+            modelBuilder.Entity<EgressUnit>().HasNoKey();
+
 
             modelBuilder.Entity<AreaInteresse>(entity =>
             {

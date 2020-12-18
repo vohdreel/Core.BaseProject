@@ -27,6 +27,9 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Gyan.Web.Identity.Data.Authentication;
 using Global.Util;
+using Global.DAO.Context;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace Global.API
 {
@@ -46,11 +49,11 @@ namespace Global.API
             {
                 //seviços relacionados ao ASP .NET Identity
 
-                services.AddDbContext<ApplicationDbContext>(options =>
+                services.AddDbContext<GlobalContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
                 services.AddIdentity<IdentityUser, IdentityRole>()
-                      .AddEntityFrameworkStores<ApplicationDbContext>()
+                      .AddEntityFrameworkStores<GlobalContext>()
                       .AddDefaultTokenProviders();
             }
 
@@ -81,6 +84,7 @@ namespace Global.API
                 );
             }
 
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             //Chave JWT (talvez colocar no ConfigurationManager??)            
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
             //Configuração JWT
@@ -91,16 +95,18 @@ namespace Global.API
             })
             .AddJwtBearer(x =>
             {
+                
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
-                {
+                {                    
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
+                    ClockSkew = TimeSpan.Zero,
+                    
                 };
                 x.Events = new JwtBearerEvents
 
