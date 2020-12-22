@@ -25,13 +25,11 @@ namespace Global.DAO.Model
         [StringLength(200)]
         public string Endereco { get; set; }
         [Required]
-        [Column("CEP")]
         [StringLength(20)]
-        public string Cep { get; set; }
+        public string CEP { get; set; }
         [Required]
-        [Column("CNPJ")]
         [StringLength(14)]
-        public string Cnpj { get; set; }
+        public string CNPJ { get; set; }
         [Required]
         [StringLength(100)]
         public string Cidade { get; set; }

@@ -100,8 +100,6 @@ namespace Global.API.Areas.Mobile.Controllers
                     bool manterConectado = new CandidatoService().VerificarManterConectado(IdCandidato);
                     if (manterConectado)
                     {
-                        //await _signInManager.SignInAsync(user, true);
-
                         IdentityUser user = await _userManager.FindByEmailAsync(candidato.Email);
                         var roles = await _userManager.GetRolesAsync(user);
                         var token = TokenService.GenerateToken(user, roles.ToList());
@@ -123,7 +121,7 @@ namespace Global.API.Areas.Mobile.Controllers
                 return new
                 {
                     ok = false,
-                    message = "Session Expired by nullity"
+                    message = "Session Expired"
                 };
             }
             else
@@ -134,8 +132,7 @@ namespace Global.API.Areas.Mobile.Controllers
                 if (expiricy > DateTime.Now)
                     return new
                     {
-                        ok = true,
-                        message = "Session Expired"
+                        ok = true
                     };
                 else
                     return new
@@ -149,14 +146,30 @@ namespace Global.API.Areas.Mobile.Controllers
         }
 
         [Authorize]
-
-        
-        [Authorize]
-        [HttpGet("Logout")]
-        public async Task<bool> FakeUserLogout()
+        [HttpGet("GetClaims")]
+        public object GetClaims()
         {
 
-            var userId = this.User.FindFirstValue(ClaimTypes.Name);
+
+            return new
+            {
+                UserId = this.User.FindFirstValue(ClaimTypes.Name),
+                Email = this.User.FindFirstValue("IdAspNetUser"),
+
+
+
+
+            };
+
+        }
+
+
+        [Authorize]
+        [HttpGet("Logout")]
+        public async Task<bool> Logout()
+        {
+
+            var userId = this.User.FindFirstValue("IdAspNetUser");
             CandidatoService service = new CandidatoService();
             service.AlternarMaterConectado(userId, false);
 
@@ -167,9 +180,8 @@ namespace Global.API.Areas.Mobile.Controllers
                 cookieOptions.Expires = DateTime.Now.AddDays(-1);
                 HttpContext.Response.Cookies.Append(cookie.Key, "", TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment")));
                 //HttpContext.Response.Cookies.Delete(cookie.Key);
-            }         
+            }
 
-            //await _signInManager.SignOutAsync();
 
             return true;
         }

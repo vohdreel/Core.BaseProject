@@ -23,9 +23,8 @@ namespace Global.DAO.Model
         [StringLength(200)]
         public string Endereco { get; set; }
         [Required]
-        [Column("CEP")]
         [StringLength(20)]
-        public string Cep { get; set; }
+        public string CEP { get; set; }
         public string Latitude { get; set; }
         public string Longitude { get; set; }
         public int DisponibilidadeViagem { get; set; }

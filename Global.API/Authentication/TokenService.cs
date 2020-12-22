@@ -33,8 +33,9 @@ namespace Gyan.Web.Identity.Data.Authentication
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     //new Claim(ClaimTypes.Name, user.UserName.ToString()),
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
-                    //new Claim("CustomClaim", "Random Value")
+                    new Claim(ClaimTypes.Name, user.UserName.ToString()),
+                    //new Claim(ClaimTypes.Email, user.Email.ToString()),
+                    new Claim("IdAspNetUser", user.Id.ToString()) 
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(400),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -71,6 +72,13 @@ namespace Gyan.Web.Identity.Data.Authentication
         private IBase64UrlEncoder _urlEncoder = new JwtBase64UrlEncoder();
         private IJwtAlgorithm _algorithm = new HMACSHA256Algorithm();
 
+        
+        
+        
+        
+        
+        
+        
         public DateTime GetExpiryTimestamp(string accessToken)
         {
             try

@@ -79,12 +79,13 @@ namespace Global.API
             {
                 services.AddMvc(options => options.EnableEndpointRouting = false);
                 services.AddRazorPages();
-                services.AddControllersWithViews().AddNewtonsoftJson(options =>
+                services.AddControllersWithViews()
+                    .AddRazorRuntimeCompilation()
+                    .AddNewtonsoftJson(options =>
                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
             }
 
-            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             //Chave JWT (talvez colocar no ConfigurationManager??)            
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
             //Configuração JWT
@@ -119,7 +120,6 @@ namespace Global.API
                     OnAuthenticationFailed = context => 
                     {
                         var response = context.HttpContext.Response;
-                        //response.Redirect($"/HttpError/{response.StatusCode}");
                         return Task.CompletedTask;
                     }
                 };
@@ -284,7 +284,7 @@ namespace Global.API
                         template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                     routes.MapRoute(
                         name: "default",
-                        template: "{controller}/{action=swagger}/{id?}");
+                        template: "{controller=Home}/{action=Index}/{id?}");
                 });
             }
             else
