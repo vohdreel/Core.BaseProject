@@ -32,5 +32,16 @@ namespace Global.API.Areas.Mobile.Controllers
             }
 
         }
+
+        public Notificacao[] GetNotificacoesRecentes(int IdCandidato, int IdUltimaNotificacao)
+        {
+            using (var service = new NotificacaoService())
+            {
+                var notificacoes = service.ObterNotificacoesRecentes(IdCandidato, IdUltimaNotificacao);
+
+                return notificacoes;
+            }
+
+        }
     }
 }

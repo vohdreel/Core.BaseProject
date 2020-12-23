@@ -44,20 +44,25 @@ namespace Global.DAO.Service
                 .OrderByDescending(x => x.DataCriacaoNotificacao)
                 .Take(10)
                 .ToArray();
-
-
-
         }
 
-        public Notificacao[] ObterNotificacoesNovas(int IdCandidato, int IdPrimeiraNotificacao)
+        public Notificacao[] ObterNotificacoesRecentes(int IdCandidato, int IdPrimeiraNotificacao)
         {
             return Repository.Get(x => x.IdCandidato == IdCandidato && x.Id > IdPrimeiraNotificacao )
                 .OrderByDescending(x => x.DataCriacaoNotificacao)
                 .Take(10)
                 .ToArray();
+        }
 
 
-
+        public bool MarcarNotificacaoComoLida(int IdNotificacao) 
+        {
+            Notificacao notificacao = Repository.Get(x => x.Id == IdNotificacao).FirstOrDefault();
+            if (notificacao != null) notificacao.Visualizado = true;
+            return Repository.Update(notificacao);
+            
+        
+        
         }
 
 

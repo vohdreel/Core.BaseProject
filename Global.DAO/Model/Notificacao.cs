@@ -18,7 +18,7 @@ namespace Global.DAO.Model
         public string CorpoNotificacao { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime DataCriacaoNotificacao { get; set; }
-        public bool Visualiado { get; set; }
+        public bool Visualizado { get; set; }
         [Required]
         [StringLength(60)]
         public string AngularRoute { get; set; }
