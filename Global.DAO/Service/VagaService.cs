@@ -34,6 +34,30 @@ namespace Global.DAO.Service
 
         }
 
+
+        public Vaga[] BuscarVagasGerais() {
+
+            return Repository
+                .Get(includeProperties: "IdProcessoSeletivoNavigation,IdProcessoSeletivoNavigation.IdEmpresaNavigation,IdCargoNavigation")
+                .OrderByDescending(x => x.IdProcessoSeletivoNavigation.DataInicioProcesso)
+                .ThenByDescending(x => x.Id)
+                .Take(5)
+                .ToArray();
+        
+        }
+
+        public Vaga[] BuscarVagasGeraisAntigas(int idUltimaVaga) 
+        {
+            return Repository
+                    .Get(x => x.Id < idUltimaVaga)
+                    .OrderByDescending(x => x.IdProcessoSeletivoNavigation.DataInicioProcesso)
+                    .ThenByDescending(x => x.Id)
+                    .ToArray();
+
+
+        }
+
+
         public bool Salvar(Vaga Dados)
         {
             
