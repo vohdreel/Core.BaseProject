@@ -30,6 +30,8 @@ using Global.Util;
 using Global.DAO.Context;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Global.DAO.Model;
+using Global.DAO.Service;
 
 namespace Global.API
 {
@@ -56,6 +58,10 @@ namespace Global.API
                       .AddEntityFrameworkStores<GlobalContext>()
                       .AddDefaultTokenProviders();
             }
+
+            //Configuração do SMTP
+            services.Configure<SMTPConfigModel>(Configuration.GetSection("SMTPConfig"));
+            services.AddScoped<IEmailService, EmailService>();
 
             //Adicionando serviço de Cors e serviço de Controllers e Views(RazorPages)
             //Configuração do CORS (configurar para manter o httpResponse em plataformas diferentes [configurei para usar cookies no app Ionic])
