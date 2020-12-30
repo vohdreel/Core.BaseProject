@@ -15,6 +15,7 @@ namespace Global.API.Models
         [Required(ErrorMessage = "O campo {0} é obrigatório!")]
         [Display(Name = "Senha")]
         [DataType(DataType.Password)]
+        [MinLength(6,ErrorMessage = "A senha deve ter no minimo 6 digitos!")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]

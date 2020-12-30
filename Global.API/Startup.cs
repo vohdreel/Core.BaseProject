@@ -59,6 +59,10 @@ namespace Global.API
                       .AddDefaultTokenProviders();
             }
 
+            // Set token life span to 5 hours
+            services.Configure<DataProtectionTokenProviderOptions>(o =>
+                o.TokenLifespan = TimeSpan.FromMinutes(5));
+
             //Configuração do SMTP
             services.Configure<SMTPConfigModel>(Configuration.GetSection("SMTPConfig"));
             services.AddScoped<IEmailService, EmailService>();
@@ -256,16 +260,21 @@ namespace Global.API
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Versão Pré-Alpha");
             });
-
-
-
+            
             app.UseStatusCodePages(context =>
             {
-                //if (Configuration.GetProperty<bool>("ApiConfig", "useMVC"))
-                //{
-                    var response = context.HttpContext.Response;
+                var response = context.HttpContext.Response;
+
+                if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+                {
+                    response.Redirect("/Home/Login");
+                }
+                else
+                {                    
                     response.Redirect($"/HttpError/{response.StatusCode}");
-                //}
+                }    
+                                
+                
                 return Task.CompletedTask;
 
             });

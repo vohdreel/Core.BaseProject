@@ -25,6 +25,7 @@ using Global.DAO.Model;
 
 namespace Global.API.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     public class HomeController : Controller
     {
@@ -83,32 +84,37 @@ namespace Global.API.Controllers
 
         [AllowAnonymous]
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(string email, string password)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            IdentityUser user = new IdentityUser();
-            user = await _userManager.FindByEmailAsync(email);
-            if (user != null && await _userManager.CheckPasswordAsync(user, password))
+            if (ModelState.IsValid)
             {
-                // user is valid do whatever you want
-
-                var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
-
-                if (result.Succeeded)
+                IdentityUser user = new IdentityUser();
+                user = await _userManager.FindByEmailAsync(model.Email);
+                if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
                 {
-                    // adicionar token 
-                    var roles = await _userManager.GetRolesAsync(user);
-                    var token = TokenService.GenerateToken(user, roles.ToList());
+                    // user is valid do whatever you want
 
-                    HttpContext.Response.Cookies
-                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("APIConfig", "Environment")));
+                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
 
-                    return RedirectToAction("UserProfile", "Home");
+                    if (result.Succeeded)
+                    {
+                        // adicionar token 
+                        var roles = await _userManager.GetRolesAsync(user);
+                        var token = TokenService.GenerateToken(user, roles.ToList());
+
+                        HttpContext.Response.Cookies
+                            .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("APIConfig", "Environment")));
+
+                        return RedirectToAction("UserProfile", "Home");
+                    }
+                                        
                 }
 
+                ViewBag.IsSuccess = false;
+                return View(model);
             }
-
-            ViewBag.IsSuccess = false;
-            return View();
+                        
+            return View(model);
 
         }
 
@@ -195,7 +201,7 @@ namespace Global.API.Controllers
         {
             if (token == null || email == null)
             {
-                return Unauthorized();
+                return NotFound();
             }
             
             var user = await _userManager.FindByEmailAsync(email);
@@ -207,7 +213,7 @@ namespace Global.API.Controllers
                 return View();
             }
 
-            return Unauthorized();
+            return NotFound();
                        
         }
 
