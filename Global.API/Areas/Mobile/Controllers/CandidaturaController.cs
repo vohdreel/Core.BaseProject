@@ -13,13 +13,30 @@ namespace Global.API.Areas.Mobile.Controllers
     public class CandidaturaController : ControllerBase
     {
         [HttpPost("GerarCandidatura")]
-        public bool GerarCandidatura([FromBody] Candidatura candidatura)
+        public object GerarCandidatura([FromBody] Candidatura candidatura)
         {
             using (var service = new CandidaturaService())
             {
-                candidatura.DataInscricao = DateTime.UtcNow;
-                bool result = service.Salvar(candidatura);
-                return result;
+
+                if (!service.ExisteCandidatura(candidatura.IdVaga, candidatura.IdCandidato))
+                {
+                    candidatura.DataInscricao = DateTime.UtcNow;
+                    bool result = service.Salvar(candidatura);
+                    return new
+                    {
+                        ok = result,
+                        message = !result ? "Ocorreu algum erro ao tentar se candidatar, tente novamente mais tarde!" : ""
+                    };
+                }
+
+                else
+                    return new
+                    {
+                        ok = false,
+                        message =  "Voce já se candidatou para essa vaga! Escolha uma vaga diferente" 
+                    };
+
+
 
 
             }
