@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\T-Gamer\\Source\\Repos\\GlobalEmpregosAPI2\\Global.Util\\Global.Util.csproj": {}
+    "C:\\Users\\T-Gamer\\source\\repos\\GlobalEmpregosAPI2\\Global.Util\\Global.Util.csproj": {}
   },
   "projects": {
-    "C:\\Users\\T-Gamer\\Source\\Repos\\GlobalEmpregosAPI2\\Global.Util\\Global.Util.csproj": {
+    "C:\\Users\\T-Gamer\\source\\repos\\GlobalEmpregosAPI2\\Global.Util\\Global.Util.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\T-Gamer\\Source\\Repos\\GlobalEmpregosAPI2\\Global.Util\\Global.Util.csproj",
+        "projectUniqueName": "C:\\Users\\T-Gamer\\source\\repos\\GlobalEmpregosAPI2\\Global.Util\\Global.Util.csproj",
         "projectName": "Global.Util",
-        "projectPath": "C:\\Users\\T-Gamer\\Source\\Repos\\GlobalEmpregosAPI2\\Global.Util\\Global.Util.csproj",
+        "projectPath": "C:\\Users\\T-Gamer\\source\\repos\\GlobalEmpregosAPI2\\Global.Util\\Global.Util.csproj",
         "packagesPath": "C:\\Users\\T-Gamer\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\T-Gamer\\Source\\Repos\\GlobalEmpregosAPI2\\Global.Util\\obj\\",
+        "outputPath": "C:\\Users\\T-Gamer\\source\\repos\\GlobalEmpregosAPI2\\Global.Util\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

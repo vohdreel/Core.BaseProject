@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "eaa2zJXLkfOuusPGifI/5b6T14QjZts+BRoGAGSh8Z2t5MsMvFnWVZS/vfprTgAi4vadXW2VpC9oZfcjKy17MQ==",
+  "dgSpecHash": "F67od/3ZppJ1NSvrE7qf9ZV1AUJ3mjsffgvhSu+NGPu23KuNOQl4FNMpveoCHllMsKg17JXCXLN0Uo647o5gjQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\T-Gamer\\Source\\Repos\\GlobalEmpregosAPI2\\Global.Util\\Global.Util.csproj",
+  "projectFilePath": "C:\\Users\\T-Gamer\\source\\repos\\GlobalEmpregosAPI2\\Global.Util\\Global.Util.csproj",
   "expectedPackageFiles": [
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.aspnetcore.authentication\\2.2.0\\microsoft.aspnetcore.authentication.2.2.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.aspnetcore.authentication.abstractions\\2.2.0\\microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",
