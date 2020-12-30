@@ -17,7 +17,7 @@ namespace Global.API.ViewModel
         public string Estado { get; set; }
         public string Requisitos { get; set; }
         public string Beneficios { get; set; }
-        public string Favotitado { get; set; }
+        public string Favoritado { get; set; }
 
 
 

@@ -103,6 +103,7 @@ namespace Global.API.Areas.Mobile.Controllers
                     Estado = vaga.Estado,
                     Requisitos = vaga.Requisitos,
                     Beneficios = vaga.Beneficios
+                    
 
                 };
             
