@@ -22,6 +22,7 @@ namespace Global.DAO.Model
         [StringLength(60)]
         public string AngularRoute { get; set; }
         public bool Visualizado { get; set; }
+        public string QueryParams { get; set; }
 
         [ForeignKey(nameof(IdCandidato))]
         [InverseProperty(nameof(Candidato.Notificacao))]

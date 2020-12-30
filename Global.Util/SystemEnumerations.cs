@@ -12,10 +12,23 @@ namespace Global.Util.SystemEnumerations
         [Display(Name = "PJ")]
         PJ = 2,
         [Display(Name = "Estário")]
-        Estagio = 3,
-
-
-
+        Estagio = 3
 
     }
+
+    public enum StatusCandidatura
+    {
+        [Display(Name = "Inscrito")]
+        Inscrito = 1,
+        [Display(Name = "Aprovado")]
+        Aprovado = 2,
+        [Display(Name = "Reprovado")]
+        Reprovado = 3,
+        [Display(Name = "Em Entrevista")]
+        EmEntrevista = 4,
+        [Display(Name = "Em Teste")]
+        EmTeste = 5
+    }
+
+
 }

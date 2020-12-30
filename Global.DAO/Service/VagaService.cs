@@ -29,31 +29,47 @@ namespace Global.DAO.Service
         }
 
 
-        public Vaga Buscar(int Id) 
+        public Vaga Buscar(int Id)
         {
 
-            return Repository.Get(x => x.Id == Id).FirstOrDefault();
+            return Repository
+                .Get(x => x.Id == Id, includeProperties: "IdProcessoSeletivoNavigation,IdProcessoSeletivoNavigation.IdEmpresaNavigation,IdCargoNavigation")
+                .FirstOrDefault();
 
         }
 
 
-        public Vaga[] BuscarVagasGerais() {
+        public Vaga[] BuscarVagasGerais()
+        {
 
             return Repository
                 .Get(includeProperties: "IdProcessoSeletivoNavigation,IdProcessoSeletivoNavigation.IdEmpresaNavigation,IdCargoNavigation")
-                .OrderByDescending(x => x.IdProcessoSeletivoNavigation.DataInicioProcesso)
-                .ThenByDescending(x => x.Id)
+                .OrderByDescending(x => x.Id)
+                .ThenByDescending(x => x.IdProcessoSeletivoNavigation.DataInicioProcesso)
                 .Take(5)
                 .ToArray();
-        
+
         }
 
-        public Vaga[] BuscarVagasGeraisAntigas(int idUltimaVaga) 
+        public Vaga[] BuscarVagasGeraisAntigas(int idUltimaVaga)
         {
             return Repository
-                    .Get(x => x.Id < idUltimaVaga)
-                    .OrderByDescending(x => x.IdProcessoSeletivoNavigation.DataInicioProcesso)
-                    .ThenByDescending(x => x.Id)
+                    .Get(x => x.Id < idUltimaVaga, includeProperties: "IdProcessoSeletivoNavigation,IdProcessoSeletivoNavigation.IdEmpresaNavigation,IdCargoNavigation")
+                    .OrderByDescending(x => x.Id)
+                .ThenByDescending(x => x.IdProcessoSeletivoNavigation.DataInicioProcesso)
+                .Take(5)
+                    .ToArray();
+
+
+        }
+
+        public Vaga[] BuscarVagasGeraisRecentes(int idPrimeiraVaga)
+        {
+            return Repository
+                    .Get(x => x.Id > idPrimeiraVaga, includeProperties: "IdProcessoSeletivoNavigation,IdProcessoSeletivoNavigation.IdEmpresaNavigation,IdCargoNavigation")
+                   .OrderByDescending(x => x.Id)
+                .ThenByDescending(x => x.IdProcessoSeletivoNavigation.DataInicioProcesso)
+                .Take(5)
                     .ToArray();
 
 
@@ -62,7 +78,7 @@ namespace Global.DAO.Service
 
         public bool Salvar(Vaga Dados)
         {
-            
+
             bool resultado = Repository.Insert(Dados);
             return resultado;
 
@@ -72,7 +88,7 @@ namespace Global.DAO.Service
         {
 
             bool resultado = Repository.Update(Dados);
-                     
+
             return resultado;
 
         }
