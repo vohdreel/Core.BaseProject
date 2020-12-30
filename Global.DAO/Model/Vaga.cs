@@ -10,6 +10,7 @@ namespace Global.DAO.Model
         public Vaga()
         {
             Candidatura = new HashSet<Candidatura>();
+            VagaFavorita = new HashSet<VagaFavorita>();
         }
 
         [Key]
@@ -23,8 +24,9 @@ namespace Global.DAO.Model
         [StringLength(200)]
         public string Endereco { get; set; }
         [Required]
+        [Column("CEP")]
         [StringLength(20)]
-        public string CEP { get; set; }
+        public string Cep { get; set; }
         public string Latitude { get; set; }
         public string Longitude { get; set; }
         public int DisponibilidadeViagem { get; set; }
@@ -37,7 +39,7 @@ namespace Global.DAO.Model
         [StringLength(2)]
         public string Estado { get; set; }
         [Column(TypeName = "money")]
-        public decimal? Salário { get; set; }
+        public decimal? Salario { get; set; }
         public int StatusVaga { get; set; }
 
         [ForeignKey(nameof(IdCargo))]
@@ -48,5 +50,7 @@ namespace Global.DAO.Model
         public virtual ProcessoSeletivo IdProcessoSeletivoNavigation { get; set; }
         [InverseProperty("IdVagaNavigation")]
         public virtual ICollection<Candidatura> Candidatura { get; set; }
+        [InverseProperty("IdVagaNavigation")]
+        public virtual ICollection<VagaFavorita> VagaFavorita { get; set; }
     }
 }

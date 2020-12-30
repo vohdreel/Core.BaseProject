@@ -18,10 +18,11 @@ namespace Global.DAO.Model
         public string CorpoNotificacao { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime DataCriacaoNotificacao { get; set; }
-        public bool Visualizado { get; set; }
         [Required]
         [StringLength(60)]
         public string AngularRoute { get; set; }
+        public bool Visualizado { get; set; }
+        public string QueryParams { get; set; }
 
         [ForeignKey(nameof(IdCandidato))]
         [InverseProperty(nameof(Candidato.Notificacao))]

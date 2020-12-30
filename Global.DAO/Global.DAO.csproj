@@ -21,4 +21,8 @@
     <Folder Include="Context\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Global.Util\Global.Util.csproj" />
+  </ItemGroup>
+
 </Project>
