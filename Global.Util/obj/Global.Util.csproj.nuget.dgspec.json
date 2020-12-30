@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\T-Gamer\\source\\repos\\GlobalEmpregosAPI2\\Global.Util\\Global.Util.csproj": {}
+    "C:\\Users\\Pro4Tech\\source\\repos\\GlobalEmpregosAPI\\Global.Util\\Global.Util.csproj": {}
   },
   "projects": {
-    "C:\\Users\\T-Gamer\\source\\repos\\GlobalEmpregosAPI2\\Global.Util\\Global.Util.csproj": {
+    "C:\\Users\\Pro4Tech\\source\\repos\\GlobalEmpregosAPI\\Global.Util\\Global.Util.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\T-Gamer\\source\\repos\\GlobalEmpregosAPI2\\Global.Util\\Global.Util.csproj",
+        "projectUniqueName": "C:\\Users\\Pro4Tech\\source\\repos\\GlobalEmpregosAPI\\Global.Util\\Global.Util.csproj",
         "projectName": "Global.Util",
-        "projectPath": "C:\\Users\\T-Gamer\\source\\repos\\GlobalEmpregosAPI2\\Global.Util\\Global.Util.csproj",
-        "packagesPath": "C:\\Users\\T-Gamer\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\T-Gamer\\source\\repos\\GlobalEmpregosAPI2\\Global.Util\\obj\\",
+        "projectPath": "C:\\Users\\Pro4Tech\\source\\repos\\GlobalEmpregosAPI\\Global.Util\\Global.Util.csproj",
+        "packagesPath": "C:\\Users\\Pro4Tech\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Pro4Tech\\source\\repos\\GlobalEmpregosAPI\\Global.Util\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\T-Gamer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Pro4Tech\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -29,7 +26,6 @@
         },
         "frameworks": {
           "netcoreapp3.1": {
-            "targetAlias": "netcoreapp3.1",
             "projectReferences": {}
           }
         },
@@ -41,7 +37,6 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "targetAlias": "netcoreapp3.1",
           "dependencies": {
             "Microsoft.AspNetCore.Http.Abstractions": {
               "target": "Package",
@@ -83,7 +78,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
         }
       }
     }
