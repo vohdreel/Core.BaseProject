@@ -105,7 +105,7 @@ namespace Global.API.Controllers
                         HttpContext.Response.Cookies
                             .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("APIConfig", "Environment")));
 
-                        return RedirectToAction("UserProfile", "Home");
+                        return RedirectToAction("Index");
                     }
                                         
                 }
