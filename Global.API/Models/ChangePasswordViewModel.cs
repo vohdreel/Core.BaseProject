@@ -15,7 +15,7 @@ namespace Global.API.Models
         [Required(ErrorMessage = "O campo {0} é obrigatório!")]
         [DataType(DataType.Password)]
         [Display(Name = "Nova senha")]
-        [MinLength(6, ErrorMessage = "A nova senha deve ter no minimo 6 digitos!")]
+        [RegularExpression(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$", ErrorMessage = "A senha deve ter no mínimo 8 dígitos, com pelo menos 1 maiúsculo, 1 minúsculo, 1 número e 1 símbolo!")]
         public string NewPassword { get; set; }
         [Required(ErrorMessage = "O campo {0} é obrigatório!")]
         [DataType(DataType.Password)]

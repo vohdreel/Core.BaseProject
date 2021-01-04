@@ -4,32 +4,6 @@
     ViewData["Title"] = "Login";
 }
 
-@if (ViewBag.IsSuccess == false)
-{
-    <div class="container w-400px">
-        <div style="padding-top: 15px;"></div>
-
-        <div class="text-center alert alert-danger">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <h3 id="msgRetorno" style="padding-top: 10px">Ops, algo deu errado :(</h3>
-            <div style="padding-top: 20px"><li>Email ou senha invalido</li></div>
-        </div>
-    </div>
-}
-
-@if (ViewData.ModelState.ErrorCount > 0)
-{
-    <div class="container w-400px">
-        <div style="padding-top: 15px;"></div>
-
-        <div class="alert alert-danger">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <h3 id="msgRetorno" style="padding-top: 10px" class="text-center">Ops! Algo deu errado :(</h3>
-            <div style="padding-top: 20px" asp-validation-summary="ModelOnly"></div>
-        </div>
-    </div>
-}
-
 <!--begin::Signin-->
 <div class="login-form login-signin py-11">
     <!--begin::Form-->
@@ -39,7 +13,7 @@
             <h2 class="font-weight-bolder text-dark display5">Login</h2>
             <span class="text-muted font-weight-bold font-size-h4">
                 Ou
-                <a asp-action="CreateAccount" class="text-primary font-weight-bolder">Crie uma conta</a>
+                <a asp-action="SignUp" class="text-primary font-weight-bolder">Crie uma conta</a>
             </span>
         </div>
         <!--end::Title-->

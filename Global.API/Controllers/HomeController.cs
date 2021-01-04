@@ -66,7 +66,209 @@ namespace Global.API.Controllers
             return View();
         }
 
-        //Retorna tela de Login
+        //Cadastrar conta
+
+        [AllowAnonymous]
+        [HttpGet("SignUp")]
+        public IActionResult SignUp()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("SignUp")]
+        public async Task<IActionResult> SignUp(SignUpViewModel model)
+        {
+            
+            if (ModelState.IsValid)
+            {
+                var usuarioexiste = await _userManager.FindByNameAsync(model.UserName);
+                var emailexiste = await _userManager.FindByEmailAsync(model.Email);
+
+                if (usuarioexiste != null || emailexiste != null)
+                {
+                    ModelState.Clear();
+                    if (emailexiste != null)
+                    {                        
+                        ModelState.AddModelError("", "Esse email já está vinculado a uma conta!");                       
+                    }
+                    if (usuarioexiste != null)
+                    {                        
+                        ModelState.AddModelError("", "Esse nome de usuário já existe!");                        
+                    }
+                    return View(model);
+                }            
+
+                var user = new IdentityUser();
+                user.UserName = model.UserName;
+                user.Email = model.Email;
+
+                string userPWD = model.Password;
+
+                IdentityResult chkUser = await _userManager.CreateAsync(user, userPWD);
+                                    
+                if (!chkUser.Succeeded)
+                {
+                    
+                    foreach (var errorMessage in chkUser.Errors)
+                    {
+                        ModelState.AddModelError("", errorMessage.Description);
+                    }
+
+                    return View(model);
+                }
+
+
+
+                //Enviando email de confirmação no cadastro
+
+
+                ModelState.Clear();
+                EmailConfirmViewModel modelEmailConfirm = new EmailConfirmViewModel
+                {
+                    Email = model.Email
+                };
+
+                user = await _userManager.FindByEmailAsync(modelEmailConfirm.Email);
+
+                if (user != null)
+                {
+                    var result = await SendEmailForEmailConfirmation(modelEmailConfirm, user);
+
+                    ModelState.Clear();
+                    if(result)
+                    {
+                        modelEmailConfirm.EmailSent = true;
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Não foi possivel enviar o email de confirmação, tente mais tarde!");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Esse email não está registrado!");
+                }
+
+                return View("ConfirmEmail" , modelEmailConfirm);
+
+            }
+
+            return View(model);
+        }
+
+        //Confirmar email
+        
+        [AllowAnonymous]
+        [HttpGet("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        {
+            
+
+            EmailConfirmViewModel model = new EmailConfirmViewModel
+            {
+                Email = email
+            };
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                bool verifyToken = await _userManager.VerifyUserTokenAsync(user, TokenOptions.DefaultProvider, "EmailConfirmation", token);
+
+                if (!verifyToken)
+                {
+                    ModelState.Clear();
+                    return NotFound();
+                }
+
+                token = token.Replace(' ', '+');
+                
+                var result = await _userManager.ConfirmEmailAsync(user, token);
+                if (result.Succeeded)
+                {
+                    
+                    await _userManager.UpdateSecurityStampAsync(user);
+                    model.EmailVerified = true;
+                }
+            }
+            
+            return View(model);
+        }
+
+        public async Task<bool> SendEmailForEmailConfirmation(EmailConfirmViewModel model, IdentityUser user)
+        {
+            try
+            {
+                await _userManager.UpdateSecurityStampAsync(user);
+
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                var emailConfirmLink = Url.Action("ConfirmEmail", "Home",
+                            new { email = model.Email, token = token }, Request.Scheme);
+
+                UserEmailOptions options = new UserEmailOptions
+                {
+                    ToEmails = new List<string>() { user.Email },
+                    PlaceHolders = new List<KeyValuePair<string, string>>()
+                        {
+                            new KeyValuePair<string, string>("{{UserName}}", user.UserName),
+                            new KeyValuePair<string, string>("{{Link}}", emailConfirmLink)
+                        }
+                };
+
+                await _emailService.SendEmailForEmailConfirmation(options);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            
+        }
+
+        [AllowAnonymous]
+        [HttpPost("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail(EmailConfirmViewModel model)
+        {
+            
+            var user = await _userManager.FindByEmailAsync(model.Email);
+                        
+
+            if (user != null)
+            {
+                if (await _userManager.IsEmailConfirmedAsync(user))
+                {
+                    model.IsConfirmed = true;
+                    return View(model);
+                }
+
+                if (user.EmailConfirmed)
+                {
+                    model.EmailVerified = true;
+                    return View(model);
+                }
+
+                var result = await SendEmailForEmailConfirmation(model, user);
+
+                ModelState.Clear();
+                if (result)
+                {
+                    model.EmailSent = true;
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Não foi possivel enviar o email de confirmação, tente mais tarde!");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Esse email não está registrado!");
+            }
+            return View(model);
+        }
+
+        //Fazer Login
 
         [AllowAnonymous]
         [HttpGet("Login")]
@@ -78,7 +280,7 @@ namespace Global.API.Controllers
             }
             else
             {
-                return RedirectToAction("UserProfile", "Home");
+                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -105,12 +307,15 @@ namespace Global.API.Controllers
                         HttpContext.Response.Cookies
                             .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("APIConfig", "Environment")));
 
+                        
+
                         return RedirectToAction("Index");
                     }
                                         
                 }
 
-                ViewBag.IsSuccess = false;
+                ModelState.Clear();
+                ModelState.AddModelError("", "Email ou senha incorreto!");
                 return View(model);
             }
                         
@@ -184,7 +389,7 @@ namespace Global.API.Controllers
 
                     await _emailService.SendEmailForForgotPassword(options);
 
-                    _logger.Log(LogLevel.Warning, passwordResetLink);
+                    //_logger.Log(LogLevel.Warning, passwordResetLink);
                                         
                     return View("ForgotPasswordConfirmation");
                 }
@@ -271,8 +476,9 @@ namespace Global.API.Controllers
                 
                 if (result.Succeeded)
                 {
-                    ViewBag.IsSuccess = true;
+                    
                     ModelState.Clear();
+                    ViewBag.IsSuccess = true;
                     return View();
                 }
                 
