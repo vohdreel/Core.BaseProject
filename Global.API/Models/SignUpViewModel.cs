@@ -10,6 +10,7 @@ namespace Global.API.Models
     {
         [Required(ErrorMessage = "O campo {0} é obrigatório!")]
         [Display(Name = "Usuário")]
+        [RegularExpression(@"^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$", ErrorMessage = "O nome de usuário deve ter entre 8 e 20 digitos, sendo eles apenas letras, números, ponto (.) ou underline (_)")]
         public string UserName { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório!")]        

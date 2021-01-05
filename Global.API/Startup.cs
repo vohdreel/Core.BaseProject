@@ -267,7 +267,7 @@ namespace Global.API
 
                 if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
                 {
-                    response.Redirect("/Home/Login");
+                    response.Redirect("/Account/Login");
                 }
                 else
                 {                    

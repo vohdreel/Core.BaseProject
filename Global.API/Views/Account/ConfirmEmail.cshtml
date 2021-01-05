@@ -34,7 +34,7 @@ else
 
                 <div class="login-form login-signin py-11">
 
-                    <form asp-action="ConfirmEmail">
+                    <form asp-action="ConfirmEmail" onsubmit="BlockPage();">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <input type="hidden" asp-for="Email" />
 
@@ -51,7 +51,7 @@ else
         {
             <div class="login-form login-signin py-11">
 
-                <form class="form" asp-action="ConfirmEmail">
+                <form class="form" asp-action="ConfirmEmail" onsubmit="BlockPage();">
 
                     <div class="text-center pb-8">
                         <h3 class="font-weight-bolder text-dark display5">Confirmar Email</h3>

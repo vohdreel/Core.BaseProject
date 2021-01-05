@@ -8,7 +8,7 @@
 <!--begin::Signup-->
 <div class="login-form login-signin py-11">
     <!--begin::Form-->
-    <form class="form" asp-action="SignUp">
+    <form class="form" asp-action="SignUp" onsubmit="BlockPage();">
         <!--begin::Title-->
         <div class="text-center pb-8">
             <h3 class="font-weight-bolder text-dark display5">Cadastre-se</h3>
@@ -46,7 +46,7 @@
         <!--begin::Form group-->
         <div class="form-group">
             <label class="checkbox mb-0">
-                <input type="checkbox" onchange="document.getElementById('signUpBtn').disabled = !this.checked;" />Eu aceito os
+                <input type="checkbox" onchange="submitBtn.disabled = !this.checked;" />Eu aceito os
                 <a href="#">termos e condições</a>.
                 <span></span>
             </label>
@@ -54,7 +54,7 @@
         <!--end::Form group-->
         <!--begin::Form group-->
         <div class="form-group d-flex flex-wrap flex-center pb-lg-0 pb-3">
-            <input type="submit" id="signUpBtn" value="Cadastrar" class="btn btn-dark font-weight-bolder font-size-h6 px-8 py-4 my-3" disabled />
+            <input type="submit" name="submitBtn" value="Cadastrar" class="btn btn-dark font-weight-bolder font-size-h6 px-8 py-4 my-3" disabled />
             <a asp-action="Login" class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mx-4">Voltar</a>
         </div>
         <!--end::Form group-->
