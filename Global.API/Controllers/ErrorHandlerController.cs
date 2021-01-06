@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Global.API.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,6 +27,63 @@ namespace Global.API.Controllers
             return new ErrorResponse(exception); // Your error model
         }
 
+
+        [HttpGet]
+        [Route("HttpError/{id:length(3,3)}")]
+        public IActionResult HandleError(int id)
+        {
+
+            var modelErro = new ErrorViewModel();
+
+            if (id == 500)
+            {
+                modelErro.Mensagem = "Tente novamente mais tarde ou contate nosso suporte.";
+                modelErro.Titulo = "Ocorreu um erro!";
+                modelErro.ErroCode = id;
+            }
+            else if (id == 404)
+            {
+                modelErro.Mensagem = "A página que está procurando não existe! <br />Em caso de dúvidas entre em contato com nosso suporte.";
+                modelErro.Titulo = "Ops! Página não encontrada.";
+                modelErro.ErroCode = id;
+            }
+            else if (id == 403)
+            {
+                modelErro.Mensagem = "Você não tem permissão para acessar essa página.";
+                modelErro.Titulo = "Acesso Negado!";
+                modelErro.ErroCode = id;
+            }
+            else if (id == 401)
+            {
+                modelErro.Mensagem = "Você não tem autorização para acessar essa página.";
+                modelErro.Titulo = "Não autorizado!";
+                modelErro.ErroCode = id;
+            }
+            else
+            {
+                return StatusCode(500);
+            }
+
+            return View("Error", modelErro);
+
+        }
+
+
+        [HttpGet]
+        [Route("TokenExpired")]
+        public IActionResult HandleExpiredToken()
+        {
+            var modelErro = new ErrorViewModel();
+                        
+            modelErro.Mensagem = "Esse token já foi utilizado ou está expirado.";
+            modelErro.Titulo = "Token expirado!";
+            modelErro.ErroCode = 401;
+
+            return View("Error", modelErro);
+        }
+
+
+        /*
         [HttpGet]
         [Route("HttpError/{code:int}")]
         public JsonResult HandleError(int code)
@@ -35,6 +93,7 @@ namespace Global.API.Controllers
             json.StatusCode = code;
             return json;
         }
+        
 
         [HttpGet]
         [Route("TokenExpired")]
@@ -45,6 +104,7 @@ namespace Global.API.Controllers
             json.StatusCode = code;
             return json;
         }
+        */
     }
 
     public class ErrorResponse

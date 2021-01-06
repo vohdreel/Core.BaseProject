@@ -157,7 +157,7 @@ namespace Global.API.Controllers
                 if (!verifyToken)
                 {
                     ModelState.Clear();
-                    return NotFound();
+                    return Redirect("/TokenExpired");
                 }
 
                 token = token.Replace(' ', '+');
@@ -396,7 +396,7 @@ namespace Global.API.Controllers
                 return View();
             }
 
-            return NotFound();
+            return Redirect("/TokenExpired");
 
         }
 

@@ -16,6 +16,13 @@ function BlockPage() {
     };
 
     $.blockUI({ message: '<h1 style="color:white; text-shadow: 2px 2px 2px black;" >Carregando...</h1>' });
+    setTimeout($.unblockUI, 5000);
+}
+
+function CheckValidation() {
+    if ($(".form").valid()) {
+        BlockPage();
+    }
 }
 
 $(document).ready(function () {
