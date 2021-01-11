@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -9,19 +7,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Gyan.Web.Identity.Data.Authentication;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using System.Web.Http;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 using AllowAnonymousAttribute = Microsoft.AspNetCore.Authorization.AllowAnonymousAttribute;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
-using System.Configuration;
 using Microsoft.Extensions.Configuration;
 using Environment = Gyan.Web.Identity.Data.Authentication.Environment;
 using Global.Util;
 
 namespace Global.API.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     public class HomeController : Controller
     {
@@ -43,6 +38,7 @@ namespace Global.API.Controllers
             _roleManager = roleManager;
             _signInManager = signInManager;
             _config = config;
+            
         }
         [HttpGet]
         [Route("/")]
@@ -59,6 +55,7 @@ namespace Global.API.Controllers
             return View();
         }
 
+        
         [AllowAnonymous]
         [HttpGet("UserAndRoles")]
         public async Task UserAndRoles()
@@ -110,7 +107,7 @@ namespace Global.API.Controllers
 
         [AllowAnonymous]
         [HttpGet("appLogin")]
-        public async Task<JsonResult> appLogin(string email, [FromUri]string password)
+        public async Task<JsonResult> appLogin(string email, string password)
         {
             IdentityUser user = new IdentityUser();
             user = await _userManager.FindByNameAsync(email);
@@ -198,5 +195,6 @@ namespace Global.API.Controllers
             }
             return Json("Logged Out");
         }
+        
     }
 }

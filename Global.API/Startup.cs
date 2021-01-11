@@ -30,6 +30,8 @@ using Global.Util;
 using Global.DAO.Context;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Global.DAO.Model;
+using Global.DAO.Service;
 
 namespace Global.API
 {
@@ -56,6 +58,14 @@ namespace Global.API
                       .AddEntityFrameworkStores<GlobalContext>()
                       .AddDefaultTokenProviders();
             }
+
+            // Set token life span to 5 hours
+            services.Configure<DataProtectionTokenProviderOptions>(o =>
+                o.TokenLifespan = TimeSpan.FromMinutes(5));
+
+            //Configuração do SMTP
+            services.Configure<SMTPConfigModel>(Configuration.GetSection("SMTPConfig"));
+            services.AddScoped<IEmailService, EmailService>();
 
             //Adicionando serviço de Cors e serviço de Controllers e Views(RazorPages)
             //Configuração do CORS (configurar para manter o httpResponse em plataformas diferentes [configurei para usar cookies no app Ionic])
@@ -250,16 +260,21 @@ namespace Global.API
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Versão Pré-Alpha");
             });
-
-
-
+            
             app.UseStatusCodePages(context =>
             {
-                //if (Configuration.GetProperty<bool>("ApiConfig", "useMVC"))
-                //{
-                    var response = context.HttpContext.Response;
+                var response = context.HttpContext.Response;
+
+                if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+                {
+                    response.Redirect("/Account/Login");
+                }
+                else
+                {                    
                     response.Redirect($"/HttpError/{response.StatusCode}");
-                //}
+                }    
+                                
+                
                 return Task.CompletedTask;
 
             });

@@ -15,14 +15,18 @@ namespace Global.DAO.Model
             Documento = new HashSet<Documento>();
             Notificacao = new HashSet<Notificacao>();
             TelefoneCandidato = new HashSet<TelefoneCandidato>();
+            VagaFavorita = new HashSet<VagaFavorita>();
         }
 
         [Key]
+        [Column("ID")]
         public int Id { get; set; }
-        public string IDLegado { get; set; }
+        [Column("IDLegado")]
+        public string Idlegado { get; set; }
         [Required]
+        [Column("CPF")]
         [StringLength(11)]
-        public string CPF { get; set; }
+        public string Cpf { get; set; }
         [Required]
         [StringLength(250)]
         public string Nome { get; set; }
@@ -40,11 +44,14 @@ namespace Global.DAO.Model
         public string Raca { get; set; }
         public bool? PossuiDependentes { get; set; }
         public int? QuantidadeDependentes { get; set; }
-        public bool? PossuiCNH { get; set; }
+        [Column("PossuiCNH")]
+        public bool? PossuiCnh { get; set; }
+        [Column("CategoriaCNH")]
         [StringLength(2)]
-        public string CategoriaCNH { get; set; }
+        public string CategoriaCnh { get; set; }
+        [Column("CEP")]
         [StringLength(50)]
-        public string CEP { get; set; }
+        public string Cep { get; set; }
         [StringLength(50)]
         public string Pais { get; set; }
         [StringLength(50)]
@@ -77,8 +84,9 @@ namespace Global.DAO.Model
         [StringLength(50)]
         public string NomePai { get; set; }
         public bool? Deficiente { get; set; }
+        [Column("CID")]
         [StringLength(50)]
-        public string CID { get; set; }
+        public string Cid { get; set; }
         [StringLength(50)]
         public string AmputacaoMembrosInferiores { get; set; }
         [StringLength(50)]
@@ -115,7 +123,8 @@ namespace Global.DAO.Model
         [Required]
         [StringLength(100)]
         public string IdAspNetUsers { get; set; }
-        public string FCMToken { get; set; }
+        [Column("FCMToken")]
+        public string Fcmtoken { get; set; }
 
         [InverseProperty("IdCandidatoNavigation")]
         public virtual ICollection<AreaInteresse> AreaInteresse { get; set; }
@@ -129,5 +138,7 @@ namespace Global.DAO.Model
         public virtual ICollection<Notificacao> Notificacao { get; set; }
         [InverseProperty("IdCandidatoNavigation")]
         public virtual ICollection<TelefoneCandidato> TelefoneCandidato { get; set; }
+        [InverseProperty("IdCandidatoNavigation")]
+        public virtual ICollection<VagaFavorita> VagaFavorita { get; set; }
     }
 }

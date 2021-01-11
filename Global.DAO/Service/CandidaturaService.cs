@@ -27,7 +27,7 @@ namespace Global.DAO.Service
         }
 
 
-        public Candidatura Buscar(int Id) 
+        public Candidatura Buscar(int Id)
         {
 
             return Repository.Get(x => x.Id == Id).FirstOrDefault();
@@ -36,7 +36,7 @@ namespace Global.DAO.Service
 
         public bool Salvar(Candidatura Dados)
         {
-            
+
             bool resultado = Repository.Insert(Dados);
             return resultado;
 
@@ -48,6 +48,19 @@ namespace Global.DAO.Service
             bool resultado = Repository.Update(Dados);
 
             return resultado;
+
+        }
+
+
+        public bool ExisteCandidatura(int idVaga, int idCandidato)
+        {
+            var candidatura = Repository
+                .Get(x => x.IdVaga == idVaga && x.IdCandidato == idCandidato)
+                .FirstOrDefault();
+
+            return candidatura != null;
+
+
 
         }
 

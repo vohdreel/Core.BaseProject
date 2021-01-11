@@ -11,8 +11,9 @@ namespace Global.DAO.Model
         public int Id { get; set; }
         public int IdCandidato { get; set; }
         public int IdVaga { get; set; }
-        public int DataInscricao { get; set; }
         public int StatusCandidatura { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime DataInscricao { get; set; }
 
         [ForeignKey(nameof(IdCandidato))]
         [InverseProperty(nameof(Candidato.Candidatura))]
