@@ -106,12 +106,9 @@ namespace Global.DAO.Model
         public string LocalPreferencia { get; set; }
         [StringLength(50)]
         public string LocalPreferenciaSecundario { get; set; }
-        [StringLength(50)]
-        public string DisponibilidadeHorario { get; set; }
-        [StringLength(50)]
-        public string DisponibilidadeViagem { get; set; }
-        [StringLength(50)]
-        public string DisponibilidadeTransferencia { get; set; }
+        public int? DisponibilidadeHorario { get; set; }
+        public int? DisponibilidadeViagem { get; set; }
+        public int? DisponibilidadeTransferencia { get; set; }
         [StringLength(50)]
         public string PretencaoSalarial { get; set; }
         [StringLength(100)]
