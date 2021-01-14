@@ -162,11 +162,12 @@ namespace Global.API.Areas.Mobile.Controllers
 
         [AllowAnonymous]
         [HttpGet("VerificarEmail")]
-        public async Task<bool> VerifyEmailAdress(string emailAdress) 
+        public async Task<object> VerifyEmailAdress(string emailAdress)
         {
-
-            return await _userManager.FindByEmailAsync(emailAdress) != null;
-
+            return new
+            {
+                ok = await _userManager.FindByEmailAsync(emailAdress) != null
+            };
         }
 
 
