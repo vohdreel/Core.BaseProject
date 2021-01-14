@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Global.DAO.Model;
 using Global.DAO.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Global.API.Areas.Mobile.Controllers
 {
     [Area("Mobile")]
     [Route("[area]/[controller]")]
+    [Authorize]
     public class CandidaturaController : ControllerBase
     {
         [HttpPost("GerarCandidatura")]

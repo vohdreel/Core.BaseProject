@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "/AbHVZr9p60wXTHMMGL0vzrrOVoIaHq31dlT1CWU9Bu+CrU/65xAm+Hf6kqitBK3XHI7mbPjW3c1zbHrH9Plbg==",
+  "dgSpecHash": "QyPz2jpPi2zINARgrsX5cc6RcenXZiVzYJzcCX5h0omjepXoXBZmH24yme4K0rROrW7mEzQ/39M5OkhaggXDDg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Pro4Tech\\source\\repos\\GlobalEmpregosAPI\\Global.Util\\Global.Util.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Pro4Tech\\.nuget\\packages\\geocoordinate.netcore\\1.0.0.1\\geocoordinate.netcore.1.0.0.1.nupkg.sha512",
     "C:\\Users\\Pro4Tech\\.nuget\\packages\\microsoft.aspnetcore.authentication\\2.2.0\\microsoft.aspnetcore.authentication.2.2.0.nupkg.sha512",
     "C:\\Users\\Pro4Tech\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.2.0\\microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\Pro4Tech\\.nuget\\packages\\microsoft.aspnetcore.authentication.cookies\\2.2.0\\microsoft.aspnetcore.authentication.cookies.2.2.0.nupkg.sha512",

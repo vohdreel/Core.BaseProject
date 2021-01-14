@@ -18,9 +18,9 @@ C:\Users\T-Gamer\source\repos\GlobalEmpregosAPI2\Global.Util\obj\Debug\netcoreap
 C:\Users\Pro4Tech\source\repos\GlobalEmpregosAPI\Global.Util\bin\Debug\netcoreapp3.1\Global.Util.deps.json
 C:\Users\Pro4Tech\source\repos\GlobalEmpregosAPI\Global.Util\bin\Debug\netcoreapp3.1\Global.Util.dll
 C:\Users\Pro4Tech\source\repos\GlobalEmpregosAPI\Global.Util\bin\Debug\netcoreapp3.1\Global.Util.pdb
-C:\Users\Pro4Tech\source\repos\GlobalEmpregosAPI\Global.Util\obj\Debug\netcoreapp3.1\Global.Util.csprojAssemblyReference.cache
 C:\Users\Pro4Tech\source\repos\GlobalEmpregosAPI\Global.Util\obj\Debug\netcoreapp3.1\Global.Util.AssemblyInfoInputs.cache
 C:\Users\Pro4Tech\source\repos\GlobalEmpregosAPI\Global.Util\obj\Debug\netcoreapp3.1\Global.Util.AssemblyInfo.cs
 C:\Users\Pro4Tech\source\repos\GlobalEmpregosAPI\Global.Util\obj\Debug\netcoreapp3.1\Global.Util.csproj.CoreCompileInputs.cache
 C:\Users\Pro4Tech\source\repos\GlobalEmpregosAPI\Global.Util\obj\Debug\netcoreapp3.1\Global.Util.dll
 C:\Users\Pro4Tech\source\repos\GlobalEmpregosAPI\Global.Util\obj\Debug\netcoreapp3.1\Global.Util.pdb
+C:\Users\Pro4Tech\source\repos\GlobalEmpregosAPI\Global.Util\obj\Debug\netcoreapp3.1\Global.Util.csprojAssemblyReference.cache

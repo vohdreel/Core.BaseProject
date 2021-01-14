@@ -4,13 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Global.DAO.Model;
 using Global.DAO.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Global.API.Areas.Mobile.Controllers
 {
     [Area("Mobile")]
+    [Route("[area]/[controller]")]
+    [Authorize]
     public class NotificacaoController : ControllerBase
     {
+        [HttpGet("GetNotificacoes")]
+
         public ViewModel.Notificacao[] GetNotificacoes(int IdCandidato, int contador)
         {
             using (var service = new NotificacaoService())
@@ -36,7 +41,7 @@ namespace Global.API.Areas.Mobile.Controllers
             }
 
         }
-
+        [HttpGet("GetNotificacoesAntigas")]
         public ViewModel.Notificacao[] GetNotificacoesAntigas(int IdCandidato, int IdUltimaNotificacao)
         {
             using (var service = new NotificacaoService())
@@ -63,6 +68,7 @@ namespace Global.API.Areas.Mobile.Controllers
 
         }
 
+        [HttpGet("GetNotificacoesRecentes")]
         public ViewModel.Notificacao[] GetNotificacoesRecentes(int IdCandidato, int IdUltimaNotificacao)
         {
             using (var service = new NotificacaoService())
