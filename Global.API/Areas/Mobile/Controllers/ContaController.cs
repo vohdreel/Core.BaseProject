@@ -159,6 +159,17 @@ namespace Global.API.Areas.Mobile.Controllers
             };
         }
 
+
+        [AllowAnonymous]
+        [HttpGet("VerificarEmail")]
+        public async Task<bool> VerifyEmailAdress(string emailAdress) 
+        {
+
+            return await _userManager.FindByEmailAsync(emailAdress) != null;
+
+        }
+
+
         [AllowAnonymous]
         [HttpPost("CadastrarUsuario")]
         public async Task<object> SingUp([FromBody] dynamic userInfo)
