@@ -38,7 +38,7 @@ namespace Global.API.Controllers
             _roleManager = roleManager;
             _signInManager = signInManager;
             _config = config;
-            
+
         }
         [HttpGet]
         [Route("/")]
@@ -55,7 +55,7 @@ namespace Global.API.Controllers
             return View();
         }
 
-        
+
         [AllowAnonymous]
         [HttpGet("UserAndRoles")]
         public async Task UserAndRoles()
@@ -83,6 +83,7 @@ namespace Global.API.Controllers
 
         }
 
+        [AllowAnonymous]
         [HttpGet("CreateRoles")]
         public async Task CreateRoles()
         {
@@ -103,6 +104,29 @@ namespace Global.API.Controllers
                 role.Name = "Employee";
                 await _roleManager.CreateAsync(role);
             }
+
+            x = await _roleManager.RoleExistsAsync("User");
+            if (!x)
+            {
+                var role = new IdentityRole();
+                role.Name = "User";
+                await _roleManager.CreateAsync(role);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet("location")]
+        public dynamic InnerRequest()
+        {
+            var teste = HttpHelper
+                .Get<string>(
+                "http://localhost:4000/",
+                "token");
+
+            //var distancia = GeoCoordinationExtension.GetDistanceBetweenLocations();
+
+            return 0;
+
         }
 
         [AllowAnonymous]
@@ -133,6 +157,47 @@ namespace Global.API.Controllers
             return Json("Failed!");
 
         }
+        [AllowAnonymous]
+        [HttpGet("token")]
+        public async Task<JsonResult> GenerateToken()
+        {
+            IdentityUser user = new IdentityUser();
+            user = await _userManager.FindByNameAsync("default");
+
+            if (user != null && await _userManager.CheckPasswordAsync(user, "Somepassword19+96+96"))
+            {
+                var result = await _signInManager.PasswordSignInAsync(user, "Somepassword19+96+96", false, false);
+
+                if (result.Succeeded)
+                {
+                    try
+                    {
+                        var result1 = await _userManager.AddToRoleAsync(user, "Employee");
+                        result1 = await _userManager.AddToRoleAsync(user, "Manager");
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                    // adicionar token 
+                    var roles = await _userManager.GetRolesAsync(user);
+                    var token = TokenService.GenerateToken(user, roles.ToList());
+                    //O User estará vazio até que um JWT gerado pelo sistema seja encontrado na requisição
+                    HttpContext
+                        .Response
+                        .Cookies
+                        .Append("access_token",
+                                token,
+                               TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment")));
+
+                    return Json("Logged");
+                }
+
+            }
+            return Json("Failed!");
+        }
+
+
 
 
         [AllowAnonymous]
@@ -195,6 +260,6 @@ namespace Global.API.Controllers
             }
             return Json("Logged Out");
         }
-        
+
     }
 }

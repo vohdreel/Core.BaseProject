@@ -189,7 +189,7 @@ namespace Global.API
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 8;
                 options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = true;
+                options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequiredUniqueChars = 6;
 
@@ -200,6 +200,8 @@ namespace Global.API
 
                 // User settings  
                 options.User.RequireUniqueEmail = true;
+
+                
             });
 
             //Configuração SWAGGER UI
@@ -225,7 +227,7 @@ namespace Global.API
                     {
                         return new[] { api.GroupName };
                     }
-
+                     
                     var controllerActionDescriptor = api.ActionDescriptor as ControllerActionDescriptor;
                     if (controllerActionDescriptor != null)
                     {

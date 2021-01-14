@@ -35,6 +35,13 @@ namespace Global.DAO.Service
 
         }
 
+        public bool CadastrarCandidato(Candidato candidato)
+        {
+            return Repository.Insert(candidato);
+        
+        
+        }
+
         public Candidato BuscarCandidato(string IdAspNetUsers)
         {
 
