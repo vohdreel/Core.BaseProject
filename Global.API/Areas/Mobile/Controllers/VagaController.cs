@@ -21,6 +21,10 @@ namespace Global.API.Areas.Mobile.Controllers
         {
             using (var service = new VagaService())
             {
+
+                var teste = service.BuscarVagasGerais();
+                
+
                 var vagas = service.BuscarVagasGerais().Select(x => new ViewModel.Vaga
                 {
                     IdVaga = x.Id,
@@ -31,9 +35,11 @@ namespace Global.API.Areas.Mobile.Controllers
                     Cidade = x.Cidade,
                     Estado = x.Estado,
                     Requisitos = x.Requisitos,
-                    Beneficios = x.Beneficios
+                    Beneficios = x.Beneficios,
+                    Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any()
 
                 }).ToArray();
+
                 return vagas;
 
             }
@@ -53,7 +59,8 @@ namespace Global.API.Areas.Mobile.Controllers
                     Cidade = x.Cidade,
                     Estado = x.Estado,
                     Requisitos = x.Requisitos,
-                    Beneficios = x.Beneficios
+                    Beneficios = x.Beneficios,
+                    Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any()
 
                 }).ToArray();
                 return vagas;
@@ -76,7 +83,33 @@ namespace Global.API.Areas.Mobile.Controllers
                     Cidade = x.Cidade,
                     Estado = x.Estado,
                     Requisitos = x.Requisitos,
-                    Beneficios = x.Beneficios
+                    Beneficios = x.Beneficios,
+                    Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any()
+
+                }).ToArray();
+                return vagas;
+
+            }
+        }
+
+
+        [HttpGet("GetVagasFavoritasCandidato")]
+        public ViewModel.Vaga[] GetVagasFavoritasCandidato(int idCandidato)
+        {
+            using (var service = new VagaFavoritaService())
+            {
+                var vagas = service.BuscarVagasFavoritasCandidato(idCandidato).Select(x => new ViewModel.Vaga
+                {
+                    IdVaga = x.Id,
+                    NomeCargo = x.IdCargoNavigation.NomeCargo,
+                    NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
+                    Salario = x.Salario?.ToString("c"),
+                    Modalidade = ((VagaModalidade)x.Modalidade).ToString(),
+                    Cidade = x.Cidade,
+                    Estado = x.Estado,
+                    Requisitos = x.Requisitos,
+                    Beneficios = x.Beneficios,
+                    Favoritado = true
 
                 }).ToArray();
                 return vagas;
@@ -100,11 +133,32 @@ namespace Global.API.Areas.Mobile.Controllers
                     Cidade = vaga.Cidade,
                     Estado = vaga.Estado,
                     Requisitos = vaga.Requisitos,
-                    Beneficios = vaga.Beneficios                   
+                    Beneficios = vaga.Beneficios
 
-                };          
+                };
             
-            } 
+            
+            }
+
+
+        }
+
+        [HttpPost("FavoritarVaga")]
+        public bool FavoritarVaga([FromBody] VagaFavorita vagaFavorita)
+        {
+            var service = new VagaFavoritaService();
+            bool sucesso = service.Salvar(vagaFavorita);
+            
+            return sucesso;
+        }
+
+        [HttpPut("DesfavoritarVaga")]
+        public bool DesfavoritarVaga([FromBody] VagaFavorita vagaFavorita)
+        {
+            var service = new VagaFavoritaService();
+            bool sucesso = service.ExcluirPorIdCandidatoIdVaga(vagaFavorita.IdCandidato, vagaFavorita.IdVaga);
+
+            return sucesso;
         }
     }
 }
