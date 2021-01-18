@@ -43,12 +43,12 @@ namespace Global.DAO.Service
         {
 
             return Repository
-                .Get(includeProperties: "IdProcessoSeletivoNavigation,IdProcessoSeletivoNavigation.IdEmpresaNavigation,IdCargoNavigation")
+                .Get(includeProperties: "IdProcessoSeletivoNavigation,IdProcessoSeletivoNavigation.IdEmpresaNavigation,IdCargoNavigation,VagaFavorita")
                 .OrderByDescending(x => x.Id)
                 .ThenByDescending(x => x.IdProcessoSeletivoNavigation.DataInicioProcesso)
                 .Take(5)
                 .ToArray();
-
+               
         }
 
         public Vaga[] BuscarVagasGeraisAntigas(int idUltimaVaga)

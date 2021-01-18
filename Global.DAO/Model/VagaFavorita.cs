@@ -18,5 +18,6 @@ namespace Global.DAO.Model
         [ForeignKey(nameof(IdVaga))]
         [InverseProperty(nameof(Vaga.VagaFavorita))]
         public virtual Vaga IdVagaNavigation { get; set; }
+        //public virtual Vaga Vaga { get; set; }
     }
 }
