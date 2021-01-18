@@ -166,7 +166,7 @@ namespace Global.API.Areas.Mobile.Controllers
         {
             return new
             {
-                ok = await _userManager.FindByEmailAsync(emailAdress) != null
+                ok = await _userManager.FindByEmailAsync(emailAdress) == null
             };
         }
 
