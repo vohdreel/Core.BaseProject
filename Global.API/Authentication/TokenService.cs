@@ -32,9 +32,7 @@ namespace Gyan.Web.Identity.Data.Authentication
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    //new Claim(ClaimTypes.Name, user.UserName.ToString()),
                     new Claim(ClaimTypes.Name, user.UserName.ToString()),
-                    //new Claim(ClaimTypes.Email, user.Email.ToString()),
                     new Claim("IdAspNetUser", user.Id.ToString()) 
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(400),

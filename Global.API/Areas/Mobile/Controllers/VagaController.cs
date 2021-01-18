@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using Global.DAO.Model;
 using Global.DAO.Service;
 using Global.Util.SystemEnumerations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Global.API.Areas.Mobile.Controllers
 {
     [Area("Mobile")]
     [Route("[area]/[controller]")]
+    [Authorize]
     public class VagaController : ControllerBase
     {
      
@@ -114,23 +116,15 @@ namespace Global.API.Areas.Mobile.Controllers
 
             }
         }
-
-
-
-
         [HttpGet("GetVagaPorId")]
-
         public ViewModel.Vaga GetVagaPorId(int idVaga)
         {
-
             using (var service = new VagaService())
             {
-
                 var vaga = service.Buscar(idVaga);
 
                 return new ViewModel.Vaga()
                 {
-
                     IdVaga = vaga.Id,
                     NomeCargo = vaga.IdCargoNavigation.NomeCargo,
                     NomeEmpresa = vaga.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,

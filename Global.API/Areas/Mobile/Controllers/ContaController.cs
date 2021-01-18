@@ -13,7 +13,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Environment = Gyan.Web.Identity.Data.Authentication.Environment;
+using FromBodyAttribute = Microsoft.AspNetCore.Mvc.FromBodyAttribute;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
+using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 namespace Global.API.Areas.Mobile.Controllers
@@ -145,21 +147,66 @@ namespace Global.API.Areas.Mobile.Controllers
 
         }
 
+
         [Authorize]
         [HttpGet("GetClaims")]
         public object GetClaims()
         {
-
-
             return new
             {
                 UserId = this.User.FindFirstValue(ClaimTypes.Name),
                 Email = this.User.FindFirstValue("IdAspNetUser"),
-
-
-
-
             };
+        }
+
+
+        [AllowAnonymous]
+        [HttpGet("VerificarEmail")]
+        public async Task<object> VerifyEmailAdress(string emailAdress)
+        {
+            return new
+            {
+                ok = await _userManager.FindByEmailAsync(emailAdress) != null
+            };
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost("CadastrarUsuario")]
+        public async Task<object> SingUp([FromBody] dynamic userInfo)
+        {
+            var user = new IdentityUser();
+            user.UserName = userInfo.Nome;
+            user.Email = userInfo.Email;
+
+            string userPWD = userInfo.Password;
+
+            IdentityResult chkUser = await _userManager.CreateAsync(user, userPWD);
+            if (chkUser.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, "User");
+
+                Candidato candidato = new Candidato()
+                {
+                    IdAspNetUsers = user.Id,
+                    Cpf = userInfo.Cpf,
+                    Nome = userInfo.Nome,
+                    Email = userInfo.Email
+                };
+
+                CandidatoService candidatoService = new CandidatoService();
+                candidatoService.CadastrarCandidato(candidato);
+
+                return new
+                {
+                    ok = true,
+                    IdCandidato = candidato.Id
+
+                };
+            }
+            else
+                return new { ok = false };
+
 
         }
 
