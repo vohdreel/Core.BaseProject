@@ -11,8 +11,7 @@ namespace Global.DAO.Interface.Service
         IEnumerable<Documento> Listar();
         bool Criar(Documento documento);
         bool Atualizar(Documento documento);
-        bool Deletar(int idDocumento);
-        Documento Get(int idDocumento);
-        void Finalizar(int id);
+        bool Excluir(int idDocumento);
+        Documento BuscarPorId(int idDocumento);
     }
 }

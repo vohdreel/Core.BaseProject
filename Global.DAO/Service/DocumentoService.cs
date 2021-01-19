@@ -1,4 +1,6 @@
 ﻿using Global.DAO.Context;
+using Global.DAO.Interface.Repository;
+using Global.DAO.Interface.Service;
 using Global.DAO.Model;
 using Global.DAO.Procedure.Models;
 using Global.DAO.Repository;
@@ -10,44 +12,32 @@ using System.Threading.Tasks;
 
 namespace Global.DAO.Service
 {
-    public class DocumentoService : IDisposable
+    public class DocumentoService : IServiceDocumento
     {
-        private DocumentoRepository Repository { get; set; }
+        private readonly IRepositoryDocumento RepositoryDocumento;
 
-        public DocumentoService()
+        public DocumentoService(IRepositoryDocumento repositoryDocumento)
         {
 
-            Repository = new DocumentoRepository();
+            RepositoryDocumento = repositoryDocumento;
 
         }
 
-        public DocumentoService(GlobalContext context)
+        public Documento BuscarPorId(int Id) 
         {
-            Repository = new DocumentoRepository(context);
+            return RepositoryDocumento.Get(x => x.Id == Id).FirstOrDefault();
         }
 
-
-        public Documento Buscar(int Id) 
-        {
-
-            return Repository.Get(x => x.Id == Id).FirstOrDefault();
-
-        }
-
-        public bool Salvar(Documento Dados)
+        public bool Criar(Documento Dados)
         {
             
-            bool resultado = Repository.Insert(Dados);
-            return resultado;
-
+            return RepositoryDocumento.Insert(Dados);
         }
 
-        public bool Editar(Documento Dados)
+        public bool Atualizar(Documento Dados)
         {
 
-            bool resultado = Repository.Update(Dados);
-
-            return resultado;
+            return RepositoryDocumento.Update(Dados);
 
         }
 
@@ -59,14 +49,13 @@ namespace Global.DAO.Service
             return resultado;
         }
 
+        public IEnumerable<Documento> Listar() {
+        
+        }
+
         public GlobalContext GetContext()
         {
             return Repository.GetContext();
-        }
-
-        public void Dispose()
-        {
-            Repository.Dispose();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Global.DAO.Interface;
+using Global.DAO.Interface.Repository;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Global.DAO.Repository.Generic
 {
-    public abstract class CommonRepository<TEntity, TContext> : IDisposable, IRepository<TEntity>
+    public abstract class Repository<TEntity, TContext> : IDisposable, IRepository<TEntity>
         where TEntity : class
         where TContext : IdentityDbContext, new()
     {
@@ -22,12 +23,12 @@ namespace Global.DAO.Repository.Generic
         internal DbSet<TEntity> set;
         internal int bulkCount;
 
-        public CommonRepository(TContext context)
+        public Repository(TContext context)
         {
             this.UpdateContext(context);
         }
 
-        public CommonRepository()
+        public Repository()
         {
             this.UpdateContext(new TContext());
         }
