@@ -2,10 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Global.DAO.Model;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Global.DAO.Context
 {
-    public partial class GlobalContext : DbContext
+    public partial class GlobalContext : IdentityDbContext
     {
         public GlobalContext()
         {
