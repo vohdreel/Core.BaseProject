@@ -49,7 +49,6 @@ namespace Global.DAO.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<AreaInteresse>(entity =>
@@ -66,6 +65,7 @@ namespace Global.DAO.Context
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_EnumAgrupamento_AreaInteresse");
             });
+          
 
             modelBuilder.Entity<Being>(entity =>
             {
@@ -213,6 +213,8 @@ namespace Global.DAO.Context
             modelBuilder.Entity<Documento>(entity =>
             {
                 entity.Property(e => e.Extensao).IsUnicode(false);
+
+                entity.Property(e => e.NomeArquivo).IsUnicode(false);
 
                 entity.HasOne(d => d.IdCandidatoNavigation)
                     .WithMany(p => p.Documento)

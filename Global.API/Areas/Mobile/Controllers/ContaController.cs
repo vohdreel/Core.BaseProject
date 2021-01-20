@@ -155,7 +155,9 @@ namespace Global.API.Areas.Mobile.Controllers
             return new
             {
                 UserId = this.User.FindFirstValue(ClaimTypes.Name),
-                Email = this.User.FindFirstValue("IdAspNetUser"),
+                Email = this.User.FindFirstValue("IdAspNetUser")
+
+                
             };
         }
 

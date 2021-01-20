@@ -16,7 +16,7 @@ using Environment = Gyan.Web.Identity.Data.Authentication.Environment;
 
 namespace Global.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("[controller]")]
     public class AccountController : Controller
     {

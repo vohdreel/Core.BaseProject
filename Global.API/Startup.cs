@@ -262,26 +262,26 @@ namespace Global.API
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Versão Pré-Alpha");
             });
-            
-            app.UseStatusCodePages(context =>
-            {
-                var response = context.HttpContext.Response;
 
-                if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
-                {
-                    response.Redirect("/Account/Login");
-                }
-                else
-                {                    
-                    response.Redirect($"/HttpError/{response.StatusCode}");
-                }    
-                                
-                
-                return Task.CompletedTask;
+            //app.UseStatusCodePages(context =>
+            //{
+            //    var response = context.HttpContext.Response;
 
-            });
+            //    if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            //    {
+            //        response.Redirect("/Account/Login");
+            //    }
+            //    else
+            //    {
+            //        response.Redirect($"/HttpError/{response.StatusCode}");
+            //    }
 
-            app.UseExceptionHandler("/error");
+
+            //    return Task.CompletedTask;
+
+            //});
+
+            //app.UseExceptionHandler("/error");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

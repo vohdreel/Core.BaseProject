@@ -16,6 +16,9 @@ namespace Global.DAO.Model
         [Required]
         [StringLength(100)]
         public string Extensao { get; set; }
+        [Required]
+        [StringLength(500)]
+        public string NomeArquivo { get; set; }
 
         [ForeignKey(nameof(IdCandidato))]
         [InverseProperty(nameof(Candidato.Documento))]
