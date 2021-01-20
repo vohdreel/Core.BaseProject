@@ -5,21 +5,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Global.DAO.Model
 {
-    public partial class Candidatura
+    public partial class VagaFavorita
     {
         [Key]
         public int Id { get; set; }
         public int IdCandidato { get; set; }
         public int IdVaga { get; set; }
-        public int StatusCandidatura { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime DataInscricao { get; set; }
 
         [ForeignKey(nameof(IdCandidato))]
-        [InverseProperty(nameof(Candidato.Candidatura))]
+        [InverseProperty(nameof(Candidato.VagaFavorita))]
         public virtual Candidato IdCandidatoNavigation { get; set; }
         [ForeignKey(nameof(IdVaga))]
-        [InverseProperty(nameof(Vaga.Candidatura))]
+        [InverseProperty(nameof(Vaga.VagaFavorita))]
         public virtual Vaga IdVagaNavigation { get; set; }
     }
 }

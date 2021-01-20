@@ -4,6 +4,8 @@
 
 /Global.DAO/bin
 /Global.API/obj
+/Global.Util/bin
 /.vs
 /Global.DAO/obj
 /Global.API/bin
+/Global.Util/obj

@@ -253,18 +253,18 @@ namespace Global.API
 
 
 
-            app.UseStatusCodePages(context =>
-            {
-                //if (Configuration.GetProperty<bool>("ApiConfig", "useMVC"))
-                //{
-                    var response = context.HttpContext.Response;
-                    response.Redirect($"/HttpError/{response.StatusCode}");
-                //}
-                return Task.CompletedTask;
+            //app.UseStatusCodePages(context =>
+            //{
+            //    //if (Configuration.GetProperty<bool>("ApiConfig", "useMVC"))
+            //    //{
+            //        var response = context.HttpContext.Response;
+            //        response.Redirect($"/HttpError/{response.StatusCode}");
+            //    //}
+            //    return Task.CompletedTask;
 
-            });
+            //});
 
-            app.UseExceptionHandler("/error");
+            //app.UseExceptionHandler("/error");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
