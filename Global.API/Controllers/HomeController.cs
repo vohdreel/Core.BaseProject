@@ -47,7 +47,6 @@ namespace Global.API.Controllers
         {
             _logger.LogInformation("Comi o cu de quem está lendo");
             return View();
-            _config.
         }
 
         [HttpGet("Privacy")]
