@@ -7,3 +7,5 @@
 /.vs
 /Global.DAO/obj
 /Global.API/bin
+/Global.Util/obj
+/Global.Util/bin
