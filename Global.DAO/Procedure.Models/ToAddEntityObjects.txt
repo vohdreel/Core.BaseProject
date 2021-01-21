@@ -1,0 +1,2 @@
+﻿modelBuilder.Entity<MachineUser>().HasNoKey();
+modelBuilder.Entity<EgressUnit>().HasNoKey();

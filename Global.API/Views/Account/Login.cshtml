@@ -1,0 +1,46 @@
+﻿@model LoginViewModel
+@{
+    Layout = "_LayoutMetronicLogin";
+    ViewData["Title"] = "Login";
+}
+
+<!--begin::Signin-->
+<div class="login-form login-signin py-11">
+    <!--begin::Form-->
+    <form class="form" asp-action="Login" onsubmit="CheckValidation();">
+        <!--begin::Title-->
+        <div class="text-center pb-8">
+            <h2 class="font-weight-bolder text-dark display5">Login</h2>
+            <span class="text-muted font-weight-bold font-size-h4">
+                Ou
+                <a asp-action="SignUp" class="text-primary font-weight-bolder">Crie uma conta</a>
+            </span>
+        </div>
+        <!--end::Title-->
+        <!--begin::Form group-->
+        <div class="form-group">
+            <label class="font-size-h6 font-weight-bolder text-dark" asp-for="Email"></label>
+            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" asp-for="Email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <!--end::Form group-->
+        <!--begin::Form group-->
+        <div class="form-group">
+            <div class="d-flex justify-content-between mt-n5">
+                <label class="font-size-h6 font-weight-bolder text-dark pt-5" asp-for="Password"></label>
+                <a asp-action="ForgotPassword" class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5">Esqueceu sua senha?</a>
+            </div>
+            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" asp-for="Password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <!--end::Form group-->
+        <!--begin::Action-->
+        <div class="text-center mt-2">
+            <input type="submit" value="Entrar" class="btn btn-dark font-weight-bolder font-size-h6 px-8 py-4 my-3" />
+
+        </div>
+        <!--end::Action-->
+    </form>
+    <!--end::Form-->
+</div>
+<!--end::Signin-->

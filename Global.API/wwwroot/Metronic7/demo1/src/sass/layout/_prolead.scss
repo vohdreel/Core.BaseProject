@@ -1,0 +1,336 @@
+@mixin layout-tabela-pdc($nome-modulo,$header-bg-color) {
+    .tabela-#{$nome-modulo} {
+        th:not(.table-cell-center) span, td:not(.table-cell-center) > span, td:not(.table-cell-center) > div {
+            padding-left: 1.55rem !important;
+        }
+
+        th {
+            background-color: $header-bg-color;
+
+            span {
+                color: white !important;
+                text-transform: capitalize !important;
+                font-weight: normal !important;
+            }
+        }
+
+        th:last-child {
+            border-top-right-radius: 0.42rem;
+            border-bottom-right-radius: 0.42rem;
+        }
+
+        th:first-child {
+            border-top-left-radius: 0.42rem;
+            border-bottom-left-radius: 0.42rem;
+        }
+
+        .datatable-pager-link-active {
+            background-color: $header-bg-color !important;
+        }
+
+        .datatable-pager-link:hover:not(.datatable-pager-link-disabled) {
+            background-color: $header-bg-color !important;
+        }
+
+        .flaticon2-arrow-up, .flaticon2-arrow-down {
+            color: white !important;
+        }
+    }
+
+    .datatable.datatable-default.tabela-#{$nome-modulo} > .datatable-pager > .datatable-pager-info .datatable-pager-size .btn.dropdown-toggle:hover {
+        background-color: $header-bg-color !important;
+    }
+}
+
+//Estrutura da empresa
+$estrutura-da-empresa-bg-color: #DBAC0A;
+$estrutura-da-empresa-bg-color-medium: #F6CC3B;
+$estrutura-da-empresa-bg-color-light: #F9DF84;
+
+//table
+@include layout-tabela-pdc("estrutura-da-empresa",$estrutura-da-empresa-bg-color);
+
+.bg-estrutura-da-empresa{
+    background-color:$estrutura-da-empresa-bg-color !important;
+}
+
+//separador do breadcrumb
+.breadcrumb-estrutura-da-empresa:after {
+  background: $estrutura-da-empresa-bg-color !important;
+}
+
+//texto da cor do modulo
+.color-estrutura-da-empresa {
+    color: $estrutura-da-empresa-bg-color !important
+}
+
+//botão
+.btn-estrutura-da-empresa {
+    color: #FFFFFF;
+    background-color: $estrutura-da-empresa-bg-color;
+    border-color: $estrutura-da-empresa-bg-color;
+}
+
+.btn-estrutura-da-empresa:hover {
+    color: #FFFFFF;
+    background-color: $estrutura-da-empresa-bg-color-medium;
+    border-color: $estrutura-da-empresa-bg-color-medium;
+}
+
+
+//Diário de feedback   
+$feedback-bg-color: #819D3B;
+$feedback-bg-color-medium: #A7C461;
+$feedback-bg-color-light: #C6D999;
+
+//Express Yourself
+$ey-bg-color: #ff8c5a;
+$ey-bg-color-medium: #ff8c5a;
+$ey-bg-color-light: #ff8c5a;
+$ey-bg-color-hover: #f37a46;
+
+//Descrição de Cargo
+$descricao-bg-color: #1c706B;
+$descricao-bg-color-medium: #1c706B;
+$descricao-bg-color-light: #94d1b4;
+$descricao-bg-color-dark: #275250;
+$descricao-bg-color-hover: #29807A;
+
+//Competencias
+$competencia-bg-color: #7c5ea8;
+$competencia-bg-color-medium: #B1A0CA;
+$competencia-bg-color-light: #B5B5C3;
+
+//separador do breadcrumb
+.breadcrumb-competencia:after {
+  background: $competencia-bg-color !important;
+}
+
+//tabela
+@include layout-tabela-pdc("competencia",$competencia-bg-color-medium);
+
+
+//titulo das páginas
+.titulo-competencia {
+  color: $competencia-bg-color;
+  font-weight: 600;
+}
+
+.border-competencia {
+    border-color: $competencia-bg-color !important;
+}
+
+.border-competencia-medium {
+    border-color: $competencia-bg-color-medium !important;
+}
+
+.bg-competencia {
+    background-color: $competencia-bg-color !important;
+}
+
+.bg-competencia-medium {
+    background-color: $competencia-bg-color-medium !important;
+}
+
+.bg-competencia-light {
+    background-color: $competencia-bg-color-light !important;
+}
+
+
+.color-competencia {
+    color: $competencia-bg-color !important
+}
+
+.color-competencia-medium {
+    color: $competencia-bg-color-medium !important;
+}
+
+.separador-competencia {
+    border-bottom-color: $competencia-bg-color-medium !important;
+}
+
+//tabs
+
+.nav-tabs-competencia.nav.nav-tabs.nav-tabs-line.nav-tabs-line-3x .nav-link:hover:not(.disabled),
+.nav-tabs-competencia.nav.nav-tabs.nav-tabs-line.nav-tabs-line-3x .nav-link.active,
+.nav-tabs-competencia.nav.nav-tabs.nav-tabs-line.nav-tabs-line-3x .show > .nav-link {
+    border-bottom: 3px solid $competencia-bg-color !important;
+}
+
+.nav-tabs-competencia.nav.nav-tabs.nav-tabs-line.nav-tabs-line-3x .nav-link:hover:not(.disabled),
+.nav-tabs-competencia.nav.nav-tabs.nav-tabs-line.nav-tabs-line-3x .nav-link.active,
+.nav-tabs-competencia.nav.nav-tabs.nav-tabs-line.nav-tabs-line-3x .show > .nav-link {
+    border-bottom: 3px solid $competencia-bg-color !important;
+}
+
+.nav-tabs-competencia.nav .show > .nav-link,
+.nav-tabs-competencia.nav .nav-link:hover:not(.disabled),
+.nav-tabs-competencia.nav .nav-link.active {
+    color: $competencia-bg-color !important;
+}
+
+
+
+
+
+
+.color-express-yourself {
+    color: $ey-bg-color !important
+}
+
+.bg-express-yourself {
+    background-color: $ey-bg-color !important
+}
+
+.btn-express-yourself {
+    color: #FFFFFF;
+    background-color: $ey-bg-color;
+    border-color: $ey-bg-color;    
+}
+.btn-express-yourself:hover {
+    color: #FFFFFF;
+    background-color: $ey-bg-color-hover;
+    border-color: $ey-bg-color-hover;
+}
+
+
+
+//Descricao De Cargo
+@include layout-tabela-pdc("descricao-de-cargo",$descricao-bg-color-medium);
+
+
+//separador do breadcrumb
+.breadcrumb-descricao-de-cargo:after {
+    background: $descricao-bg-color !important
+}
+
+@include layout-tabela-pdc("descricao-de-cargo",$descricao-bg-color);
+
+
+.color-descricao-de-cargo {
+    color: $descricao-bg-color !important
+}
+
+.bg-descricao-de-cargo {
+    background-color: $descricao-bg-color !important
+}
+
+.btn-descricao-de-cargo {
+    color: #FFFFFF !important;
+    background-color: $descricao-bg-color;
+    border-color: $descricao-bg-color;
+}
+
+.btn-descricao-de-cargo:hover {
+    color: #FFFFFF !important;
+    background-color: $descricao-bg-color-hover;
+    border-color: $descricao-bg-color-hover;
+}
+
+/*.form-descricao-de-cargo .form-group label {
+    color: $descricao-bg-color;
+    font-size: 1.175rem !important;
+    font-weight: 500 !important;
+}*/
+
+.btn-competencia {
+    color: #FFFFFF;
+    background-color: $competencia-bg-color;
+    border-color: $competencia-bg-color;
+}
+
+.btn-competencia:hover {
+    color: #FFFFFF;
+    background-color: $competencia-bg-color-medium;
+    border-color: $competencia-bg-color-medium;
+}
+
+
+
+
+
+//Desempenho   
+$desempenho-bg-color: #1B5486;
+$desempenho-bg-color-medium: #287CC6;
+$desempenho-bg-color-light: #5CA1DE;
+
+//Carreiras   
+$carreiras-bg-color: #252049;
+$carreiras-bg-color-medium: #40377E;
+$carreiras-bg-color-light: #5C4FB2;
+
+//Matriz Avaliacao   
+$matriz-avaliacao-bg-color: #38AAC5;
+$matriz-avaliacao-bg-color-medium: #72C4D7;
+$matriz-avaliacao-bg-color-light: #AEDDE8;
+
+//Descrição de cargos
+$descricao-de-cargo-bg-color: #666;
+$matriz-avaliacao-bg-color-medium: #666;
+$matriz-avaliacao-bg-color-light: #666;
+
+//Admin
+
+$pl-laranja-bg-color: #f27145;
+
+//Menu lateral com icones laranjas
+.aside-menu .menu-nav > .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover > .menu-heading .menu-icon.svg-icon svg g [fill], .aside-menu .menu-nav > .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover > .menu-link .menu-icon.svg-icon svg g [fill] {
+    -webkit-transition: fill 0.3s ease;
+    transition: fill 0.3s ease;
+    fill: $pl-laranja-bg-color !important;
+}
+
+.aside-menu .menu-nav > .menu-item.menu-item-active > .menu-heading .menu-icon.svg-icon svg g [fill],
+.aside-menu .menu-nav > .menu-item.menu-item-active > .menu-link .menu-icon.svg-icon svg g [fill] {
+    -webkit-transition: fill 0.3s ease;
+    transition: fill 0.3s ease;
+    fill: $pl-laranja-bg-color !important;
+}
+
+.aside-menu .menu-nav > .menu-item.menu-item-open > .menu-heading .menu-icon.svg-icon svg g [fill], .aside-menu .menu-nav > .menu-item.menu-item-open > .menu-link .menu-icon.svg-icon svg g [fill] {
+    -webkit-transition: fill 0.3s ease;
+    transition: fill 0.3s ease;
+    fill: $pl-laranja-bg-color !important;
+}
+
+//Sticky-toolbar visao adm e painel do colaborador
+.sticky-toolbar .ativo {
+    background-color: $pl-laranja-bg-color !important;
+    border-color: $pl-laranja-bg-color !important;
+    color: #ffffff !important;
+}
+
+.sticky-toolbar .ativo i {
+    color: #ffffff !important;
+}
+
+.sticky-toolbar i {
+    color: black !important;
+}
+
+.visaoRH:hover, .visaoPDC:hover {
+    background-color: $pl-laranja-bg-color !important;
+    border-color: $pl-laranja-bg-color !important;
+}
+
+.visaoRH:hover i, .visaoPDC:hover i {
+    color: #ffffff !important;
+}
+
+
+@mixin spinners($nome-modulo,$color-modulo) {
+    .spinner.spinner-#{$nome-modulo}:before {
+        border: 2px solid $color-modulo;
+        border-right: 2px solid transparent;
+    }
+}
+
+
+
+@include spinners("competencia", $competencia-bg-color);
+@include spinners("descricao", $descricao-bg-color);
+@include spinners("feedback", $feedback-bg-color);
+@include spinners("ey", $ey-bg-color);
+@include spinners("estrutura-da-empresa",$estrutura-da-empresa-bg-color);
+
+//Prolead
