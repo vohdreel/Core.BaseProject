@@ -16,6 +16,17 @@ namespace Global.Util.SystemEnumerations
 
     }
 
+    public enum NomeTipoDocumento
+    {
+        [Display(Name = "Curriculum Vitae")]
+        CurriculumVitae = 1,
+        [Display(Name = "Documento com Foto")]
+        DocumentoComFoto = 2,
+        [Display(Name = "Comprovante de Residência")]
+        ComprovanteDeResidencia = 3
+
+    }
+
     public enum StatusCandidatura
     {
         [Display(Name = "Inscrito")]

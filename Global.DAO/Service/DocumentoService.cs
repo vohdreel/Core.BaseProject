@@ -34,6 +34,13 @@ namespace Global.DAO.Service
 
         }
 
+        public Documento[] ListarPorCandidato(int idCandidato)
+        {
+            return Repository.Get(x => x.IdCandidato == idCandidato).ToArray();
+
+
+        }
+
         public bool Salvar(Documento Dados)
         {
             

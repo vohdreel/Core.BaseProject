@@ -15,7 +15,7 @@ namespace Global.API.Areas.Mobile.Controllers
     [Authorize]
     public class VagaController : ControllerBase
     {
-     
+
         [HttpGet("GetVagasGeraisPaginaInicial")]
         public ViewModel.Vaga[] GetVagasGeraisPaginaInicial()
         {
@@ -23,7 +23,7 @@ namespace Global.API.Areas.Mobile.Controllers
             {
 
                 var teste = service.BuscarVagasGerais();
-                
+
 
                 var vagas = service.BuscarVagasGerais().Select(x => new ViewModel.Vaga
                 {
@@ -98,27 +98,29 @@ namespace Global.API.Areas.Mobile.Controllers
         {
             using (var service = new VagaFavoritaService())
             {
-                var vagas = service.BuscarVagasFavoritasCandidato(idCandidato).Select(x => new ViewModel.Vaga
-                {
-                    IdVaga = x.Id,
-                    NomeCargo = x.IdCargoNavigation.NomeCargo,
-                    NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
-                    Salario = x.Salario?.ToString("c"),
-                    Modalidade = ((VagaModalidade)x.Modalidade).ToString(),
-                    Cidade = x.Cidade,
-                    Estado = x.Estado,
-                    Requisitos = x.Requisitos,
-                    Beneficios = x.Beneficios,
-                    Favoritado = true
+                var vagas = service.BuscarVagasFavoritasCandidato(idCandidato)
+                    .Select(x => new ViewModel.Vaga
+                    {
+                        IdVaga = x.Id,
+                        NomeCargo = x.IdCargoNavigation.NomeCargo,
+                        NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
+                        Salario = x.Salario?.ToString("c"),
+                        Modalidade = ((VagaModalidade)x.Modalidade).ToString(),
+                        Cidade = x.Cidade,
+                        Estado = x.Estado,
+                        Requisitos = x.Requisitos,
+                        Beneficios = x.Beneficios,
+                        Favoritado = true
 
-                }).ToArray();
+                    }).ToArray();
                 return vagas;
 
             }
         }
         [HttpGet("GetVagaPorId")]
-        public ViewModel.Vaga GetVagaPorId(int idVaga)
+        public ViewModel.Vaga GetVagaPorId(int idVaga, int idCandidato)
         {
+            using (var vagaFavoritaService = new VagaFavoritaService())
             using (var service = new VagaService())
             {
                 var vaga = service.Buscar(idVaga);
@@ -133,11 +135,11 @@ namespace Global.API.Areas.Mobile.Controllers
                     Cidade = vaga.Cidade,
                     Estado = vaga.Estado,
                     Requisitos = vaga.Requisitos,
-                    Beneficios = vaga.Beneficios
-
+                    Beneficios = vaga.Beneficios,
+                    Favoritado = vagaFavoritaService.IsVagaFavoritadaPorCandidato(idCandidato, vaga.Id)
                 };
-            
-            
+
+
             }
 
 
@@ -148,7 +150,7 @@ namespace Global.API.Areas.Mobile.Controllers
         {
             var service = new VagaFavoritaService();
             bool sucesso = service.Salvar(vagaFavorita);
-            
+
             return sucesso;
         }
 

@@ -44,6 +44,11 @@ namespace Global.DAO.Service
                 .Get(x => x.IdCandidato == IdCandidato, includeProperties: "IdVagaNavigation,IdVagaNavigation.IdCargoNavigation,IdVagaNavigation.IdProcessoSeletivoNavigation,IdVagaNavigation.IdProcessoSeletivoNavigation.IdEmpresaNavigation").Select(x=>x.IdVagaNavigation).ToArray();
         }
 
+        public bool IsVagaFavoritadaPorCandidato(int IdCandidato, int idVaga)
+        {
+            return Repository.Get(x => x.IdCandidato == IdCandidato && x.IdVaga == idVaga).FirstOrDefault() != null;
+        }
+
 
         //public VagaFavorita[] BuscarVagaFavoritasGerais()
         //{
