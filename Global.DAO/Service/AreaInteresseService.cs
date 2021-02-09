@@ -34,6 +34,13 @@ namespace Global.DAO.Service
 
         }
 
+        public AreaInteresse[] BuscarTodos()
+        {
+
+            return Repository.Get().ToArray();
+
+        }
+
         public bool Salvar(AreaInteresse Dados)
         {
             

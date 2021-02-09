@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -59,27 +60,32 @@ namespace Global.API.Areas.Mobile.Controllers
                 {
                     nomeArquivo = anexo.NomeArquivo,
                     tipoArquivo = anexo.Extensao,
-                    fileStream = anexo.ByteArray
+                    base64string = anexo.Base64Code
                 };
 
             }
 
 
         }
+
+        
+
         [HttpPost("SalvarArquivo")]
         public object SalvarArquivo([FromBody] ViewModel.Documento anexo)
         {
+
             using (var service = new DocumentoService())
             {
 
                 Documento _anexo = new Documento()
                 {
 
-                    ByteArray = Encoding.ASCII.GetBytes(anexo.ByteArray),
+                    ByteArray = Convert.FromBase64String(anexo.ByteArray),
                     IdCandidato = anexo.IdCandidato,
                     IdEnumTipoDocumento = anexo.IdEnumTipoDocumento,
                     NomeArquivo = anexo.NomeArquivo,
-                    Extensao = anexo.Extensao
+                    Extensao = anexo.Extensao,
+                    Base64Code = anexo.ByteArray
 
                 };
 

@@ -242,7 +242,7 @@ namespace Global.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env )
         {
 
             if (env.IsDevelopment())
@@ -265,6 +265,13 @@ namespace Global.API
 
             app.UseStatusCodePages(context =>
             {
+                var agent= context.HttpContext.Request.Headers["User-Agent"].ToString().ToLower();
+                if (agent.Contains("android") || agent.Contains("ios"))
+                {
+                    return Task.CompletedTask;
+
+                }
+
                 var response = context.HttpContext.Response;
 
                 if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
@@ -275,7 +282,6 @@ namespace Global.API
                 {
                     response.Redirect($"/HttpError/{response.StatusCode}");
                 }
-
 
                 return Task.CompletedTask;
 

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Global.DAO.Model;
 using Global.DAO.Service;
+using Global.Util;
+using Global.Util.SystemEnumerations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +16,69 @@ namespace Global.API.Areas.Mobile.Controllers
     [Authorize]
     public class CandidaturaController : ControllerBase
     {
+
+        [HttpGet("ListarCandidaturas")]
+        public ViewModel.Candidatura[] ListarCandidaturas(int idCandidato)
+        {
+            using (var service = new CandidaturaService())
+            {
+                return service.ListarPorCandidato(idCandidato)
+                    .Select(x => new ViewModel.Candidatura
+                    {
+                        IdCandidatura = x.Id,
+                        NomeCargo = x.IdVagaNavigation.IdCargoNavigation.NomeCargo,
+                        NomeEmpresa = x.IdVagaNavigation.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
+                        AngularRoute = "tab3/modal-vaga",
+                        QueryParams = "{\"idVaga\":" + x.IdVaga + "}",
+                        Situacao = EnumExtensions.GetEnumDisplayName((StatusCandidatura)x.StatusCandidatura)
+
+                    }).ToArray();
+
+            }
+        }
+        [HttpGet("ListarCandidaturasAntigas")]
+        public object[] ListarCandidaturasAntigas(int idCandidato, int idUltimaCandidatura)
+        {
+            using (var service = new CandidaturaService())
+            {
+                return service.ListarPorCandidatoAntigas(idCandidato, idUltimaCandidatura)
+                    .Select(x => new ViewModel.Candidatura
+                    {
+                        IdCandidatura = x.Id,
+                        NomeCargo = x.IdVagaNavigation.IdCargoNavigation.NomeCargo,
+                        NomeEmpresa = x.IdVagaNavigation.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
+                        AngularRoute = "tab3/modal-vaga",
+                        QueryParams = "{\"idVaga\":" + x.IdVaga + "}",
+                        Situacao = EnumExtensions.GetEnumDisplayName((StatusCandidatura)x.StatusCandidatura)
+
+                    }).ToArray();
+
+            }
+        }
+
+        [HttpGet("ListarCandidaturasRecentes")]
+        public object[] ListarCandidaturasRecentes(int idCandidato, int idPrimeiraCandidatura)
+        {
+            using (var service = new CandidaturaService())
+            {
+                return service.ListarPorCandidatoRecentes(idCandidato, idPrimeiraCandidatura)
+                    .Select(x => new ViewModel.Candidatura
+                    {
+                        IdCandidatura = x.Id,
+                        NomeCargo = x.IdVagaNavigation.IdCargoNavigation.NomeCargo,
+                        NomeEmpresa = x.IdVagaNavigation.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
+                        AngularRoute = "tab3/modal-vaga",
+                        QueryParams = "{\"idVaga\":" + x.IdVaga + "}",
+                        Situacao = EnumExtensions.GetEnumDisplayName((StatusCandidatura)x.StatusCandidatura)
+
+                    }).ToArray();
+
+            }
+        }
+
+
+
+
         [HttpPost("GerarCandidatura")]
         public object GerarCandidatura([FromBody] Candidatura candidatura)
         {
@@ -35,7 +100,7 @@ namespace Global.API.Areas.Mobile.Controllers
                     return new
                     {
                         ok = false,
-                        message =  "Voce já se candidatou para essa vaga! Escolha uma vaga diferente" 
+                        message = "Voce já se candidatou para essa vaga! Escolha uma vaga diferente"
                     };
 
 

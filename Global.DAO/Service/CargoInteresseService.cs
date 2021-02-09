@@ -33,6 +33,12 @@ namespace Global.DAO.Service
             return Repository.Get(x => x.Id == Id).FirstOrDefault();
 
         }
+        public CargoInteresse[] BuscarTodos() 
+        {
+
+            return Repository.Get().ToArray();
+
+        }
 
         public bool Salvar(CargoInteresse Dados)
         {

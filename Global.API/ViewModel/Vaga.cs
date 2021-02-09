@@ -13,11 +13,13 @@ namespace Global.API.ViewModel
         public string NomeEmpresa { get; set; }
         public string Salario { get; set; }
         public string Modalidade { get; set; }
+        public string Endereco { get; set; }
         public string Cidade { get; set; }
         public string Estado { get; set; }
         public string Requisitos { get; set; }
         public string Beneficios { get; set; }
         public bool Favoritado { get; set; }
+
 
 
 

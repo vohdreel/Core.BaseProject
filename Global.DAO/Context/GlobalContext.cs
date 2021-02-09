@@ -49,6 +49,7 @@ namespace Global.DAO.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<AreaInteresse>(entity =>
@@ -65,7 +66,8 @@ namespace Global.DAO.Context
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_EnumAgrupamento_AreaInteresse");
             });
-          
+
+           
 
             modelBuilder.Entity<Being>(entity =>
             {
@@ -91,6 +93,8 @@ namespace Global.DAO.Context
                 entity.Property(e => e.Cid).IsUnicode(false);
 
                 entity.Property(e => e.Cidade).IsUnicode(false);
+
+                entity.Property(e => e.Complemento).IsUnicode(false);
 
                 entity.Property(e => e.Cpf).IsUnicode(false);
 
@@ -136,9 +140,17 @@ namespace Global.DAO.Context
 
                 entity.Property(e => e.Idlegado).IsUnicode(false);
 
+                entity.Property(e => e.Latitude)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
                 entity.Property(e => e.LocalPreferencia).IsUnicode(false);
 
                 entity.Property(e => e.LocalPreferenciaSecundario).IsUnicode(false);
+
+                entity.Property(e => e.Longitude)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.Nacionalidade).IsUnicode(false);
 
@@ -147,6 +159,8 @@ namespace Global.DAO.Context
                 entity.Property(e => e.NomeMae).IsUnicode(false);
 
                 entity.Property(e => e.NomePai).IsUnicode(false);
+
+                entity.Property(e => e.Numero).IsUnicode(false);
 
                 entity.Property(e => e.NumeroEcomplemetno).IsUnicode(false);
 
@@ -212,6 +226,8 @@ namespace Global.DAO.Context
 
             modelBuilder.Entity<Documento>(entity =>
             {
+                entity.Property(e => e.Base64Code).IsUnicode(false);
+
                 entity.Property(e => e.Extensao).IsUnicode(false);
 
                 entity.Property(e => e.NomeArquivo).IsUnicode(false);
@@ -357,6 +373,8 @@ namespace Global.DAO.Context
 
                 entity.Property(e => e.Cidade).IsUnicode(false);
 
+                entity.Property(e => e.Complemento).IsUnicode(false);
+
                 entity.Property(e => e.Endereco).IsUnicode(false);
 
                 entity.Property(e => e.Estado).IsUnicode(false);
@@ -364,6 +382,8 @@ namespace Global.DAO.Context
                 entity.Property(e => e.Latitude).IsUnicode(false);
 
                 entity.Property(e => e.Longitude).IsUnicode(false);
+
+                entity.Property(e => e.Numero).IsUnicode(false);
 
                 entity.Property(e => e.Requisitos).IsUnicode(false);
 

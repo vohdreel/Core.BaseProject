@@ -31,14 +31,17 @@ namespace Global.Util.SystemEnumerations
     {
         [Display(Name = "Inscrito")]
         Inscrito = 1,
+        [Display(Name = "Participando")]
+        Participando = 2,
         [Display(Name = "Aprovado")]
-        Aprovado = 2,
+        Aprovado = 3,
         [Display(Name = "Reprovado")]
-        Reprovado = 3,
+        Reprovado = 4,
         [Display(Name = "Em Entrevista")]
-        EmEntrevista = 4,
+        EmEntrevista = 5,
         [Display(Name = "Em Teste")]
-        EmTeste = 5
+        EmTeste = 6
+        
     }
 
 

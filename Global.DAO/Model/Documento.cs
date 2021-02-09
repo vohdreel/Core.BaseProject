@@ -19,6 +19,7 @@ namespace Global.DAO.Model
         [Required]
         [StringLength(500)]
         public string NomeArquivo { get; set; }
+        public string Base64Code { get; set; }
 
         [ForeignKey(nameof(IdCandidato))]
         [InverseProperty(nameof(Candidato.Documento))]

@@ -283,7 +283,7 @@ namespace Global.API.Controllers
                         var token = TokenService.GenerateToken(user, roles.ToList());
 
                         HttpContext.Response.Cookies
-                            .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("APIConfig", "Environment")));
+                            .Append("access_token", token, TokenService.GenerateCookies(Environment.WebDeploy));
 
 
 

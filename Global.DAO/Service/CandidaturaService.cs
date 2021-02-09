@@ -34,6 +34,45 @@ namespace Global.DAO.Service
 
         }
 
+
+        public Candidatura[] ListarPorCandidato(int IdCandidato)
+        {
+            return Repository.Get(x => x.IdCandidato == IdCandidato,
+                includeProperties: "IdVagaNavigation,IdVagaNavigation.IdCargoNavigation,IdVagaNavigation.IdCargoNavigation,IdVagaNavigation.IdProcessoSeletivoNavigation.IdEmpresaNavigation")
+                                    .OrderByDescending(x => x.Id)
+
+                .Take(5)
+
+                .ToArray();
+
+
+        }
+
+        public Candidatura[] ListarPorCandidatoAntigas(int IdCandidato, int IdUltimaCandidatura)
+        {
+
+            return Repository.Get(x => x.IdCandidato == IdCandidato && x.Id < IdUltimaCandidatura,
+                includeProperties: "IdVagaNavigation,IdVagaNavigation.IdCargoNavigation,IdVagaNavigation.IdCargoNavigation,IdVagaNavigation.IdProcessoSeletivoNavigation.IdEmpresaNavigation")
+                                    .OrderByDescending(x => x.Id)
+
+                .Take(5)
+                   .ToArray();
+
+        }
+
+        public Candidatura[] ListarPorCandidatoRecentes(int IdCandidato, int IdPrimeiraCandidatura)
+        {
+
+            return Repository.Get(x => x.IdCandidato == IdCandidato && x.Id > IdPrimeiraCandidatura,
+                includeProperties: "IdVagaNavigation,IdVagaNavigation.IdCargoNavigation,IdVagaNavigation.IdCargoNavigation,IdVagaNavigation.IdProcessoSeletivoNavigation.IdEmpresaNavigation")
+                    .OrderByDescending(x => x.Id)
+
+                   .Take(5)
+                   .ToArray();
+
+        }
+
+
         public bool Salvar(Candidatura Dados)
         {
 

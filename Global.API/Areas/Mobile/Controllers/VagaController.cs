@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Global.DAO.Model;
 using Global.DAO.Service;
+using Global.Util;
 using Global.Util.SystemEnumerations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +37,8 @@ namespace Global.API.Areas.Mobile.Controllers
                     Estado = x.Estado,
                     Requisitos = x.Requisitos,
                     Beneficios = x.Beneficios,
-                    Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any()
+                    Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any(),
+                    Endereco = service.MontarVagaEndereco(x)
 
                 }).ToArray();
 
@@ -60,7 +62,8 @@ namespace Global.API.Areas.Mobile.Controllers
                     Estado = x.Estado,
                     Requisitos = x.Requisitos,
                     Beneficios = x.Beneficios,
-                    Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any()
+                    Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any(),
+                    Endereco = service.MontarVagaEndereco(x)
 
                 }).ToArray();
                 return vagas;
@@ -84,12 +87,51 @@ namespace Global.API.Areas.Mobile.Controllers
                     Estado = x.Estado,
                     Requisitos = x.Requisitos,
                     Beneficios = x.Beneficios,
-                    Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any()
+                    Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any(),
+                    Endereco = service.MontarVagaEndereco(x)
 
                 }).ToArray();
                 return vagas;
 
             }
+        }
+
+
+        [AllowAnonymous]
+        [HttpGet("GetVagasPorDistancia")]
+        public ViewModel.Vaga[] GetVagasPorDistancia(int idCandidato, int distanciaMinima, int distanciaMaxima)
+        {
+
+            using (var candidatoService = new CandidatoService())
+            using (var service = new VagaService())
+            {
+                Coordinates coordenadasCandidato = candidatoService.BuscarCoordenadasCandidato(idCandidato);
+
+                var vagas = service
+                    .BuscarVagasPorDistancia(coordenadasCandidato, distanciaMinima, distanciaMaxima)
+                    .Select(x => new ViewModel.Vaga
+                    {
+                        IdVaga = x.Id,
+                        NomeCargo = x.IdCargoNavigation.NomeCargo,
+                        NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
+                        Salario = x.Salario?.ToString("c"),
+                        Modalidade = ((VagaModalidade)x.Modalidade).ToString(),
+                        Cidade = x.Cidade,
+                        Estado = x.Estado,
+                        Requisitos = x.Requisitos,
+                        Beneficios = x.Beneficios,
+                        Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any(),
+                        Endereco = service.MontarVagaEndereco(x)
+
+                    }).ToArray();
+                return vagas;
+
+            }
+
+
+
+
+
         }
 
 
@@ -136,7 +178,8 @@ namespace Global.API.Areas.Mobile.Controllers
                     Estado = vaga.Estado,
                     Requisitos = vaga.Requisitos,
                     Beneficios = vaga.Beneficios,
-                    Favoritado = vagaFavoritaService.IsVagaFavoritadaPorCandidato(idCandidato, vaga.Id)
+                    Favoritado = vagaFavoritaService.IsVagaFavoritadaPorCandidato(idCandidato, vaga.Id),
+                    Endereco = service.MontarVagaEndereco(x)
                 };
 
 

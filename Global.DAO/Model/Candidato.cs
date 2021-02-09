@@ -125,6 +125,14 @@ namespace Global.DAO.Model
         public string IdAspNetUsers { get; set; }
         [Column("FCMToken")]
         public string Fcmtoken { get; set; }
+        [StringLength(100)]
+        public string Latitude { get; set; }
+        [StringLength(100)]
+        public string Longitude { get; set; }
+        [StringLength(20)]
+        public string Numero { get; set; }
+        [StringLength(40)]
+        public string Complemento { get; set; }
 
         [InverseProperty("IdCandidatoNavigation")]
         public virtual ICollection<AreaInteresse> AreaInteresse { get; set; }

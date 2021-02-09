@@ -157,7 +157,7 @@ namespace Global.API.Areas.Mobile.Controllers
                 UserId = this.User.FindFirstValue(ClaimTypes.Name),
                 Email = this.User.FindFirstValue("IdAspNetUser")
 
-                
+
             };
         }
 
@@ -208,6 +208,59 @@ namespace Global.API.Areas.Mobile.Controllers
             }
             else
                 return new { ok = false };
+
+
+        }
+
+        [AllowAnonymous]
+        [HttpGet("CarregarConfiguracoseInteresse")]
+        public object CarregarConfiguracoseInteresse()
+        {
+
+
+            using (var areaService = new EnumAgrupamentoService())
+            using (var cargoService = new CargoService())
+            {
+                EnumAgrupamento[] areas = areaService.BuscarTodos();
+                Cargo[] cargos = cargoService.BuscarTodos();
+
+                return new
+                {
+                    areas,
+                    cargos
+
+                };
+
+            }
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost("SalvarPreferencias")]
+        public object SalvarPreferencias([FromBody] ViewModel.Preferencias preferencias)
+        {
+
+            using (var areaService = new AreaInteresseService())
+            using (var cargoService = new CargoInteresseService())
+            {
+
+                bool sucesso = true;
+                foreach(var area in preferencias.areasInteresse)
+                    sucesso = areaService.Salvar(area);
+
+                foreach (var cargo in preferencias.cargosInteresse)
+                    sucesso = cargoService.Salvar(cargo);
+
+                return new
+                {
+                    ok = sucesso
+                };
+
+
+            }
+
+
+
 
 
         }

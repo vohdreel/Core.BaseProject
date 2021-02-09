@@ -2,6 +2,7 @@
 using Global.DAO.Model;
 using Global.DAO.Procedure.Models;
 using Global.DAO.Repository;
+using Global.Util;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -62,6 +63,13 @@ namespace Global.DAO.Service
         {
             Candidato candidato = Repository.Get(x => x.Id == IdCandidato).FirstOrDefault();
             return candidato.MaterConectado;
+
+        }
+
+
+        public Coordinates BuscarCoordenadasCandidato(int idCandidato) {
+            Candidato candidato = BuscarCandidato(idCandidato);
+            return new Coordinates(candidato.Latitude, candidato.Longitude);
 
         }
 

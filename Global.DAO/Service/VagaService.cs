@@ -48,7 +48,7 @@ namespace Global.DAO.Service
                 .ThenByDescending(x => x.IdProcessoSeletivoNavigation.DataInicioProcesso)
                 .Take(5)
                 .ToArray();
-               
+
         }
 
         public Vaga[] BuscarVagasGeraisAntigas(int idUltimaVaga)
@@ -75,6 +75,61 @@ namespace Global.DAO.Service
 
         }
 
+        public Vaga[] BuscarVagasPorDistancia(Coordinates coordenadasCandidato, int distanciaMinima, int distanciaMaxima)
+        {
+            List<Vaga> vagasCompativies = new List<Vaga>();
+            List<Vaga> vagas = Repository
+                .Get(includeProperties: "IdProcessoSeletivoNavigation,IdProcessoSeletivoNavigation.IdEmpresaNavigation,IdCargoNavigation,VagaFavorita").ToList();
+
+            foreach (var vaga in vagas)
+            {
+                Vaga _vaga = vaga;
+
+                //Se a vaga ainda não possui latitude ou longitude, preencher usando o helper de coordenadas
+                if (string.IsNullOrEmpty(vaga.Latitude) || string.IsNullOrEmpty(vaga.Longitude))
+                {
+                    _vaga = PreencherCoordenadas(_vaga);
+                    //se ainda estiver vazia, pular essa comparação
+                    if (string.IsNullOrEmpty(vaga.Latitude) || string.IsNullOrEmpty(vaga.Longitude))
+                        continue;
+                }
+
+                Coordinates coordenadaVaga = new Coordinates(_vaga.Latitude, _vaga.Longitude);
+                double distancia = GeoCoordinationExtension
+                    .GetDistanceBetweenLocations(coordenadasCandidato, coordenadaVaga);
+
+                if (distancia >= distanciaMinima && distancia <= distanciaMaxima) {
+                    vagasCompativies.Add(_vaga);
+                }
+
+            }
+
+            return vagasCompativies.ToArray();
+        }
+
+
+        public string MontarVagaEndereco(Vaga vaga)
+        {
+            string fullAddress = "";
+            if (string.IsNullOrEmpty(vaga.Endereco)) return "";
+            else
+            {
+                fullAddress += vaga.Endereco.Trim();
+                if (!string.IsNullOrEmpty(vaga.Numero))
+                {
+                    fullAddress += (", " + vaga.Numero.Trim());
+                    if (!string.IsNullOrEmpty(vaga.Cep))
+                    {
+                        fullAddress += (" - " + vaga.Cep.Trim());
+                    }
+                }
+            }
+
+            return fullAddress;
+
+
+        }
+
 
         public bool Salvar(Vaga Dados)
         {
@@ -90,6 +145,38 @@ namespace Global.DAO.Service
             bool resultado = Repository.Update(Dados);
 
             return resultado;
+
+        }
+
+        public Vaga PreencherCoordenadas(Vaga dados)
+        {
+            string fullAddress = "";
+            //se nao houver endereço, impossivel
+            if (string.IsNullOrEmpty(dados.Endereco)) return dados;
+            else
+            {
+                fullAddress += dados.Endereco.Trim().Replace(" ", "+");
+                if (!string.IsNullOrEmpty(dados.Numero))
+                {
+                    fullAddress += (",+" + dados.Numero.Trim());
+                    if (!string.IsNullOrEmpty(dados.Cep))
+                    {
+                        fullAddress += ("+-+" + dados.Cep.Trim());
+                    }
+                }
+            }
+
+            string key = "AIzaSyBDZN9proIwpDe18stl_EzVQjnxYTbdQLY";
+
+            Coordinates coordinates = GeoCoordinationExtension
+                .GetCoordinatesFromApi(fullAddress, key);
+
+            dados.Latitude = coordinates?.Latitude.ToString() ?? null;
+            dados.Longitude = coordinates?.Longitude.ToString() ?? null;
+
+            bool resultado = Repository.Update(dados);
+
+            return dados;
 
         }
 

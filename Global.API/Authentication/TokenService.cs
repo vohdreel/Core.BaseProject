@@ -15,7 +15,7 @@ using Newtonsoft.Json.Linq;
 namespace Gyan.Web.Identity.Data.Authentication
 {
 
-    public enum Environment { Development, Production }
+    public enum Environment { Development, Production, WebDeploy }
 
     public static class Settings
     {

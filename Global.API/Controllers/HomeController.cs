@@ -13,6 +13,9 @@ using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 using Microsoft.Extensions.Configuration;
 using Environment = Gyan.Web.Identity.Data.Authentication.Environment;
 using Global.Util;
+using Global.DAO.Model;
+using Global.DAO.Service;
+using Newtonsoft.Json.Linq;
 
 namespace Global.API.Controllers
 {
@@ -118,12 +121,18 @@ namespace Global.API.Controllers
         [HttpGet("location")]
         public dynamic InnerRequest()
         {
-            var teste = HttpHelper
-                .Get<string>(
-                "http://localhost:4000/",
-                "token");
+            object parameters = new
+            {
+                address = "Rua+Manuel+Onha,+459+-+03192-100",
+                key = "AIzaSyBDZN9proIwpDe18stl_EzVQjnxYTbdQLY"
 
-            //var distancia = GeoCoordinationExtension.GetDistanceBetweenLocations();
+            };
+            var teste = HttpHelper
+                .Get<JObject>(
+                "https://maps.googleapis.com/maps/api/geocode/json",
+                "json",
+                parameters);
+
 
             return 0;
 
@@ -255,7 +264,7 @@ namespace Global.API.Controllers
             {
                 CookieOptions cookieOptions = TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment"));
                 cookieOptions.Expires = DateTime.Now.AddDays(-1);
-                HttpContext.Response.Cookies.Append(cookie.Key, null, TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment")));
+                HttpContext.Response.Cookies.Append(cookie.Key, "", TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment")));
                 //HttpContext.Response.Cookies.Delete(cookie.Key);
             }
             return Json("Logged Out");
