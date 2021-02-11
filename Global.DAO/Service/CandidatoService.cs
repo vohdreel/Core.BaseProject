@@ -43,6 +43,13 @@ namespace Global.DAO.Service
         
         }
 
+        public bool AtualizarCandidato(Candidato candidato)
+        {
+            return Repository.Update(candidato);
+
+
+        }
+
         public Candidato BuscarCandidato(string IdAspNetUsers)
         {
 

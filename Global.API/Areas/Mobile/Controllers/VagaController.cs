@@ -179,7 +179,7 @@ namespace Global.API.Areas.Mobile.Controllers
                     Requisitos = vaga.Requisitos,
                     Beneficios = vaga.Beneficios,
                     Favoritado = vagaFavoritaService.IsVagaFavoritadaPorCandidato(idCandidato, vaga.Id),
-                    Endereco = service.MontarVagaEndereco(x)
+                    Endereco = service.MontarVagaEndereco(vaga)
                 };
 
 

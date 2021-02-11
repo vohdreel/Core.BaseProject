@@ -178,7 +178,7 @@ namespace Global.API.Areas.Mobile.Controllers
         public async Task<object> SingUp([FromBody] dynamic userInfo)
         {
             var user = new IdentityUser();
-            user.UserName = userInfo.Nome;
+            user.UserName = userInfo.UserName;
             user.Email = userInfo.Email;
 
             string userPWD = userInfo.Password;
@@ -193,7 +193,15 @@ namespace Global.API.Areas.Mobile.Controllers
                     IdAspNetUsers = user.Id,
                     Cpf = userInfo.Cpf,
                     Nome = userInfo.Nome,
-                    Email = userInfo.Email
+                    Email = userInfo.Email,
+                    TelefoneCandidato = new List<TelefoneCandidato>() {
+                        new TelefoneCandidato(){
+                            IdTelefoneNavigation = new Telefone(){
+                                Numero = userInfo.Telefone
+                            }
+                        }
+                    }
+
                 };
 
                 CandidatoService candidatoService = new CandidatoService();
@@ -245,7 +253,7 @@ namespace Global.API.Areas.Mobile.Controllers
             {
 
                 bool sucesso = true;
-                foreach(var area in preferencias.areasInteresse)
+                foreach (var area in preferencias.areasInteresse)
                     sucesso = areaService.Salvar(area);
 
                 foreach (var cargo in preferencias.cargosInteresse)
