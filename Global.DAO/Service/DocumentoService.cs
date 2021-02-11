@@ -43,19 +43,15 @@ namespace Global.DAO.Service
 
         public bool Excluir(int Id)
         {
-            var dados = Repository.GetByID(Id);
-            bool resultado = Repository.Delete(dados);
+            bool resultado = RepositoryDocumento.Delete(Id);
 
             return resultado;
         }
 
         public IEnumerable<Documento> Listar() {
-        
+
+            return RepositoryDocumento.Get();
         }
 
-        public GlobalContext GetContext()
-        {
-            return Repository.GetContext();
-        }
     }
 }

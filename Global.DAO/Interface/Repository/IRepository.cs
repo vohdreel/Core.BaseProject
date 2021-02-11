@@ -9,6 +9,7 @@ namespace Global.DAO.Interface.Repository
     public interface IRepository<TEntity>
         where TEntity : class
     {
+
         bool Insert(TEntity entity);
 
         bool InsertAll(IEnumerable<TEntity> entities);
