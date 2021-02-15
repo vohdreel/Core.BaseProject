@@ -58,6 +58,14 @@ namespace Global.DAO.Service
 
         }
 
+        public bool ExisteCpfUsuario(string cpf)
+        {
+
+            return Repository.Get(x => x.Cpf == cpf).FirstOrDefault() != null;
+
+
+        }
+
         public void AlternarMaterConectado(string IdAspNetUsers, bool value)
         {
             Candidato candidato = Repository.Get(x => x.IdAspNetUsers == IdAspNetUsers).FirstOrDefault();

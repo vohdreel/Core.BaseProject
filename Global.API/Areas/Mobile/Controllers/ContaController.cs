@@ -28,18 +28,24 @@ namespace Global.API.Areas.Mobile.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IConfiguration _config;
+        private readonly IEmailService _emailService;
+
 
         public ContaController(
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
             SignInManager<IdentityUser> signInManager,
-            IConfiguration config
+            IConfiguration config,
+            IEmailService emailService
+
             )
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _config = config;
+            _emailService = emailService;
+
         }
 
         [HttpGet("Login")]
@@ -51,6 +57,14 @@ namespace Global.API.Areas.Mobile.Controllers
             if (user != null && await _userManager.CheckPasswordAsync(user, password))
             {
                 // user is valid do whatever you want
+                if (!await _userManager.IsEmailConfirmedAsync(user))
+                    return new
+                    {
+                        unverified = true,
+                        Ok = false,
+                        Message = "Essa conta ainda não foi confirmada. Por favor verifique sua caixa de mensagens."
+                    };
+
 
                 var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
 
@@ -147,6 +161,84 @@ namespace Global.API.Areas.Mobile.Controllers
 
         }
 
+        public async Task<bool> SendEmailForEmailConfirmation(string email, IdentityUser user)
+        {
+            try
+            {
+                await _userManager.UpdateSecurityStampAsync(user);
+
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                var emailConfirmLink = Url.Action("ConfirmEmail", "Account",
+                            new { email = email, token = token }, Request.Scheme);
+
+                UserEmailOptions options = new UserEmailOptions
+                {
+                    ToEmails = new List<string>() { user.Email },
+                    PlaceHolders = new List<KeyValuePair<string, string>>()
+                        {
+                            new KeyValuePair<string, string>("{{UserName}}", user.UserName),
+                            new KeyValuePair<string, string>("{{Link}}", emailConfirmLink)
+                        }
+                };
+
+                await _emailService.SendEmailForEmailConfirmation(options);
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+        }
+
+        [HttpGet("EnviarLinkRedefinirSenha")]
+        [AllowAnonymous]
+        public async Task<object> ForgotPassword(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user != null && await _userManager.IsEmailConfirmedAsync(user))
+            {
+                await _userManager.RemoveAuthenticationTokenAsync(user, TokenOptions.DefaultProvider, "ResetPassword");
+
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                var passwordResetLink = Url.Action("ResetPassword", "Account",
+                        new { email = email, token = token }, Request.Scheme);
+
+                UserEmailOptions options = new UserEmailOptions
+                {
+                    ToEmails = new List<string>() { user.Email },
+                    PlaceHolders = new List<KeyValuePair<string, string>>()
+                        {
+                            new KeyValuePair<string, string>("{{UserName}}", user.UserName),
+                            new KeyValuePair<string, string>("{{Link}}", passwordResetLink)
+                        }
+                };
+
+                await _emailService.SendEmailForForgotPassword(options);
+
+                //_logger.Log(LogLevel.Warning, passwordResetLink);
+
+                return new
+                {
+                    ok = true,
+                    message = "Enviamos pare esse endereço de email as instruções para redefinir sua senha.<br /><br />" +
+                        "Por favor, verifique sua caixa de mensagens (Em alguns casos, a mensagem pode ser marcado como spam)!"
+
+                };
+            }
+
+            return new
+            {
+                ok = false,
+                message = "Não existe nenhuma conta registrada usando este email.<br /><br />" +
+                        "Verifique se digitou o endereço de email corretamente e tente novamente!"
+
+            };
+
+        }
 
         [Authorize]
         [HttpGet("GetClaims")]
@@ -172,6 +264,20 @@ namespace Global.API.Areas.Mobile.Controllers
             };
         }
 
+        [AllowAnonymous]
+        [HttpGet("VerificarCpf")]
+        public async Task<object> VerifyCpf(string cpf)
+        {
+            using (var service = new CandidatoService())
+            {
+                return new
+                {
+                    ok = !service.ExisteCpfUsuario(cpf)
+                };
+            }
+        }
+
+
 
         [AllowAnonymous]
         [HttpPost("CadastrarUsuario")]
@@ -179,6 +285,7 @@ namespace Global.API.Areas.Mobile.Controllers
         {
             var user = new IdentityUser();
             user.UserName = userInfo.UserName;
+            user.UserName = user.UserName.RemoveDiacritics();
             user.Email = userInfo.Email;
 
             string userPWD = userInfo.Password;
@@ -205,11 +312,20 @@ namespace Global.API.Areas.Mobile.Controllers
                 };
 
                 CandidatoService candidatoService = new CandidatoService();
-                candidatoService.CadastrarCandidato(candidato);
+                bool success = candidatoService.CadastrarCandidato(candidato);
+
+                if (success)
+                {
+                    try
+                    {
+                        await SendEmailForEmailConfirmation(user.Email, user);
+                    }
+                    catch (Exception e) { }
+                }
 
                 return new
                 {
-                    ok = true,
+                    ok = success,
                     IdCandidato = candidato.Id
 
                 };

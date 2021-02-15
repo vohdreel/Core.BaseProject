@@ -45,9 +45,40 @@ namespace Global.DAO.Service
             return Repository
                 .Get(includeProperties: "IdProcessoSeletivoNavigation,IdProcessoSeletivoNavigation.IdEmpresaNavigation,IdCargoNavigation,VagaFavorita")
                 .OrderByDescending(x => x.Id)
-                .ThenByDescending(x => x.IdProcessoSeletivoNavigation.DataInicioProcesso)
                 .Take(5)
                 .ToArray();
+
+        }
+
+        public Vaga[] BuscarVagasCampoDeBusca(string stringBusca)
+        {
+            List<Vaga> result = new List<Vaga>();
+            List<Vaga> vagas = Repository.Get(includeProperties: "IdProcessoSeletivoNavigation,IdProcessoSeletivoNavigation.IdEmpresaNavigation,IdCargoNavigation").ToList();
+            foreach (var vaga in vagas)
+            {
+                string vagaNome = vaga.IdCargoNavigation.NomeCargo.RemoveDiacritics().ToLower();
+                if (vagaNome.Contains(stringBusca.RemoveDiacritics().ToLower()))
+                    result.Add(vaga);
+            }
+            
+            return result.ToArray();
+
+        }
+
+        public Vaga[] BuscarVagasCampoDeBuscaAntigas(string stringBusca, int idUltimaVaga)
+        {
+            return Repository
+                       .Get(x =>
+                        x.Id < idUltimaVaga &&
+                       x.IdCargoNavigation
+                       .NomeCargo
+                       .RemoveDiacritics()
+                       .ToLower()
+                       .Contains(stringBusca.RemoveDiacritics().ToLower())
+                       , includeProperties: "IdProcessoSeletivoNavigation,IdProcessoSeletivoNavigation.IdEmpresaNavigation,IdCargoNavigation")
+                       .OrderByDescending(x => x.Id)
+                       .Take(10)
+                       .ToArray();
 
         }
 
@@ -56,8 +87,7 @@ namespace Global.DAO.Service
             return Repository
                     .Get(x => x.Id < idUltimaVaga, includeProperties: "IdProcessoSeletivoNavigation,IdProcessoSeletivoNavigation.IdEmpresaNavigation,IdCargoNavigation")
                     .OrderByDescending(x => x.Id)
-                .ThenByDescending(x => x.IdProcessoSeletivoNavigation.DataInicioProcesso)
-                .Take(5)
+                    .Take(5)
                     .ToArray();
 
 
@@ -67,9 +97,8 @@ namespace Global.DAO.Service
         {
             return Repository
                     .Get(x => x.Id > idPrimeiraVaga, includeProperties: "IdProcessoSeletivoNavigation,IdProcessoSeletivoNavigation.IdEmpresaNavigation,IdCargoNavigation")
-                   .OrderByDescending(x => x.Id)
-                .ThenByDescending(x => x.IdProcessoSeletivoNavigation.DataInicioProcesso)
-                .Take(5)
+                    .OrderByDescending(x => x.Id)
+                    .Take(5)
                     .ToArray();
 
 
@@ -98,7 +127,8 @@ namespace Global.DAO.Service
                 double distancia = GeoCoordinationExtension
                     .GetDistanceBetweenLocations(coordenadasCandidato, coordenadaVaga);
 
-                if (distancia >= distanciaMinima && distancia <= distanciaMaxima) {
+                if (distancia >= distanciaMinima && distancia <= distanciaMaxima)
+                {
                     vagasCompativies.Add(_vaga);
                 }
 

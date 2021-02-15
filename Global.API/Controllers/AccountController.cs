@@ -4,6 +4,7 @@ using Global.DAO.Service;
 using Global.Util;
 using Gyan.Web.Identity.Data.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -131,6 +132,14 @@ namespace Global.API.Controllers
                 return View("ConfirmEmail", modelEmailConfirm);
 
             }
+            foreach (var cookie in HttpContext.Request.Cookies)
+            {
+                CookieOptions cookieOptions = TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"));
+                cookieOptions.Expires = DateTime.Now.AddDays(-1);
+                HttpContext.Response.Cookies.Append(cookie.Key, "", TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment")));
+                //HttpContext.Response.Cookies.Delete(cookie.Key);
+            }
+
 
             return View(model);
         }
@@ -170,6 +179,14 @@ namespace Global.API.Controllers
                     model.EmailVerified = true;
                 }
             }
+            foreach (var cookie in HttpContext.Request.Cookies)
+            {
+                CookieOptions cookieOptions = TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"));
+                cookieOptions.Expires = DateTime.Now.AddDays(-1);
+                HttpContext.Response.Cookies.Append(cookie.Key, "", TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment")));
+                //HttpContext.Response.Cookies.Delete(cookie.Key);
+            }
+
 
             return View(model);
         }
@@ -198,7 +215,7 @@ namespace Global.API.Controllers
                 await _emailService.SendEmailForEmailConfirmation(options);
                 return true;
             }
-            catch
+            catch(Exception e)
             {
                 return false;
             }

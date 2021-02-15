@@ -17,9 +17,13 @@ else
 
     @if (Model.EmailVerified == true)
     {
+        @*<div class="text-center">
+                <h4>Seu email foi verificado com sucesso!<br />Por favor, clique <a asp-action="Login">aqui</a> para fazer o login!</h4>
+            </div>*@
         <div class="text-center">
-            <h4>Seu email foi verificado com sucesso!<br />Por favor, clique <a asp-action="Login">aqui</a> para fazer o login!</h4>
-        </div>
+                <h4>Seu email foi verificado com sucesso!<br /> Agora você já pode fazer login no aplicativo Global Empregos e começar a navegar!</h4>
+            </div>
+
 
     }
     else

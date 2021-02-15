@@ -48,7 +48,6 @@ namespace Global.API.Controllers
         [Route("Index")]
         public IActionResult Index()
         {
-            _logger.LogInformation("Comi o cu de quem está lendo");
             return View();
         }
 

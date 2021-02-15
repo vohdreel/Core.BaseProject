@@ -16,7 +16,7 @@ namespace Global.API.Areas.Mobile.Controllers
     [Authorize]
     public class VagaController : ControllerBase
     {
-
+        [AllowAnonymous]
         [HttpGet("GetVagasGeraisPaginaInicial")]
         public ViewModel.Vaga[] GetVagasGeraisPaginaInicial()
         {
@@ -46,6 +46,8 @@ namespace Global.API.Areas.Mobile.Controllers
 
             }
         }
+
+        [AllowAnonymous]
         [HttpGet("GetVagasGeraisRecentes")]
         public ViewModel.Vaga[] GetVagasGeraisRecentes(int idPrimeiraVaga)
         {
@@ -71,6 +73,7 @@ namespace Global.API.Areas.Mobile.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("GetVagasGeraisAntigas")]
         public ViewModel.Vaga[] GetVagasGeraisAntigas(int idUltimaVaga)
         {
@@ -97,7 +100,60 @@ namespace Global.API.Areas.Mobile.Controllers
         }
 
 
-        [AllowAnonymous]
+        [HttpGet("SearchVagas")]
+        public ViewModel.Vaga[] GetVagasCampoDeBusca(string stringBusca)
+        {
+            using (var service = new VagaService())
+            {
+                if (string.IsNullOrEmpty(stringBusca))
+                    return null;
+
+                var vagas = service.BuscarVagasCampoDeBusca(stringBusca).Select(x => new ViewModel.Vaga
+                {
+                    IdVaga = x.Id,
+                    NomeCargo = x.IdCargoNavigation.NomeCargo,
+                    NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
+                    Salario = x.Salario?.ToString("c"),
+                    Modalidade = ((VagaModalidade)x.Modalidade).ToString(),
+                    Cidade = x.Cidade,
+                    Estado = x.Estado,
+                    Requisitos = x.Requisitos,
+                    Beneficios = x.Beneficios,
+                    Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any(),
+                    Endereco = service.MontarVagaEndereco(x)
+
+                }).ToArray();
+                return vagas;
+
+            }
+        }
+
+        [HttpGet("SearchVagasAntigas")]
+        public ViewModel.Vaga[] GetVagasCampoDeBuscaAntigas(string stringBusca, int idUltimaVaga)
+        {
+            using (var service = new VagaService())
+            {
+                var vagas = service.BuscarVagasCampoDeBuscaAntigas(stringBusca, idUltimaVaga).Select(x => new ViewModel.Vaga
+                {
+                    IdVaga = x.Id,
+                    NomeCargo = x.IdCargoNavigation.NomeCargo,
+                    NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
+                    Salario = x.Salario?.ToString("c"),
+                    Modalidade = ((VagaModalidade)x.Modalidade).ToString(),
+                    Cidade = x.Cidade,
+                    Estado = x.Estado,
+                    Requisitos = x.Requisitos,
+                    Beneficios = x.Beneficios,
+                    Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any(),
+                    Endereco = service.MontarVagaEndereco(x)
+
+                }).ToArray();
+                return vagas;
+
+            }
+        }
+
+
         [HttpGet("GetVagasPorDistancia")]
         public ViewModel.Vaga[] GetVagasPorDistancia(int idCandidato, int distanciaMinima, int distanciaMaxima)
         {
@@ -128,11 +184,9 @@ namespace Global.API.Areas.Mobile.Controllers
 
             }
 
-
-
-
-
         }
+
+
 
 
         [HttpGet("GetVagasFavoritasCandidato")]

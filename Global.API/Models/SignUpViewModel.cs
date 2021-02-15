@@ -20,7 +20,7 @@ namespace Global.API.Models
         [Required(ErrorMessage = "O campo {0} é obrigatório!")]        
         [Display(Name = "Senha")]
         [DataType(DataType.Password)]
-        [RegularExpression(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$", ErrorMessage = "A senha deve ter:<br /> <li>No mínimo 8 caracteres</li> <li>Pelo menos 1 letra maiúscula e minúscula</li> <li>Pelo menos 1 número e 1 símbolo</li>")]
+        //[RegularExpression(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$", ErrorMessage = "A senha deve ter:<br /> <li>No mínimo 8 caracteres</li> <li>Pelo menos 1 letra maiúscula e minúscula</li> <li>Pelo menos 1 número e 1 símbolo</li>")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório!")]
