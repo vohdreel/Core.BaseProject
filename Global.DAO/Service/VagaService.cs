@@ -53,32 +53,38 @@ namespace Global.DAO.Service
         public Vaga[] BuscarVagasCampoDeBusca(string stringBusca)
         {
             List<Vaga> result = new List<Vaga>();
-            List<Vaga> vagas = Repository.Get(includeProperties: "IdProcessoSeletivoNavigation,IdProcessoSeletivoNavigation.IdEmpresaNavigation,IdCargoNavigation").ToList();
+            List<Vaga> vagas = Repository.Get(includeProperties: "IdProcessoSeletivoNavigation,IdProcessoSeletivoNavigation.IdEmpresaNavigation,IdCargoNavigation.IdEnumAgrupamentoNavigation").ToList();
             foreach (var vaga in vagas)
             {
                 string vagaNome = vaga.IdCargoNavigation.NomeCargo.RemoveDiacritics().ToLower();
-                if (vagaNome.Contains(stringBusca.RemoveDiacritics().ToLower()))
+                string vagaEmpresa = vaga.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia.RemoveDiacritics().ToLower();
+                string vagaAreas = vaga.IdCargoNavigation.IdEnumAgrupamentoNavigation.NomeAgrupamento.RemoveDiacritics().ToLower();
+                if (vagaNome.Contains(stringBusca.RemoveDiacritics().ToLower()) ||
+                    vagaEmpresa.Contains(stringBusca.RemoveDiacritics().ToLower()) ||
+                    vagaAreas.Contains(stringBusca.RemoveDiacritics().ToLower()))
                     result.Add(vaga);
             }
-            
+
             return result.ToArray();
 
         }
 
         public Vaga[] BuscarVagasCampoDeBuscaAntigas(string stringBusca, int idUltimaVaga)
         {
-            return Repository
-                       .Get(x =>
-                        x.Id < idUltimaVaga &&
-                       x.IdCargoNavigation
-                       .NomeCargo
-                       .RemoveDiacritics()
-                       .ToLower()
-                       .Contains(stringBusca.RemoveDiacritics().ToLower())
-                       , includeProperties: "IdProcessoSeletivoNavigation,IdProcessoSeletivoNavigation.IdEmpresaNavigation,IdCargoNavigation")
-                       .OrderByDescending(x => x.Id)
-                       .Take(10)
-                       .ToArray();
+            List<Vaga> result = new List<Vaga>();
+            List<Vaga> vagas = Repository.Get(x => x.Id < idUltimaVaga, includeProperties: "IdProcessoSeletivoNavigation,IdProcessoSeletivoNavigation.IdEmpresaNavigation,IdCargoNavigation.IdEnumAgrupamentoNavigation").ToList();
+            foreach (var vaga in vagas)
+            {
+                string vagaNome = vaga.IdCargoNavigation.NomeCargo.RemoveDiacritics().ToLower();
+                string vagaEmpresa = vaga.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia.RemoveDiacritics().ToLower();
+                string vagaAreas = vaga.IdCargoNavigation.IdEnumAgrupamentoNavigation.NomeAgrupamento.RemoveDiacritics().ToLower();
+                if (vagaNome.Contains(stringBusca.RemoveDiacritics().ToLower()) ||
+                    vagaEmpresa.Contains(stringBusca.RemoveDiacritics().ToLower()) ||
+                    vagaAreas.Contains(stringBusca.RemoveDiacritics().ToLower()))
+                    result.Add(vaga);
+            }
+
+            return result.ToArray();
 
         }
 
@@ -137,6 +143,68 @@ namespace Global.DAO.Service
             return vagasCompativies.ToArray();
         }
 
+        public Vaga[] BuscarVagasDirecionadas(int idCandidato, int nivelMinimoCompatibilidade)
+        {
+            List<Vaga> vagasCompativies = new List<Vaga>();
+            VagaCompatibilidade[] vagasCompatibilidade = Repository
+                .GetContext()
+                .Set<VagaCompatibilidade>()
+                .FromSqlInterpolated($"EXEC [ObterVagasDirecionadas] @IdCandidato={idCandidato}")
+                .AsEnumerable()
+                .Where(x => x.Compatibilidade >= nivelMinimoCompatibilidade)
+                .OrderByDescending(x => x.IdVaga)
+                .Take(5)
+                .ToArray();
+
+            foreach (var resultado in vagasCompatibilidade)
+                vagasCompativies.Add(Buscar(resultado.IdVaga));
+
+            return vagasCompativies.ToArray();
+
+        }
+
+        public Vaga[] BuscarVagasDirecionadasAntigas(int idCandidato, int idUltimaVaga, int nivelMinimoCompatibilidade)
+        {
+            List<Vaga> vagasCompativies = new List<Vaga>();
+            VagaCompatibilidade[] vagasCompatibilidade = Repository
+                .GetContext()
+                .Set<VagaCompatibilidade>()
+                .FromSqlInterpolated($"EXEC [ObterVagasDirecionadas] @IdCandidato={idCandidato}")
+                .AsEnumerable()
+                .Where(x => x.Compatibilidade >= nivelMinimoCompatibilidade && x.IdVaga < idUltimaVaga)
+                .OrderByDescending(x => x.IdVaga)
+                .Take(5)
+                .ToArray();
+
+            foreach (var resultado in vagasCompatibilidade)
+                vagasCompativies.Add(Buscar(resultado.IdVaga));
+
+            return vagasCompativies.ToArray();
+
+        }
+
+        public Vaga[] BuscarVagasDirecionadasRecentes(int idCandidato, int idPrimeiraVaga, int nivelMinimoCompatibilidade)
+        {
+            List<Vaga> vagasCompativies = new List<Vaga>();
+            VagaCompatibilidade[] vagasCompatibilidade = Repository
+                .GetContext()
+                .Set<VagaCompatibilidade>()
+                .FromSqlInterpolated($"EXEC [ObterVagasDirecionadas] @IdCandidato={idCandidato}")
+                .AsEnumerable()
+                .Where(x => x.Compatibilidade >= nivelMinimoCompatibilidade && x.IdVaga > idPrimeiraVaga)
+                .OrderByDescending(x => x.IdVaga)
+                .Take(5)
+                .ToArray();
+
+            foreach (var resultado in vagasCompatibilidade)
+                vagasCompativies.Add(Buscar(resultado.IdVaga));
+
+            return vagasCompativies.ToArray();
+
+        }
+
+
+
 
         public string MontarVagaEndereco(Vaga vaga)
         {
@@ -157,6 +225,18 @@ namespace Global.DAO.Service
 
             return fullAddress;
 
+
+        }
+
+        public string MontarEmpresLogo(Vaga vaga)
+        {
+            string extensao = vaga.IdProcessoSeletivoNavigation.IdEmpresaNavigation.ImageLogoExtension;
+            string base64 = vaga.IdProcessoSeletivoNavigation.IdEmpresaNavigation.Base64ImageLogo;
+
+            if (!string.IsNullOrEmpty(extensao) && !string.IsNullOrEmpty(base64))
+                return extensao + ',' + base64;
+            else
+                return "https://via.placeholder.com/50x50";
 
         }
 

@@ -8,6 +8,7 @@ using Global.Util;
 using Global.Util.SystemEnumerations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace Global.API.Areas.Mobile.Controllers
 {
@@ -16,6 +17,16 @@ namespace Global.API.Areas.Mobile.Controllers
     [Authorize]
     public class VagaController : ControllerBase
     {
+
+        private readonly IConfiguration _config;
+        public VagaController(
+            IConfiguration config
+            )
+        {
+            _config = config;
+        }
+
+
         [AllowAnonymous]
         [HttpGet("GetVagasGeraisPaginaInicial")]
         public ViewModel.Vaga[] GetVagasGeraisPaginaInicial()
@@ -38,7 +49,8 @@ namespace Global.API.Areas.Mobile.Controllers
                     Requisitos = x.Requisitos,
                     Beneficios = x.Beneficios,
                     Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any(),
-                    Endereco = service.MontarVagaEndereco(x)
+                    Endereco = service.MontarVagaEndereco(x),
+                    EmpresaLogo = service.MontarEmpresLogo(x)
 
                 }).ToArray();
 
@@ -65,7 +77,8 @@ namespace Global.API.Areas.Mobile.Controllers
                     Requisitos = x.Requisitos,
                     Beneficios = x.Beneficios,
                     Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any(),
-                    Endereco = service.MontarVagaEndereco(x)
+                    Endereco = service.MontarVagaEndereco(x),
+                    EmpresaLogo = service.MontarEmpresLogo(x)
 
                 }).ToArray();
                 return vagas;
@@ -91,7 +104,90 @@ namespace Global.API.Areas.Mobile.Controllers
                     Requisitos = x.Requisitos,
                     Beneficios = x.Beneficios,
                     Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any(),
-                    Endereco = service.MontarVagaEndereco(x)
+                    Endereco = service.MontarVagaEndereco(x),
+                    EmpresaLogo = service.MontarEmpresLogo(x)
+
+                }).ToArray();
+                return vagas;
+
+            }
+        }
+
+
+        [HttpGet("GetVagasDirecionadasPaginaInicial")]
+        public ViewModel.Vaga[] GetVagasDirecionadasPaginaInicial(int idCandidato)
+        {
+            using (var service = new VagaService())
+            {
+                var vagas = service.BuscarVagasDirecionadas(idCandidato, 3).Select(x => new ViewModel.Vaga
+                {
+                    IdVaga = x.Id,
+                    NomeCargo = x.IdCargoNavigation.NomeCargo,
+                    NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
+                    Salario = x.Salario?.ToString("c"),
+                    Modalidade = ((VagaModalidade)x.Modalidade).ToString(),
+                    Cidade = x.Cidade,
+                    Estado = x.Estado,
+                    Requisitos = x.Requisitos,
+                    Beneficios = x.Beneficios,
+                    Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any(),
+                    Endereco = service.MontarVagaEndereco(x),
+                    EmpresaLogo = service.MontarEmpresLogo(x)
+
+                }).ToArray();
+
+                return vagas;
+
+            }
+        }
+
+
+        [HttpGet("GetVagasDirecionadasRecentes")]
+        public ViewModel.Vaga[] GetVagasDirecionadasRecentes(int idCandidato, int idPrimeiraVaga)
+        {
+            using (var service = new VagaService())
+            {
+                var vagas = service.BuscarVagasDirecionadasRecentes(idCandidato, idPrimeiraVaga, 3).Select(x => new ViewModel.Vaga
+                {
+                    IdVaga = x.Id,
+                    NomeCargo = x.IdCargoNavigation.NomeCargo,
+                    NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
+                    Salario = x.Salario?.ToString("c"),
+                    Modalidade = ((VagaModalidade)x.Modalidade).ToString(),
+                    Cidade = x.Cidade,
+                    Estado = x.Estado,
+                    Requisitos = x.Requisitos,
+                    Beneficios = x.Beneficios,
+                    Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any(),
+                    Endereco = service.MontarVagaEndereco(x),
+                    EmpresaLogo = service.MontarEmpresLogo(x)
+
+                }).ToArray();
+                return vagas;
+
+            }
+        }
+
+
+        [HttpGet("GetVagasDirecionadasAntigas")]
+        public ViewModel.Vaga[] GetVagasDirecionadasAntigas(int idCandidato, int idUltimaVaga)
+        {
+            using (var service = new VagaService())
+            {
+                var vagas = service.BuscarVagasDirecionadasAntigas(idCandidato,idUltimaVaga, 3).Select(x => new ViewModel.Vaga
+                {
+                    IdVaga = x.Id,
+                    NomeCargo = x.IdCargoNavigation.NomeCargo,
+                    NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
+                    Salario = x.Salario?.ToString("c"),
+                    Modalidade = ((VagaModalidade)x.Modalidade).ToString(),
+                    Cidade = x.Cidade,
+                    Estado = x.Estado,
+                    Requisitos = x.Requisitos,
+                    Beneficios = x.Beneficios,
+                    Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any(),
+                    Endereco = service.MontarVagaEndereco(x),
+                    EmpresaLogo = service.MontarEmpresLogo(x)
 
                 }).ToArray();
                 return vagas;
@@ -120,7 +216,8 @@ namespace Global.API.Areas.Mobile.Controllers
                     Requisitos = x.Requisitos,
                     Beneficios = x.Beneficios,
                     Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any(),
-                    Endereco = service.MontarVagaEndereco(x)
+                    Endereco = service.MontarVagaEndereco(x),
+                    EmpresaLogo = service.MontarEmpresLogo(x)
 
                 }).ToArray();
                 return vagas;
@@ -145,7 +242,8 @@ namespace Global.API.Areas.Mobile.Controllers
                     Requisitos = x.Requisitos,
                     Beneficios = x.Beneficios,
                     Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any(),
-                    Endereco = service.MontarVagaEndereco(x)
+                    Endereco = service.MontarVagaEndereco(x),
+                    EmpresaLogo = service.MontarEmpresLogo(x)
 
                 }).ToArray();
                 return vagas;
@@ -177,7 +275,8 @@ namespace Global.API.Areas.Mobile.Controllers
                         Requisitos = x.Requisitos,
                         Beneficios = x.Beneficios,
                         Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any(),
-                        Endereco = service.MontarVagaEndereco(x)
+                        Endereco = service.MontarVagaEndereco(x),
+                        EmpresaLogo = service.MontarEmpresLogo(x)
 
                     }).ToArray();
                 return vagas;
@@ -192,6 +291,7 @@ namespace Global.API.Areas.Mobile.Controllers
         [HttpGet("GetVagasFavoritasCandidato")]
         public ViewModel.Vaga[] GetVagasFavoritasCandidato(int idCandidato)
         {
+            using (var vagaService = new VagaService())
             using (var service = new VagaFavoritaService())
             {
                 var vagas = service.BuscarVagasFavoritasCandidato(idCandidato)
@@ -206,7 +306,12 @@ namespace Global.API.Areas.Mobile.Controllers
                         Estado = x.Estado,
                         Requisitos = x.Requisitos,
                         Beneficios = x.Beneficios,
-                        Favoritado = true
+                        Favoritado = true,
+                        EmpresaLogo = vagaService.MontarEmpresLogo(x),
+                        Endereco = vagaService.MontarVagaEndereco(x),
+
+
+
 
                     }).ToArray();
                 return vagas;
@@ -233,7 +338,9 @@ namespace Global.API.Areas.Mobile.Controllers
                     Requisitos = vaga.Requisitos,
                     Beneficios = vaga.Beneficios,
                     Favoritado = vagaFavoritaService.IsVagaFavoritadaPorCandidato(idCandidato, vaga.Id),
-                    Endereco = service.MontarVagaEndereco(vaga)
+                    Endereco = service.MontarVagaEndereco(vaga),
+                    EmpresaLogo = service.MontarEmpresLogo(vaga)
+
                 };
 
 

@@ -40,6 +40,13 @@ namespace Global.DAO.Service
 
         }
 
+        public CargoInteresse[] BuscarTodosPorCandidato(int idCandidato)
+        {
+
+            return Repository.Get(x => x.IdCandidato == idCandidato).ToArray();
+
+        }
+
         public bool Salvar(CargoInteresse Dados)
         {
             
@@ -64,6 +71,14 @@ namespace Global.DAO.Service
 
             return resultado;
         }
+
+        public bool ExcluirVarios(CargoInteresse[] records)
+        {
+            bool resultado = Repository.DeleteAll(records);
+
+            return resultado;
+        }
+
 
         public GlobalContext GetContext()
         {

@@ -11,7 +11,7 @@ namespace Global.API.Areas.Mobile.Controllers
 {
     [Area("Mobile")]
     [Route("[area]/[controller]")]
-    [Authorize(Roles = "User")]
+    [Authorize]
     public class NotificacaoController : ControllerBase
     {
         [HttpGet("GetNotificacoes")]

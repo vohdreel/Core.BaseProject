@@ -20,6 +20,7 @@ namespace Global.API.Areas.Mobile.Controllers
         [HttpGet("ListarCandidaturas")]
         public ViewModel.Candidatura[] ListarCandidaturas(int idCandidato)
         {
+            using (var vagaService = new VagaService())
             using (var service = new CandidaturaService())
             {
                 return service.ListarPorCandidato(idCandidato)
@@ -30,7 +31,8 @@ namespace Global.API.Areas.Mobile.Controllers
                         NomeEmpresa = x.IdVagaNavigation.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
                         AngularRoute = "tab3/modal-vaga",
                         QueryParams = "{\"idVaga\":" + x.IdVaga + "}",
-                        Situacao = EnumExtensions.GetEnumDisplayName((StatusCandidatura)x.StatusCandidatura)
+                        Situacao = EnumExtensions.GetEnumDisplayName((StatusCandidatura)x.StatusCandidatura),
+                        EmpresaLogo = vagaService.MontarEmpresLogo(x.IdVagaNavigation)
 
                     }).ToArray();
 
@@ -39,6 +41,7 @@ namespace Global.API.Areas.Mobile.Controllers
         [HttpGet("ListarCandidaturasAntigas")]
         public object[] ListarCandidaturasAntigas(int idCandidato, int idUltimaCandidatura)
         {
+            using (var vagaService = new VagaService())
             using (var service = new CandidaturaService())
             {
                 return service.ListarPorCandidatoAntigas(idCandidato, idUltimaCandidatura)
@@ -49,7 +52,8 @@ namespace Global.API.Areas.Mobile.Controllers
                         NomeEmpresa = x.IdVagaNavigation.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
                         AngularRoute = "tab3/modal-vaga",
                         QueryParams = "{\"idVaga\":" + x.IdVaga + "}",
-                        Situacao = EnumExtensions.GetEnumDisplayName((StatusCandidatura)x.StatusCandidatura)
+                        Situacao = EnumExtensions.GetEnumDisplayName((StatusCandidatura)x.StatusCandidatura),
+                        EmpresaLogo = vagaService.MontarEmpresLogo(x.IdVagaNavigation)
 
                     }).ToArray();
 
@@ -59,6 +63,7 @@ namespace Global.API.Areas.Mobile.Controllers
         [HttpGet("ListarCandidaturasRecentes")]
         public object[] ListarCandidaturasRecentes(int idCandidato, int idPrimeiraCandidatura)
         {
+            using (var vagaService = new VagaService())
             using (var service = new CandidaturaService())
             {
                 return service.ListarPorCandidatoRecentes(idCandidato, idPrimeiraCandidatura)
@@ -69,7 +74,8 @@ namespace Global.API.Areas.Mobile.Controllers
                         NomeEmpresa = x.IdVagaNavigation.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
                         AngularRoute = "tab3/modal-vaga",
                         QueryParams = "{\"idVaga\":" + x.IdVaga + "}",
-                        Situacao = EnumExtensions.GetEnumDisplayName((StatusCandidatura)x.StatusCandidatura)
+                        Situacao = EnumExtensions.GetEnumDisplayName((StatusCandidatura)x.StatusCandidatura),
+                        EmpresaLogo = vagaService.MontarEmpresLogo(x.IdVagaNavigation)
 
                     }).ToArray();
 

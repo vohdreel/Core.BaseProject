@@ -66,6 +66,14 @@ namespace Global.DAO.Service
             return resultado;
         }
 
+        public AreaInteresse[] BuscarTodosPorCandidato(int idCandidato)
+        {
+
+            return Repository.Get(x => x.IdCandidato == idCandidato).ToArray();
+
+        }
+
+
         public GlobalContext GetContext()
         {
             return Repository.GetContext();

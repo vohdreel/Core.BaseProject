@@ -192,7 +192,7 @@ namespace Global.API.Areas.Mobile.Controllers
 
         }
 
-        [HttpGet("EnviarLinkRedefinirSenha")]
+        [HttpPost("EnviarLinkRedefinirSenha")]
         [AllowAnonymous]
         public async Task<object> ForgotPassword(string email)
         {

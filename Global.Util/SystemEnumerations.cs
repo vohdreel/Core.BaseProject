@@ -12,18 +12,20 @@ namespace Global.Util.SystemEnumerations
         [Display(Name = "PJ")]
         PJ = 2,
         [Display(Name = "Estário")]
-        Estagio = 3
+        Estagio = 3,
+        [Display(Name = "Temporário")]
+        Temporario = 4
 
     }
 
     public enum Disponibilidade
     {
         [Display(Name = "Sim")]
-        CLT = 1,
+        Sim = 1,
         [Display(Name = "Não")]
-        PJ = 2,
+        Nao = 2,
         [Display(Name = "Negociável")]
-        Estagio = 3
+        Negociavel = 3
 
     }
 
@@ -53,7 +55,9 @@ namespace Global.Util.SystemEnumerations
         [Display(Name = "R$6001 a R$8000 mês")]
         Entre6001a8000 = 5,
         [Display(Name = "Acima R$8000 mês")]
-        Acima8000 = 6
+        Acima8000 = 6,
+        [Display(Name = "A combinar")]
+        ACombinar = 7
 
 
     }
@@ -66,6 +70,23 @@ namespace Global.Util.SystemEnumerations
         DocumentoComFoto = 2,
         [Display(Name = "Comprovante de Residência")]
         ComprovanteDeResidencia = 3
+
+    }
+
+    public enum DisponibilidadeHorario
+    {
+
+        [Display(Name = "Integral")]
+        Integral = 1,
+        [Display(Name = "Total")]
+        Total = 2,
+        [Display(Name = "Pela Manhã")]
+        PelaManha= 3,
+        [Display(Name = "Pela Tarde")]
+        PelaTarde = 4,
+        [Display(Name = "Pela Noite")]
+        PelaNoite = 5
+
 
     }
 

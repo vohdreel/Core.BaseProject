@@ -13,6 +13,7 @@ namespace Global.API.ViewModel
         public string AngularRoute { get; set; }
         public string QueryParams { get; set; }
         public string Situacao { get; set; }
+        public string EmpresaLogo { get; set; }
 
 
 

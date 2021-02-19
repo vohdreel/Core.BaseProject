@@ -18,13 +18,10 @@ namespace Global.API.ViewModel
         public string Estado { get; set; }
         public string Requisitos { get; set; }
         public string Beneficios { get; set; }
+        public string EmpresaLogo { get; set; }
         public bool Favoritado { get; set; }
 
-
-
-
-
-
-
     }
+
+   
 }
