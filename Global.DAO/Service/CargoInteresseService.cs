@@ -27,13 +27,13 @@ namespace Global.DAO.Service
         }
 
 
-        public CargoInteresse Buscar(int Id) 
+        public CargoInteresse Buscar(int Id)
         {
 
             return Repository.Get(x => x.Id == Id).FirstOrDefault();
 
         }
-        public CargoInteresse[] BuscarTodos() 
+        public CargoInteresse[] BuscarTodos()
         {
 
             return Repository.Get().ToArray();
@@ -49,9 +49,53 @@ namespace Global.DAO.Service
 
         public bool Salvar(CargoInteresse Dados)
         {
-            
+
             bool resultado = Repository.Insert(Dados);
             return resultado;
+
+        }
+
+        public bool SalvarVarios(CargoInteresse[] Dados)
+        {
+
+            bool resultado = Repository.InsertAll(Dados);
+            return resultado;
+
+        }
+
+        public CargoInteresse BuscarCargoPorCandidato(int idCandidato, int idCargo)
+        {
+
+            return Repository.Get(x => x.IdCandidato == idCandidato && x.IdCargo == idCargo).FirstOrDefault();
+
+        }
+
+
+        public bool AtualizarListaDeCargosInteressePorCandidato(int idCandidato, int[] idsCargoInteresse)
+        {
+            CargoInteresse[] cargosRemovidos = BuscarTodosPorCandidato(idCandidato)
+                .Where(x => !idsCargoInteresse.Contains(x.IdCargo)).ToArray();
+            List<CargoInteresse> cargosNovos = new List<CargoInteresse>();
+            foreach (int idCargo in idsCargoInteresse)
+            {
+                CargoInteresse cargo = BuscarCargoPorCandidato(idCandidato, idCargo);
+                if (cargo == null)
+                {
+                    cargosNovos.Add(new CargoInteresse()
+                    {
+                        IdCandidato = idCandidato,
+                        IdCargo = idCargo
+
+                    });
+
+                }
+
+            }
+            bool sucesso = ExcluirVarios(cargosRemovidos);
+            if (sucesso) sucesso = SalvarVarios(cargosNovos.ToArray());
+
+            return sucesso;
+
 
         }
 

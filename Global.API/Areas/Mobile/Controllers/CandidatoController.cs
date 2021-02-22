@@ -15,7 +15,7 @@ namespace Global.API.Areas.Mobile.Controllers
     public class CandidatoController : ControllerBase
     {
         [HttpPost("AtualizarInformacoesPessoais")]
-        public object AtualizarInformacoesPessoais([FromBody] Candidato informacoesPessoais, [FromQuery] int[] idsCargosInteresse = null, [FromQuery] int[] idsAreaInteresse = null)
+        public object AtualizarInformacoesPessoais([FromBody] Candidato informacoesPessoais, [FromQuery] int[] idsCargosSelecionados = null, [FromQuery] int[] idsEnumAgrupamentoSelecionados = null)
         {
             using (var cargoInteresseService = new CargoInteresseService())
             using (var areaInteresseService = new AreaInteresseService())
@@ -68,13 +68,30 @@ namespace Global.API.Areas.Mobile.Controllers
                 candidato.DisponibilidadeHorario = informacoesPessoais.DisponibilidadeHorario != null ? informacoesPessoais.DisponibilidadeHorario : candidato.DisponibilidadeHorario;
                 candidato.DisponibilidadeViagem = informacoesPessoais.DisponibilidadeViagem != null ? informacoesPessoais.DisponibilidadeViagem : candidato.DisponibilidadeTransferencia;
                 candidato.DisponibilidadeTransferencia = informacoesPessoais.DisponibilidadeTransferencia != null ? informacoesPessoais.DisponibilidadeTransferencia : candidato.DisponibilidadeTransferencia;
-                //candidato.PretencaoSalarial = informacoesPessoais.PretencaoSalarial != null ? informacoesPessoais.PretencaoSalarial : candidato.PretencaoSalarial;
+                candidato.PretensaoSalarial = informacoesPessoais.PretensaoSalarial != null ? informacoesPessoais.PretensaoSalarial : candidato.PretensaoSalarial;
+                candidato.PerfilProfissional = informacoesPessoais.PerfilProfissional != null ? informacoesPessoais.PerfilProfissional : candidato.PerfilProfissional;
 
 
 
 
-                bool successo = service.AtualizarCandidato(candidato);
-                return new { ok = successo };
+
+                bool sucesso = service.AtualizarCandidato(candidato);
+
+                if (sucesso)
+                {
+                    if (idsCargosSelecionados != null && idsCargosSelecionados.Count() > 0 || idsEnumAgrupamentoSelecionados != null && idsEnumAgrupamentoSelecionados.Count() > 0)
+                    {
+                        sucesso = cargoInteresseService.AtualizarListaDeCargosInteressePorCandidato(candidato.Id, idsCargosSelecionados);
+                        if (sucesso) areaInteresseService.AtualizarListaDeAreasInteressePorCandidato(candidato.Id, idsEnumAgrupamentoSelecionados);
+
+
+                    }
+                }
+                return new
+                {
+                    ok = sucesso,
+                    message = sucesso ? "As suas informações foram atualizadas com sucesso!" : "Ocorreu um erro ao salvar suas informações, tente novamente mais tarde"
+                };
 
 
 
@@ -89,11 +106,11 @@ namespace Global.API.Areas.Mobile.Controllers
 
             using (var service = new CandidatoService())
             {
+                Candidato candidato = service.BuscarCandidato(idCandidato);
 
                 if (!isObjetivo)
                 {
-                    Candidato candidado = service.BuscarCandidato(idCandidato);
-                    return candidado;
+                    return candidato;
                 }
 
 
@@ -101,21 +118,22 @@ namespace Global.API.Areas.Mobile.Controllers
 
                 EnumAgrupamento[] areas = new EnumAgrupamentoService().BuscarTodos();
 
-                int[] idsCargosInteresse = new CargoInteresseService().BuscarTodosPorCandidato(idCandidato)
+                int[] idsCargosSelecionados = new CargoInteresseService().BuscarTodosPorCandidato(idCandidato)
                     .Select(x => x.IdCargo)
                     .ToArray();
 
-                int[] idsAreasInteresse = new AreaInteresseService().BuscarTodosPorCandidato(idCandidato)
+                int[] idsEnumAgrupamentoSelecionados = new AreaInteresseService().BuscarTodosPorCandidato(idCandidato)
                     .Select(x => x.IdEnumAgrupamento)
                     .ToArray();
 
 
                 return new
                 {
+                    candidato,
                     cargos,
                     areas,
-                    idsCargosInteresse,
-                    idsAreasInteresse
+                    idsCargosSelecionados,
+                    idsEnumAgrupamentoSelecionados
                 };
 
 
