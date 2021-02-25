@@ -119,7 +119,7 @@ namespace Global.API.Areas.Mobile.Controllers
         {
             using (var service = new VagaService())
             {
-                var vagas = service.BuscarVagasDirecionadas(idCandidato, 3).Select(x => new ViewModel.Vaga
+                var vagas = service.BuscarVagasDirecionadas(idCandidato, _config.GetProperty<int>("NivelDeAfinidade")).Select(x => new ViewModel.Vaga
                 {
                     IdVaga = x.Id,
                     NomeCargo = x.IdCargoNavigation.NomeCargo,
@@ -147,7 +147,7 @@ namespace Global.API.Areas.Mobile.Controllers
         {
             using (var service = new VagaService())
             {
-                var vagas = service.BuscarVagasDirecionadasRecentes(idCandidato, idPrimeiraVaga, 3).Select(x => new ViewModel.Vaga
+                var vagas = service.BuscarVagasDirecionadasRecentes(idCandidato, idPrimeiraVaga, _config.GetProperty<int>("NivelDeAfinidade")).Select(x => new ViewModel.Vaga
                 {
                     IdVaga = x.Id,
                     NomeCargo = x.IdCargoNavigation.NomeCargo,
@@ -174,7 +174,7 @@ namespace Global.API.Areas.Mobile.Controllers
         {
             using (var service = new VagaService())
             {
-                var vagas = service.BuscarVagasDirecionadasAntigas(idCandidato,idUltimaVaga, 3).Select(x => new ViewModel.Vaga
+                var vagas = service.BuscarVagasDirecionadasAntigas(idCandidato, idUltimaVaga, _config.GetProperty<int>("NivelDeAfinidade")).Select(x => new ViewModel.Vaga
                 {
                     IdVaga = x.Id,
                     NomeCargo = x.IdCargoNavigation.NomeCargo,
@@ -253,13 +253,21 @@ namespace Global.API.Areas.Mobile.Controllers
 
 
         [HttpGet("GetVagasPorDistancia")]
-        public ViewModel.Vaga[] GetVagasPorDistancia(int idCandidato, int distanciaMinima, int distanciaMaxima)
+        public object GetVagasPorDistancia(int idCandidato, int distanciaMinima, int distanciaMaxima)
         {
 
             using (var candidatoService = new CandidatoService())
             using (var service = new VagaService())
             {
                 Coordinates coordenadasCandidato = candidatoService.BuscarCoordenadasCandidato(idCandidato);
+                if (coordenadasCandidato == null)
+
+                    return new
+                    {
+                        ok = false,
+                        message = "Não foi possível determinar sua localização.</br> Verifique suas informações de endereço e tente novamente"
+
+                    };
 
                 var vagas = service
                     .BuscarVagasPorDistancia(coordenadasCandidato, distanciaMinima, distanciaMaxima)
@@ -279,7 +287,12 @@ namespace Global.API.Areas.Mobile.Controllers
                         EmpresaLogo = service.MontarEmpresLogo(x)
 
                     }).ToArray();
-                return vagas;
+                return new { 
+                 
+                    ok = true,
+                    vagas
+                
+                };
 
             }
 

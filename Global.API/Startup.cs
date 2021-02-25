@@ -32,9 +32,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Global.DAO.Model;
 using Global.DAO.Service;
+using Global.API.Authentication;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Global.API
-{
+namespace Global.API {
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -78,6 +80,26 @@ namespace Global.API
                     .AllowAnyHeader()
                     .AllowCredentials());
             });
+
+            //services.AddDistributedMemoryCache();
+            //services.ConfigureNonBreakingSameSiteCookies();
+
+
+            //Configuração De Sessão 
+            //services.AddSession(options => {
+            //    options.Cookie.SameSite = SameSiteMode.None;
+            //    options.IdleTimeout = TimeSpan.FromMinutes(120);
+            //    options.Cookie.HttpOnly = true;
+            //    //// Make the session cookie essential
+            //    options.Cookie.IsEssential = true;
+            //    //options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            //});
+
+            //Configuração De Cache (refernete a Sessão)
+            //services.AddDistributedMemoryCache();
+
+            ////Configuração De SameSite Cookies
+            //services.ConfigureNonBreakingSameSiteCookies();
 
 
             services.AddControllers()
@@ -125,6 +147,9 @@ namespace Global.API
                     OnMessageReceived = context =>
                     {
                         context.Token = context.Request.Cookies["access_token"];
+                        //if (string.IsNullOrEmpty(context.Token))
+                        //    //context.Token = context.Request.HttpContext.Session.GetString("JWToken");
+
                         return Task.CompletedTask;
                     },
                     OnAuthenticationFailed = context => 
@@ -134,20 +159,25 @@ namespace Global.API
                     }
                 };
             });
+
+
+            
             //Configuração do Cookie Authentication
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                       .AddCookie(options =>
                       {
                           options.ExpireTimeSpan = TimeSpan.FromDays(30);
-                          options.SlidingExpiration = true;
+                          options.SlidingExpiration = false;
                           options.ExpireTimeSpan = TimeSpan.FromDays(30);
                           options.LoginPath = "/Account/Login";
                           options.LogoutPath = "/Account/Logout";
                           options.AccessDeniedPath = "/Account/AccessDenied";
-                          options.SlidingExpiration = true;
 
                           //Configuração geral dos cookies para validar no Azure Dev Ops
                           options.Cookie.SameSite = SameSiteMode.None;
+                          options.Cookie.IsEssential = true;
+                          options.Cookie.Path = "/";
+                          options.Cookie.HttpOnly = true;
 
                           if (Configuration.GetProperty<bool>("ApiConfig", "useEntityCore"))
                           {
@@ -169,6 +199,8 @@ namespace Global.API
                               };
                           }
                       });
+
+
 
 
             //serviço para usar os atributos de autorização
@@ -239,6 +271,7 @@ namespace Global.API
                 c.DocInclusionPredicate((name, api) => true);
             });
 
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -266,7 +299,7 @@ namespace Global.API
             app.UseStatusCodePages(context =>
             {
                 var agent= context.HttpContext.Request.Headers["User-Agent"].ToString().ToLower();
-                if (agent.Contains("android") || agent.Contains("ios"))
+                if (agent.Contains("android") || agent.Contains("iphone"))
                 {
                     return Task.CompletedTask;
 
@@ -294,9 +327,26 @@ namespace Global.API
 
             app.UseRouting();
 
+            app.UseCookiePolicy();
+            ////Add User session
+            //app.UseSession();
+
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
+
+            //Add JWToken to all incoming HTTP Request Header
+            //app.Use((context, next) =>
+            //{
+            //    var JWToken = context.Session.GetString("JWToken");
+            //    if (!string.IsNullOrEmpty(JWToken))
+            //    {
+            //        context.Request.Headers.Add("Authorization", "Bearer " + JWToken);
+            //    }
+            //    return next();
+            //});
+            //Add JWToken Authentication service
+
 
             if (Configuration.GetProperty<bool>("ApiConfig", "useMVC"))
             {

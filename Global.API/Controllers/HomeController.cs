@@ -241,12 +241,11 @@ namespace Global.API.Controllers
                     var roles = await _userManager.GetRolesAsync(user);
                     var token = TokenService.GenerateToken(user, roles.ToList());
                     //O User estará vazio até que um JWT gerado pelo sistema seja encontrado na requisição
-                    HttpContext
-                        .Response
-                        .Cookies
-                        .Append("access_token",
-                                token,
-                               TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment")));
+                    //HttpContext.Session.SetString("JWToken", token);
+
+                    HttpContext.Response.Cookies
+                       .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
+
 
                     return Json("Logged");
                 }
