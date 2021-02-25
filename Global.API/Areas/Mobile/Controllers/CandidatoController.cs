@@ -66,7 +66,7 @@ namespace Global.API.Areas.Mobile.Controllers
 
 
                 candidato.DisponibilidadeHorario = informacoesPessoais.DisponibilidadeHorario != null ? informacoesPessoais.DisponibilidadeHorario : candidato.DisponibilidadeHorario;
-                candidato.DisponibilidadeViagem = informacoesPessoais.DisponibilidadeViagem != null ? informacoesPessoais.DisponibilidadeViagem : candidato.DisponibilidadeTransferencia;
+                candidato.DisponibilidadeViagem = informacoesPessoais.DisponibilidadeViagem != null ? informacoesPessoais.DisponibilidadeViagem : candidato.DisponibilidadeViagem;
                 candidato.DisponibilidadeTransferencia = informacoesPessoais.DisponibilidadeTransferencia != null ? informacoesPessoais.DisponibilidadeTransferencia : candidato.DisponibilidadeTransferencia;
                 candidato.PretensaoSalarial = informacoesPessoais.PretensaoSalarial != null ? informacoesPessoais.PretensaoSalarial : candidato.PretensaoSalarial;
                 candidato.PerfilProfissional = informacoesPessoais.PerfilProfissional != null ? informacoesPessoais.PerfilProfissional : candidato.PerfilProfissional;
