@@ -1,4 +1,5 @@
 ﻿using Global.DAO.Context;
+using Global.DAO.Interface.Repository;
 using Global.DAO.Model;
 using Global.DAO.Procedure.Models;
 using Global.DAO.Repository;
@@ -10,49 +11,44 @@ using System.Threading.Tasks;
 
 namespace Global.DAO.Service
 {
-    public class AreaInteresseService : IDisposable
+    public class ServiceAreaInteresse : IServiceAreaInteresse
     {
-        private AreaInteresseRepository Repository { get; set; }
 
-        public AreaInteresseService()
+        private readonly IRepositoryAreaInteresse RepositoryAreaInteresse;
+
+        public ServiceAreaInteresse(IRepositoryAreaInteresse repositoryAreaInteresse)
         {
 
-            Repository = new AreaInteresseRepository();
+            RepositoryAreaInteresse = repositoryAreaInteresse;
 
         }
 
-        public AreaInteresseService(GlobalContext context)
-        {
-            Repository = new AreaInteresseRepository(context);
-        }
-
-
-        public AreaInteresse Buscar(int Id)
+        public AreaInteresse BuscarPorId(int Id)
         {
 
-            return Repository.Get(x => x.Id == Id).FirstOrDefault();
+            return RepositoryAreaInteresse.Get(x => x.Id == Id).FirstOrDefault();
 
         }
 
-        public AreaInteresse[] BuscarTodos()
+        public IEnumerable<AreaInteresse> Listar()
         {
 
-            return Repository.Get().ToArray();
+            return RepositoryAreaInteresse.Get().ToArray();
 
         }
 
         public bool Salvar(AreaInteresse Dados)
         {
 
-            bool resultado = Repository.Insert(Dados);
+            bool resultado = RepositoryAreaInteresse.Insert(Dados);
             return resultado;
 
         }
 
-        public bool Editar(AreaInteresse Dados)
+        public bool Atualizar(AreaInteresse Dados)
         {
 
-            bool resultado = Repository.Update(Dados);
+            bool resultado = RepositoryAreaInteresse.Update(Dados);
 
             return resultado;
 
@@ -61,23 +57,22 @@ namespace Global.DAO.Service
 
         public bool Excluir(int Id)
         {
-            var dados = Repository.GetByID(Id);
-            bool resultado = Repository.Delete(dados);
+            bool resultado = RepositoryAreaInteresse.Delete(Id);
 
             return resultado;
         }
 
-        public AreaInteresse[] BuscarTodosPorCandidato(int idCandidato)
+        public IEnumerable<AreaInteresse> BuscarTodosPorCandidato(int idCandidato)
         {
 
-            return Repository.Get(x => x.IdCandidato == idCandidato).ToArray();
+            return RepositoryAreaInteresse.Get(x => x.IdCandidato == idCandidato).ToArray();
 
         }
 
         public AreaInteresse BuscarAgrupamentoPorCandidato(int idCandidato, int idEnumAgrupamento)
         {
 
-            return Repository.Get(x => x.IdCandidato == idCandidato && x.IdEnumAgrupamento == idEnumAgrupamento).FirstOrDefault();
+            return RepositoryAreaInteresse.Get(x => x.IdCandidato == idCandidato && x.IdEnumAgrupamento == idEnumAgrupamento).FirstOrDefault();
 
         }
 
@@ -113,7 +108,7 @@ namespace Global.DAO.Service
 
         public bool ExcluirVarios(AreaInteresse[] records)
         {
-            bool resultado = Repository.DeleteAll(records);
+            bool resultado = RepositoryAreaInteresse.DeleteAll(records);
 
             return resultado;
         }
@@ -121,20 +116,9 @@ namespace Global.DAO.Service
         public bool SalvarVarios(AreaInteresse[] Dados)
         {
 
-            bool resultado = Repository.InsertAll(Dados);
+            bool resultado = RepositoryAreaInteresse.InsertAll(Dados);
             return resultado;
 
-        }
-
-
-        public GlobalContext GetContext()
-        {
-            return Repository.GetContext();
-        }
-
-        public void Dispose()
-        {
-            Repository.Dispose();
         }
     }
 }

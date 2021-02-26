@@ -278,7 +278,7 @@ namespace Global.API
         {
             #region Servicos
 
-            services.AddScoped<IServiceDocumento, DocumentoService>();
+            services.AddScoped<IServiceDocumento, ServiceDocumento>();
 
             #endregion
 

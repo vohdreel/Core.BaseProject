@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Global.DAO.Repository
 {
-    public class RepositoryCandidato : GenericRepository<Candidato, GlobalContext>
+    public class Repository : GenericRepository<Candidato, GlobalContext>
     {
 
-        public RepositoryCandidato() :base(){ }
+        public Repository() :base(){ }
 
-        public RepositoryCandidato(GlobalContext context) : base(context) { }
+        public Repository(GlobalContext context) : base(context) { }
     }
 }

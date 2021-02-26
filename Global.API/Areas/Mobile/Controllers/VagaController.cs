@@ -256,7 +256,7 @@ namespace Global.API.Areas.Mobile.Controllers
         public object GetVagasPorDistancia(int idCandidato, int distanciaMinima, int distanciaMaxima, int salarioMinimo, int salarioMaximo)
         {
 
-            using (var candidatoService = new CandidatoService())
+            using (var candidatoService = new ServiceCandidato())
             using (var service = new VagaService())
             {
                 Coordinates coordenadasCandidato = candidatoService.BuscarCoordenadasCandidato(idCandidato);

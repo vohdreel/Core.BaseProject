@@ -80,7 +80,7 @@ namespace Global.API.Areas.Mobile.Controllers
                     HttpContext.Response.Cookies
                         .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
 
-                    CandidatoService service = new CandidatoService();
+                    ServiceCandidato service = new ServiceCandidato();
 
                     if (ManterConectado)
                     {
@@ -112,11 +112,11 @@ namespace Global.API.Areas.Mobile.Controllers
             //se o usuario tiver o manterconectado ativo, renova o token
             if (IdCandidato != 0)
             {
-                CandidatoService service = new CandidatoService();
+                ServiceCandidato service = new ServiceCandidato();
                 Candidato candidato = service.BuscarCandidato(IdCandidato);
                 if (candidato != null)
                 {
-                    bool manterConectado = new CandidatoService().VerificarManterConectado(IdCandidato);
+                    bool manterConectado = new ServiceCandidato().VerificarManterConectado(IdCandidato);
                     if (manterConectado)
                     {
                         IdentityUser user = await _userManager.FindByEmailAsync(candidato.Email);
@@ -270,7 +270,7 @@ namespace Global.API.Areas.Mobile.Controllers
         [HttpGet("VerificarCpf")]
         public async Task<object> VerifyCpf(string cpf)
         {
-            using (var service = new CandidatoService())
+            using (var service = new ServiceCandidato())
             {
                 return new
                 {
@@ -313,7 +313,7 @@ namespace Global.API.Areas.Mobile.Controllers
 
                 };
 
-                CandidatoService candidatoService = new CandidatoService();
+                ServiceCandidato candidatoService = new ServiceCandidato();
                 bool success = candidatoService.CadastrarCandidato(candidato);
 
                 if (success)
@@ -366,7 +366,7 @@ namespace Global.API.Areas.Mobile.Controllers
         public object SalvarPreferencias([FromBody] ViewModel.Preferencias preferencias)
         {
 
-            using (var areaService = new AreaInteresseService())
+            using (var areaService = new ServiceAreaInteresse())
             using (var cargoService = new CargoInteresseService())
             {
 
@@ -398,7 +398,7 @@ namespace Global.API.Areas.Mobile.Controllers
         {
 
             var userId = this.User.FindFirstValue("IdAspNetUser");
-            CandidatoService service = new CandidatoService();
+            ServiceCandidato service = new ServiceCandidato();
             service.AlternarMaterConectado(userId, false);
 
 

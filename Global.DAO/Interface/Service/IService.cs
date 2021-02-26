@@ -8,10 +8,14 @@ namespace Global.DAO.Interface.Service
     public interface IService<TEntity>
     {
         IEnumerable<TEntity> Listar();
+        //CREATE
         bool Salvar(TEntity entity);
-        bool Editar(TEntity entity);
-        bool Excluir(int entityId);
+        //READ
         TEntity BuscarPorId(int entityId);
-        //Documento[] ListarPorCandidato(int idCandidato);
+        //UPDATE
+        bool Atualizar(TEntity entity);
+        //DELETE
+        bool Excluir(int entityId);
+
     }
 }

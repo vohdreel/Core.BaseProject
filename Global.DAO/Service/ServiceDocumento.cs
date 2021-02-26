@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace Global.DAO.Service
 {
-    public class DocumentoService : IServiceDocumento
+    public class ServiceDocumento : IServiceDocumento
     {
         private readonly IRepositoryDocumento RepositoryDocumento;
 
-        public DocumentoService(IRepositoryDocumento repositoryDocumento)
+        public ServiceDocumento(IRepositoryDocumento repositoryDocumento)
         {
 
             RepositoryDocumento = repositoryDocumento;

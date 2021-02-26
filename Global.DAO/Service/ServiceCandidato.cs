@@ -1,4 +1,6 @@
 ﻿using Global.DAO.Context;
+using Global.DAO.Interface.Repository;
+using Global.DAO.Interface.Service;
 using Global.DAO.Model;
 using Global.DAO.Procedure.Models;
 using Global.DAO.Repository;
@@ -11,49 +13,56 @@ using System.Threading.Tasks;
 
 namespace Global.DAO.Service
 {
-    public class CandidatoService : IDisposable
+    public class ServiceCandidato : IServiceCandidato
     {
-        private RepositoryCandidato Repository { get; set; }
+        private readonly IRepositoryCandidato RepositoryCandidato;
 
-        public CandidatoService()
+
+        public ServiceCandidato(IRepositoryCandidato RepositoryCandidatoCandidato)
         {
 
-            Repository = new RepositoryCandidato();
+            RepositoryCandidato = RepositoryCandidatoCandidato;
 
         }
 
-        public CandidatoService(GlobalContext context)
-        {
-            Repository = new RepositoryCandidato(context);
-        }
-
-
-        public Candidato BuscarCandidato(int IdCandidato) 
+        public Candidato BuscarPorId(int IdCandidato) 
         {
 
-            return Repository.Get(x => x.Id == IdCandidato).FirstOrDefault();
+            return RepositoryCandidato.Get(x => x.Id == IdCandidato).FirstOrDefault();
 
 
         }
 
-        public bool CadastrarCandidato(Candidato candidato)
+        public IEnumerable<Candidato> Listar() {
+            return RepositoryCandidato.Get();
+        
+        }
+
+        public bool Salvar(Candidato candidato)
         {
-            return Repository.Insert(candidato);
+            return RepositoryCandidato.Insert(candidato);
         
         
         }
 
-        public bool AtualizarCandidato(Candidato candidato)
+        public bool Atualizar(Candidato candidato)
         {
-            return Repository.Update(candidato);
-
+            return RepositoryCandidato.Update(candidato);
 
         }
 
-        public Candidato BuscarCandidato(string IdAspNetUsers)
+        public bool Excluir(int IdCandidato)
+        {
+            bool resultado = RepositoryCandidato.Delete(IdCandidato);
+
+            return resultado;
+
+        }
+
+        public Candidato BuscarPorIdAspNetUser(string IdAspNetUsers)
         {
 
-            return Repository.Get(x => x.IdAspNetUsers == IdAspNetUsers).FirstOrDefault();
+            return RepositoryCandidato.Get(x => x.IdAspNetUsers == IdAspNetUsers).FirstOrDefault();
 
 
         }
@@ -61,29 +70,29 @@ namespace Global.DAO.Service
         public bool ExisteCpfUsuario(string cpf)
         {
 
-            return Repository.Get(x => x.Cpf == cpf).FirstOrDefault() != null;
+            return RepositoryCandidato.Get(x => x.Cpf == cpf).FirstOrDefault() != null;
 
 
         }
 
         public void AlternarMaterConectado(string IdAspNetUsers, bool value)
         {
-            Candidato candidato = Repository.Get(x => x.IdAspNetUsers == IdAspNetUsers).FirstOrDefault();
+            Candidato candidato = RepositoryCandidato.Get(x => x.IdAspNetUsers == IdAspNetUsers).FirstOrDefault();
             candidato.MaterConectado = value;
-            Repository.Update(candidato); 
+            RepositoryCandidato.Update(candidato); 
 
         }
 
         public bool VerificarManterConectado(int IdCandidato)
         {
-            Candidato candidato = Repository.Get(x => x.Id == IdCandidato).FirstOrDefault();
+            Candidato candidato = RepositoryCandidato.Get(x => x.Id == IdCandidato).FirstOrDefault();
             return candidato.MaterConectado;
 
         }
 
 
         public Coordinates BuscarCoordenadasCandidato(int idCandidato) {
-            Candidato candidato = BuscarCandidato(idCandidato);
+            Candidato candidato = BuscarPorId(idCandidato);
 
             if (candidato.Latitude == null || candidato.Longitude == null)
             {
@@ -135,21 +144,11 @@ namespace Global.DAO.Service
             candidato.Latitude = coordinates?.Latitude.ToString() ?? null;
             candidato.Longitude = coordinates?.Longitude.ToString() ?? null;
 
-            bool resultado = Repository.Update(candidato);
+            bool resultado = RepositoryCandidato.Update(candidato);
 
             return candidato;
 
         }
 
-
-        public GlobalContext GetContext()
-        {
-            return Repository.GetContext();
-        }
-
-        public void Dispose()
-        {
-            Repository.Dispose();
-        }
     }
 }
