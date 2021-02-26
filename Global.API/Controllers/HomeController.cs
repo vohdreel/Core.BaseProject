@@ -13,6 +13,9 @@ using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 using Microsoft.Extensions.Configuration;
 using Environment = Gyan.Web.Identity.Data.Authentication.Environment;
 using Global.Util;
+using Global.DAO.Model;
+using Global.DAO.Service;
+using Newtonsoft.Json.Linq;
 
 namespace Global.API.Controllers
 {
@@ -45,7 +48,6 @@ namespace Global.API.Controllers
         [Route("Index")]
         public IActionResult Index()
         {
-            _logger.LogInformation("Comi o cu de quem está lendo");
             return View();
         }
 
@@ -61,10 +63,10 @@ namespace Global.API.Controllers
         public async Task UserAndRoles()
         {
             var user = new IdentityUser();
-            user.UserName = "default_global";
-            user.Email = "default@global.com";
+            user.UserName = "usuario_global";
+            user.Email = "usuario_app@global.com.br";
 
-            string userPWD = "globalSomepassword20+20";
+            string userPWD = "@Globalapp123";
 
             IdentityResult chkUser = await _userManager.CreateAsync(user, userPWD);
 
@@ -118,12 +120,18 @@ namespace Global.API.Controllers
         [HttpGet("location")]
         public dynamic InnerRequest()
         {
-            var teste = HttpHelper
-                .Get<string>(
-                "http://localhost:4000/",
-                "token");
+            object parameters = new
+            {
+                address = "Rua+Manuel+Onha,+459+-+03192-100",
+                key = "AIzaSyBDZN9proIwpDe18stl_EzVQjnxYTbdQLY"
 
-            //var distancia = GeoCoordinationExtension.GetDistanceBetweenLocations();
+            };
+            var teste = HttpHelper
+                .Get<JObject>(
+                "https://maps.googleapis.com/maps/api/geocode/json",
+                "json",
+                parameters);
+
 
             return 0;
 
@@ -233,12 +241,11 @@ namespace Global.API.Controllers
                     var roles = await _userManager.GetRolesAsync(user);
                     var token = TokenService.GenerateToken(user, roles.ToList());
                     //O User estará vazio até que um JWT gerado pelo sistema seja encontrado na requisição
-                    HttpContext
-                        .Response
-                        .Cookies
-                        .Append("access_token",
-                                token,
-                               TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment")));
+                    //HttpContext.Session.SetString("JWToken", token);
+
+                    HttpContext.Response.Cookies
+                       .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
+
 
                     return Json("Logged");
                 }
@@ -255,7 +262,7 @@ namespace Global.API.Controllers
             {
                 CookieOptions cookieOptions = TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment"));
                 cookieOptions.Expires = DateTime.Now.AddDays(-1);
-                HttpContext.Response.Cookies.Append(cookie.Key, null, TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment")));
+                HttpContext.Response.Cookies.Append(cookie.Key, "", TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment")));
                 //HttpContext.Response.Cookies.Delete(cookie.Key);
             }
             return Json("Logged Out");

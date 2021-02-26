@@ -4,6 +4,7 @@ using Global.DAO.Service;
 using Global.Util;
 using Gyan.Web.Identity.Data.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -16,7 +17,7 @@ using Environment = Gyan.Web.Identity.Data.Authentication.Environment;
 
 namespace Global.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("[controller]")]
     public class AccountController : Controller
     {
@@ -131,6 +132,14 @@ namespace Global.API.Controllers
                 return View("ConfirmEmail", modelEmailConfirm);
 
             }
+            foreach (var cookie in HttpContext.Request.Cookies)
+            {
+                CookieOptions cookieOptions = TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"));
+                cookieOptions.Expires = DateTime.Now.AddDays(-1);
+                HttpContext.Response.Cookies.Append(cookie.Key, "", TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment")));
+                //HttpContext.Response.Cookies.Delete(cookie.Key);
+            }
+
 
             return View(model);
         }
@@ -170,6 +179,14 @@ namespace Global.API.Controllers
                     model.EmailVerified = true;
                 }
             }
+            foreach (var cookie in HttpContext.Request.Cookies)
+            {
+                CookieOptions cookieOptions = TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"));
+                cookieOptions.Expires = DateTime.Now.AddDays(-1);
+                HttpContext.Response.Cookies.Append(cookie.Key, "", TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment")));
+                //HttpContext.Response.Cookies.Delete(cookie.Key);
+            }
+
 
             return View(model);
         }
@@ -198,7 +215,7 @@ namespace Global.API.Controllers
                 await _emailService.SendEmailForEmailConfirmation(options);
                 return true;
             }
-            catch
+            catch(Exception e)
             {
                 return false;
             }
@@ -283,7 +300,7 @@ namespace Global.API.Controllers
                         var token = TokenService.GenerateToken(user, roles.ToList());
 
                         HttpContext.Response.Cookies
-                            .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("APIConfig", "Environment")));
+                            .Append("access_token", token, TokenService.GenerateCookies(Environment.WebDeploy));
 
 
 

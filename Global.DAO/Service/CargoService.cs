@@ -34,6 +34,13 @@ namespace Global.DAO.Service
 
         }
 
+        public Cargo[] BuscarTodos()
+        {
+
+            return Repository.Get().ToArray();
+
+        }
+
         public bool Salvar(Cargo Dados)
         {
             

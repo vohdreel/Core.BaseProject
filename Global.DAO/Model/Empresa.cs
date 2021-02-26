@@ -38,6 +38,9 @@ namespace Global.DAO.Model
         [Required]
         [StringLength(2)]
         public string Estado { get; set; }
+        public string Base64ImageLogo { get; set; }
+        [StringLength(50)]
+        public string ImageLogoExtension { get; set; }
 
         [InverseProperty("IdEmpresaNavigation")]
         public virtual ICollection<ProcessoSeletivo> ProcessoSeletivo { get; set; }

@@ -2,6 +2,7 @@
 using Global.DAO.Model;
 using Global.DAO.Procedure.Models;
 using Global.DAO.Repository;
+using Global.Util;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -42,10 +43,25 @@ namespace Global.DAO.Service
         
         }
 
+        public bool AtualizarCandidato(Candidato candidato)
+        {
+            return Repository.Update(candidato);
+
+
+        }
+
         public Candidato BuscarCandidato(string IdAspNetUsers)
         {
 
             return Repository.Get(x => x.IdAspNetUsers == IdAspNetUsers).FirstOrDefault();
+
+
+        }
+
+        public bool ExisteCpfUsuario(string cpf)
+        {
+
+            return Repository.Get(x => x.Cpf == cpf).FirstOrDefault() != null;
 
 
         }
@@ -62,6 +78,66 @@ namespace Global.DAO.Service
         {
             Candidato candidato = Repository.Get(x => x.Id == IdCandidato).FirstOrDefault();
             return candidato.MaterConectado;
+
+        }
+
+
+        public Coordinates BuscarCoordenadasCandidato(int idCandidato) {
+            Candidato candidato = BuscarCandidato(idCandidato);
+
+            if (candidato.Latitude == null || candidato.Longitude == null)
+            {
+                candidato = PreencherCoordenadas(candidato);
+                if (candidato.Latitude == null || candidato.Longitude == null)
+                    return null;
+            }
+            return new Coordinates(candidato.Latitude, candidato.Longitude);
+
+        }
+
+        public string MontarVagaEndereco(Candidato candidato)
+        {
+            string fullAddress = "";
+            if (string.IsNullOrEmpty(candidato.Endereco)) return "";
+            else
+            {
+                fullAddress += candidato.Endereco.Trim();
+                if (!string.IsNullOrEmpty(candidato.Numero))
+                {
+                    fullAddress += (", " + candidato.Numero.Trim());
+                    if (!string.IsNullOrEmpty(candidato.Cep))
+                    {
+                        fullAddress += (" - " + candidato.Cep.Trim());
+                    }
+                }
+            }
+
+            return fullAddress;
+
+
+        }
+
+        public Candidato PreencherCoordenadas(Candidato candidato)
+        {
+            string fullAddress = "";
+            //se nao houver endereço, impossivel
+            if (string.IsNullOrEmpty(candidato.Endereco)) return candidato;
+            else
+            {
+                fullAddress = MontarVagaEndereco(candidato);
+            }
+
+            string key = "AIzaSyBDZN9proIwpDe18stl_EzVQjnxYTbdQLY";
+
+            Coordinates coordinates = GeoCoordinationExtension
+                .GetCoordinatesFromApi(fullAddress, key);
+
+            candidato.Latitude = coordinates?.Latitude.ToString() ?? null;
+            candidato.Longitude = coordinates?.Longitude.ToString() ?? null;
+
+            bool resultado = Repository.Update(candidato);
+
+            return candidato;
 
         }
 

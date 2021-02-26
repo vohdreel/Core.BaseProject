@@ -17,7 +17,7 @@ namespace Global.DAO.Model
         public int Id { get; set; }
         [Required]
         [StringLength(100)]
-        public string NomeAgrupamneto { get; set; }
+        public string NomeAgrupamento { get; set; }
 
         [InverseProperty("IdEnumAgrupamentoNavigation")]
         public virtual ICollection<AreaInteresse> AreaInteresse { get; set; }

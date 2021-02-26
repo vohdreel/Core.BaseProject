@@ -27,16 +27,23 @@ namespace Global.DAO.Service
         }
 
 
-        public AreaInteresse Buscar(int Id) 
+        public AreaInteresse Buscar(int Id)
         {
 
             return Repository.Get(x => x.Id == Id).FirstOrDefault();
 
         }
 
+        public AreaInteresse[] BuscarTodos()
+        {
+
+            return Repository.Get().ToArray();
+
+        }
+
         public bool Salvar(AreaInteresse Dados)
         {
-            
+
             bool resultado = Repository.Insert(Dados);
             return resultado;
 
@@ -51,6 +58,7 @@ namespace Global.DAO.Service
 
         }
 
+
         public bool Excluir(int Id)
         {
             var dados = Repository.GetByID(Id);
@@ -58,6 +66,66 @@ namespace Global.DAO.Service
 
             return resultado;
         }
+
+        public AreaInteresse[] BuscarTodosPorCandidato(int idCandidato)
+        {
+
+            return Repository.Get(x => x.IdCandidato == idCandidato).ToArray();
+
+        }
+
+        public AreaInteresse BuscarAgrupamentoPorCandidato(int idCandidato, int idEnumAgrupamento)
+        {
+
+            return Repository.Get(x => x.IdCandidato == idCandidato && x.IdEnumAgrupamento == idEnumAgrupamento).FirstOrDefault();
+
+        }
+
+
+
+        public bool AtualizarListaDeAreasInteressePorCandidato(int idCandidato, int[] idsEnumAgrupamento)
+        {
+            AreaInteresse[] cargosRemovidos = BuscarTodosPorCandidato(idCandidato)
+                .Where(x => !idsEnumAgrupamento.Contains(x.IdEnumAgrupamento)).ToArray();
+            List<AreaInteresse> cargosNovos = new List<AreaInteresse>();
+            foreach (int idEnumAgrupamento in idsEnumAgrupamento)
+            {
+                AreaInteresse cargo = BuscarAgrupamentoPorCandidato(idCandidato, idEnumAgrupamento);
+                if (cargo == null)
+                {
+                    cargosNovos.Add(new AreaInteresse()
+                    {
+                        IdCandidato = idCandidato,
+                        IdEnumAgrupamento = idEnumAgrupamento
+
+                    });
+
+                }
+
+            }
+            bool sucesso = ExcluirVarios(cargosRemovidos);
+            if (sucesso) sucesso = SalvarVarios(cargosNovos.ToArray());
+
+            return sucesso;
+
+
+        }
+
+        public bool ExcluirVarios(AreaInteresse[] records)
+        {
+            bool resultado = Repository.DeleteAll(records);
+
+            return resultado;
+        }
+
+        public bool SalvarVarios(AreaInteresse[] Dados)
+        {
+
+            bool resultado = Repository.InsertAll(Dados);
+            return resultado;
+
+        }
+
 
         public GlobalContext GetContext()
         {

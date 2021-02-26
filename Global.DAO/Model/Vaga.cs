@@ -41,6 +41,10 @@ namespace Global.DAO.Model
         [Column(TypeName = "money")]
         public decimal? Salario { get; set; }
         public int StatusVaga { get; set; }
+        [StringLength(20)]
+        public string Numero { get; set; }
+        [StringLength(40)]
+        public string Complemento { get; set; }
 
         [ForeignKey(nameof(IdCargo))]
         [InverseProperty(nameof(Cargo.Vaga))]

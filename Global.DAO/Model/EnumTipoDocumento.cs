@@ -16,7 +16,7 @@ namespace Global.DAO.Model
         public int Id { get; set; }
         [Required]
         [StringLength(100)]
-        public string NomeAgrupamneto { get; set; }
+        public string NomeTipoDocumento { get; set; }
 
         [InverseProperty("IdEnumTipoDocumentoNavigation")]
         public virtual ICollection<Documento> Documento { get; set; }

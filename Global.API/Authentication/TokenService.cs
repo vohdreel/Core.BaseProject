@@ -11,11 +11,12 @@ using JWT;
 using JWT.Algorithms;
 using JWT.Exceptions;
 using Newtonsoft.Json.Linq;
+using Global.API.Authentication;
 
 namespace Gyan.Web.Identity.Data.Authentication
 {
 
-    public enum Environment { Development, Production }
+    public enum Environment { Development, Production, WebDeploy }
 
     public static class Settings
     {
@@ -53,6 +54,21 @@ namespace Gyan.Web.Identity.Data.Authentication
             if (enviorment == Environment.Production)
             {
                 cookie.SameSite = SameSiteMode.None;
+                cookie.Secure = true;
+            }
+            return cookie;
+        }
+
+        public static CookieOptions GenerateCookies(Environment enviorment, string userAgent)
+        {
+            CookieOptions cookie = new CookieOptions();
+            cookie.HttpOnly = true;
+            if (enviorment == Environment.Production)
+            {
+                if (SameSiteCookiesServiceCollectionExtensions.DisallowsSameSiteNone(userAgent))
+                    cookie.SameSite = SameSiteMode.None;
+                else
+                    cookie.SameSite = SameSiteMode.None;
                 cookie.Secure = true;
             }
             return cookie;

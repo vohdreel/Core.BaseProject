@@ -11,7 +11,7 @@ namespace Global.DAO.Model
         {
             AreaInteresse = new HashSet<AreaInteresse>();
             Candidatura = new HashSet<Candidatura>();
-            CargoInteresseNavigation = new HashSet<CargoInteresse>();
+            CargoInteresse = new HashSet<CargoInteresse>();
             Documento = new HashSet<Documento>();
             Notificacao = new HashSet<Notificacao>();
             TelefoneCandidato = new HashSet<TelefoneCandidato>();
@@ -109,12 +109,7 @@ namespace Global.DAO.Model
         public int? DisponibilidadeHorario { get; set; }
         public int? DisponibilidadeViagem { get; set; }
         public int? DisponibilidadeTransferencia { get; set; }
-        [StringLength(50)]
-        public string PretencaoSalarial { get; set; }
-        [StringLength(100)]
-        public string CargoInteresse { get; set; }
-        [StringLength(100)]
-        public string CagoInteresseSecundario { get; set; }
+        public int? PretensaoSalarial { get; set; }
         public bool? TermoCompromisso { get; set; }
         public bool MaterConectado { get; set; }
         [Required]
@@ -122,13 +117,25 @@ namespace Global.DAO.Model
         public string IdAspNetUsers { get; set; }
         [Column("FCMToken")]
         public string Fcmtoken { get; set; }
+        [StringLength(100)]
+        public string Latitude { get; set; }
+        [StringLength(100)]
+        public string Longitude { get; set; }
+        [StringLength(20)]
+        public string Numero { get; set; }
+        [StringLength(40)]
+        public string Complemento { get; set; }
+        [StringLength(200)]
+        public string Agrupadores { get; set; }
+        public int? PerfilProfissional { get; set; }
+        public int? NivelProfissionalVagaDesejada { get; set; }
 
         [InverseProperty("IdCandidatoNavigation")]
         public virtual ICollection<AreaInteresse> AreaInteresse { get; set; }
         [InverseProperty("IdCandidatoNavigation")]
         public virtual ICollection<Candidatura> Candidatura { get; set; }
         [InverseProperty("IdCandidatoNavigation")]
-        public virtual ICollection<CargoInteresse> CargoInteresseNavigation { get; set; }
+        public virtual ICollection<CargoInteresse> CargoInteresse { get; set; }
         [InverseProperty("IdCandidatoNavigation")]
         public virtual ICollection<Documento> Documento { get; set; }
         [InverseProperty("IdCandidatoNavigation")]

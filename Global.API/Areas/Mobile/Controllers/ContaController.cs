@@ -28,18 +28,24 @@ namespace Global.API.Areas.Mobile.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IConfiguration _config;
+        private readonly IEmailService _emailService;
+
 
         public ContaController(
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
             SignInManager<IdentityUser> signInManager,
-            IConfiguration config
+            IConfiguration config,
+            IEmailService emailService
+
             )
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _config = config;
+            _emailService = emailService;
+
         }
 
         [HttpGet("Login")]
@@ -51,6 +57,14 @@ namespace Global.API.Areas.Mobile.Controllers
             if (user != null && await _userManager.CheckPasswordAsync(user, password))
             {
                 // user is valid do whatever you want
+                if (!await _userManager.IsEmailConfirmedAsync(user))
+                    return new
+                    {
+                        unverified = true,
+                        Ok = false,
+                        Message = "Essa conta ainda não foi confirmada. Por favor verifique sua caixa de mensagens."
+                    };
+
 
                 var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
 
@@ -61,8 +75,11 @@ namespace Global.API.Areas.Mobile.Controllers
                     var roles = await _userManager.GetRolesAsync(user);
                     var token = TokenService.GenerateToken(user, roles.ToList());
 
+                    //HttpContext.Session.SetString("JWToken", token);
+
                     HttpContext.Response.Cookies
-                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment")));
+                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
+
                     CandidatoService service = new CandidatoService();
 
                     if (ManterConectado)
@@ -122,8 +139,7 @@ namespace Global.API.Areas.Mobile.Controllers
             {
                 return new
                 {
-                    ok = false,
-                    message = "Session Expired"
+                    ok = false
                 };
             }
             else
@@ -140,13 +156,91 @@ namespace Global.API.Areas.Mobile.Controllers
                     return new
                     {
                         ok = false,
-                        message = "Session Expired"
+                        message = "Sessão expirada"
                     };
 
             }
 
         }
 
+        public async Task<bool> SendEmailForEmailConfirmation(string email, IdentityUser user)
+        {
+            try
+            {
+                await _userManager.UpdateSecurityStampAsync(user);
+
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                var emailConfirmLink = Url.Action("ConfirmEmail", "Account",
+                            new { email = email, token = token }, Request.Scheme);
+
+                UserEmailOptions options = new UserEmailOptions
+                {
+                    ToEmails = new List<string>() { user.Email },
+                    PlaceHolders = new List<KeyValuePair<string, string>>()
+                        {
+                            new KeyValuePair<string, string>("{{UserName}}", user.UserName),
+                            new KeyValuePair<string, string>("{{Link}}", emailConfirmLink)
+                        }
+                };
+
+                await _emailService.SendEmailForEmailConfirmation(options);
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+        }
+
+        [HttpPost("EnviarLinkRedefinirSenha")]
+        [AllowAnonymous]
+        public async Task<object> ForgotPassword(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user != null && await _userManager.IsEmailConfirmedAsync(user))
+            {
+                await _userManager.RemoveAuthenticationTokenAsync(user, TokenOptions.DefaultProvider, "ResetPassword");
+
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                var passwordResetLink = Url.Action("ResetPassword", "Account",
+                        new { email = email, token = token }, Request.Scheme);
+
+                UserEmailOptions options = new UserEmailOptions
+                {
+                    ToEmails = new List<string>() { user.Email },
+                    PlaceHolders = new List<KeyValuePair<string, string>>()
+                        {
+                            new KeyValuePair<string, string>("{{UserName}}", user.UserName),
+                            new KeyValuePair<string, string>("{{Link}}", passwordResetLink)
+                        }
+                };
+
+                await _emailService.SendEmailForForgotPassword(options);
+
+                //_logger.Log(LogLevel.Warning, passwordResetLink);
+
+                return new
+                {
+                    ok = true,
+                    message = "Enviamos pare esse endereço de email as instruções para redefinir sua senha.<br /><br />" +
+                        "Por favor, verifique sua caixa de mensagens (Em alguns casos, a mensagem pode ser marcado como spam)!"
+
+                };
+            }
+
+            return new
+            {
+                ok = false,
+                message = "Não existe nenhuma conta registrada usando este email.<br /><br />" +
+                        "Verifique se digitou o endereço de email corretamente e tente novamente!"
+
+            };
+
+        }
 
         [Authorize]
         [HttpGet("GetClaims")]
@@ -155,16 +249,45 @@ namespace Global.API.Areas.Mobile.Controllers
             return new
             {
                 UserId = this.User.FindFirstValue(ClaimTypes.Name),
-                Email = this.User.FindFirstValue("IdAspNetUser"),
+                Email = this.User.FindFirstValue("IdAspNetUser")
+
+
             };
         }
+
+
+        [AllowAnonymous]
+        [HttpGet("VerificarEmail")]
+        public async Task<object> VerifyEmailAdress(string emailAdress)
+        {
+            return new
+            {
+                ok = await _userManager.FindByEmailAsync(emailAdress) == null
+            };
+        }
+
+        [AllowAnonymous]
+        [HttpGet("VerificarCpf")]
+        public async Task<object> VerifyCpf(string cpf)
+        {
+            using (var service = new CandidatoService())
+            {
+                return new
+                {
+                    ok = !service.ExisteCpfUsuario(cpf)
+                };
+            }
+        }
+
+
 
         [AllowAnonymous]
         [HttpPost("CadastrarUsuario")]
         public async Task<object> SingUp([FromBody] dynamic userInfo)
         {
             var user = new IdentityUser();
-            user.UserName = userInfo.Nome;
+            user.UserName = userInfo.UserName;
+            user.UserName = user.UserName.RemoveDiacritics();
             user.Email = userInfo.Email;
 
             string userPWD = userInfo.Password;
@@ -179,21 +302,91 @@ namespace Global.API.Areas.Mobile.Controllers
                     IdAspNetUsers = user.Id,
                     Cpf = userInfo.Cpf,
                     Nome = userInfo.Nome,
-                    Email = userInfo.Email
+                    Email = userInfo.Email,
+                    TelefoneCandidato = new List<TelefoneCandidato>() {
+                        new TelefoneCandidato(){
+                            IdTelefoneNavigation = new Telefone(){
+                                Numero = userInfo.Telefone
+                            }
+                        }
+                    }
+
                 };
 
                 CandidatoService candidatoService = new CandidatoService();
-                candidatoService.CadastrarCandidato(candidato);
+                bool success = candidatoService.CadastrarCandidato(candidato);
+
+                if (success)
+                {
+                    try
+                    {
+                        await SendEmailForEmailConfirmation(user.Email, user);
+                    }
+                    catch (Exception e) { }
+                }
 
                 return new
                 {
-                    ok = true,
+                    ok = success,
                     IdCandidato = candidato.Id
 
                 };
             }
             else
                 return new { ok = false };
+
+
+        }
+
+        [AllowAnonymous]
+        [HttpGet("CarregarConfiguracoseInteresse")]
+        public object CarregarConfiguracoseInteresse()
+        {
+
+
+            using (var areaService = new EnumAgrupamentoService())
+            using (var cargoService = new CargoService())
+            {
+                EnumAgrupamento[] areas = areaService.BuscarTodos();
+                Cargo[] cargos = cargoService.BuscarTodos();
+
+                return new
+                {
+                    areas,
+                    cargos
+
+                };
+
+            }
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost("SalvarPreferencias")]
+        public object SalvarPreferencias([FromBody] ViewModel.Preferencias preferencias)
+        {
+
+            using (var areaService = new AreaInteresseService())
+            using (var cargoService = new CargoInteresseService())
+            {
+
+                bool sucesso = true;
+                foreach (var area in preferencias.areasInteresse)
+                    sucesso = areaService.Salvar(area);
+
+                foreach (var cargo in preferencias.cargosInteresse)
+                    sucesso = cargoService.Salvar(cargo);
+
+                return new
+                {
+                    ok = sucesso
+                };
+
+
+            }
+
+
+
 
 
         }
