@@ -13,18 +13,18 @@ namespace Global.DAO.Service
 {
     public class CandidatoService : IDisposable
     {
-        private CandidatoRepository Repository { get; set; }
+        private RepositoryCandidato Repository { get; set; }
 
         public CandidatoService()
         {
 
-            Repository = new CandidatoRepository();
+            Repository = new RepositoryCandidato();
 
         }
 
         public CandidatoService(GlobalContext context)
         {
-            Repository = new CandidatoRepository(context);
+            Repository = new RepositoryCandidato(context);
         }
 
 

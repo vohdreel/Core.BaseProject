@@ -23,8 +23,8 @@ namespace Global.API.Areas.Mobile.Controllers
 
         public DocumentoController(IServiceDocumento serviceDocumento)
         {
-            _serviceDocumento = serviceDocumento;       
-        
+            _serviceDocumento = serviceDocumento;
+
         }
 
 
@@ -32,7 +32,10 @@ namespace Global.API.Areas.Mobile.Controllers
         public ViewModel.Documento[] ListarArquivo(int IdCandidato)
         {
 
-            return _serviceDocumento;
+            return _serviceDocumento
+                .ListarPorCandidato(IdCandidato)
+                .Select(x => new ViewModel.Documento(x))
+                .ToArray();
 
 
 
@@ -60,54 +63,54 @@ namespace Global.API.Areas.Mobile.Controllers
         }
 
 
-        [HttpGet("BaixarArquivo")]
-        public object BaixarArquivo(int idArquivo)
-        {
-            using (var service = new DocumentoService())
-            {
+        //[HttpGet("BaixarArquivo")]
+        //public object BaixarArquivo(int idArquivo)
+        //{
+        //    using (var service = new DocumentoService())
+        //    {
 
-                Documento anexo = service.Buscar(idArquivo);
+        //        Documento anexo = service.Buscar(idArquivo);
 
-                return new
-                {
-                    nomeArquivo = anexo.NomeArquivo,
-                    tipoArquivo = anexo.Extensao,
-                    base64string = anexo.Base64Code
-                };
+        //        return new
+        //        {
+        //            nomeArquivo = anexo.NomeArquivo,
+        //            tipoArquivo = anexo.Extensao,
+        //            base64string = anexo.Base64Code
+        //        };
 
-            }
-
-
-        }
-
-        
-
-        [HttpPost("SalvarArquivo")]
-        public object SalvarArquivo([FromBody] ViewModel.Documento anexo)
-        {
-
-            using (var service = new DocumentoService())
-            {
-
-                Documento _anexo = new Documento()
-                {
-
-                    ByteArray = Convert.FromBase64String(anexo.ByteArray),
-                    IdCandidato = anexo.IdCandidato,
-                    IdEnumTipoDocumento = anexo.IdEnumTipoDocumento,
-                    NomeArquivo = anexo.NomeArquivo,
-                    Extensao = anexo.Extensao,
-                    Base64Code = anexo.ByteArray
-
-                };
-
-                bool salvar = service.Salvar(_anexo);
-                return new { ok = salvar };
-
-            }
+        //    }
 
 
-        }
+        //}
+
+
+
+        //[HttpPost("SalvarArquivo")]
+        //public object SalvarArquivo([FromBody] ViewModel.Documento anexo)
+        //{
+
+        //    using (var service = new DocumentoService())
+        //    {
+
+        //        Documento _anexo = new Documento()
+        //        {
+
+        //            ByteArray = Convert.FromBase64String(anexo.ByteArray),
+        //            IdCandidato = anexo.IdCandidato,
+        //            IdEnumTipoDocumento = anexo.IdEnumTipoDocumento,
+        //            NomeArquivo = anexo.NomeArquivo,
+        //            Extensao = anexo.Extensao,
+        //            Base64Code = anexo.ByteArray
+
+        //        };
+
+        //        bool salvar = service.Salvar(_anexo);
+        //        return new { ok = salvar };
+
+        //    }
+
+
+        //}
 
     }
 }

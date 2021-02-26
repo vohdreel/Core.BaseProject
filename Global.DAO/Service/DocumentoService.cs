@@ -28,13 +28,19 @@ namespace Global.DAO.Service
             return RepositoryDocumento.Get(x => x.Id == Id).FirstOrDefault();
         }
 
-        public bool Criar(Documento Dados)
+        public Documento[] ListarPorCandidato(int idCandidato)
         {
-            
+            return RepositoryDocumento.Get(x => x.IdCandidato == idCandidato).ToArray();
+
+        }
+
+        public bool Salvar(Documento Dados)
+        {
+
             return RepositoryDocumento.Insert(Dados);
         }
 
-        public bool Atualizar(Documento Dados)
+        public bool Editar(Documento Dados)
         {
 
             return RepositoryDocumento.Update(Dados);

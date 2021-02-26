@@ -9,9 +9,11 @@ namespace Global.DAO.Interface.Service
     public interface IServiceDocumento
     {
         IEnumerable<Documento> Listar();
-        bool Criar(Documento documento);
-        bool Atualizar(Documento documento);
+        bool Salvar(Documento Dados);
+        bool Editar(Documento Dados);
         bool Excluir(int idDocumento);
         Documento BuscarPorId(int idDocumento);
+        Documento[] ListarPorCandidato(int idCandidato);
+
     }
 }
