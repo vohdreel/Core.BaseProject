@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Global.DAO.Interface.Service;
 using Global.DAO.Model;
 using Global.DAO.Service;
 using Global.Util;
@@ -18,30 +19,41 @@ namespace Global.API.Areas.Mobile.Controllers
     [Authorize]
     public class DocumentoController : ControllerBase
     {
+        private readonly IServiceDocumento _serviceDocumento;
+
+        public DocumentoController(IServiceDocumento serviceDocumento)
+        {
+            _serviceDocumento = serviceDocumento;       
+        
+        }
 
 
         [HttpGet("ListarArquivos")]
         public ViewModel.Documento[] ListarArquivo(int IdCandidato)
         {
 
-            using (var service = new DocumentoService())
-            {
-
-                ViewModel.Documento[] lista = service
-                    .ListarPorCandidato(IdCandidato)
-                    .Select(x => new ViewModel.Documento
-                    {
-                        IdArquivo = x.Id,
-                        Extensao = x.Extensao,
-                        IdCandidato = x.IdCandidato,
-                        NomeArquivo = x.NomeArquivo,
-                        TipoDocumento = EnumExtensions.GetEnumDisplayName((NomeTipoDocumento)x.IdEnumTipoDocumento)
+            return _serviceDocumento;
 
 
-                    }).ToArray();
-                return lista;
 
-            }
+            //using (var service = new DocumentoService())
+            //{
+
+            //    ViewModel.Documento[] lista = service
+            //        .ListarPorCandidato(IdCandidato)
+            //        .Select(x => new ViewModel.Documento
+            //        {
+            //            IdArquivo = x.Id,
+            //            Extensao = x.Extensao,
+            //            IdCandidato = x.IdCandidato,
+            //            NomeArquivo = x.NomeArquivo,
+            //            TipoDocumento = EnumExtensions.GetEnumDisplayName((NomeTipoDocumento)x.IdEnumTipoDocumento)
+
+
+            //        }).ToArray();
+            //    return lista;
+
+            //}
 
 
 

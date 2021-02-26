@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Global.DAO.Interface.Service
 {
-    interface IServiceDocumento
+    public interface IServiceDocumento
     {
         IEnumerable<Documento> Listar();
         bool Criar(Documento documento);
