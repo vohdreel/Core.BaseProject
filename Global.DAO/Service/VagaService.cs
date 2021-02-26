@@ -110,7 +110,7 @@ namespace Global.DAO.Service
 
         }
 
-        public Vaga[] BuscarVagasPorDistancia(Coordinates coordenadasCandidato, int distanciaMinima, int distanciaMaxima)
+        public Vaga[] BuscarVagasPorDistancia(Coordinates coordenadasCandidato, int distanciaMinima, int distanciaMaxima, int salarioMinimo, int salarioMaximo)
         {
             List<Vaga> vagasCompativies = new List<Vaga>();
             List<Vaga> vagas = Repository
@@ -133,7 +133,7 @@ namespace Global.DAO.Service
                 double distancia = GeoCoordinationExtension
                     .GetDistanceBetweenLocations(coordenadasCandidato, coordenadaVaga);
 
-                if (distancia >= distanciaMinima && distancia <= distanciaMaxima)
+                if (distancia >= distanciaMinima && distancia <= distanciaMaxima && _vaga.Salario >= salarioMinimo && _vaga.Salario <= salarioMaximo)
                 {
                     vagasCompativies.Add(_vaga);
                 }

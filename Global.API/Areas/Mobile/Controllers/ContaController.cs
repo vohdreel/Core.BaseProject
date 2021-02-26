@@ -75,7 +75,7 @@ namespace Global.API.Areas.Mobile.Controllers
                     var roles = await _userManager.GetRolesAsync(user);
                     var token = TokenService.GenerateToken(user, roles.ToList());
 
-                    HttpContext.Session.SetString("JWToken", token);
+                    //HttpContext.Session.SetString("JWToken", token);
 
                     HttpContext.Response.Cookies
                         .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
@@ -139,8 +139,7 @@ namespace Global.API.Areas.Mobile.Controllers
             {
                 return new
                 {
-                    ok = false,
-                    message = "Session Expired"
+                    ok = false
                 };
             }
             else
@@ -157,7 +156,7 @@ namespace Global.API.Areas.Mobile.Controllers
                     return new
                     {
                         ok = false,
-                        message = "Session Expired"
+                        message = "Sessão expirada"
                     };
 
             }

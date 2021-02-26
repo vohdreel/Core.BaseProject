@@ -63,10 +63,10 @@ namespace Global.API.Controllers
         public async Task UserAndRoles()
         {
             var user = new IdentityUser();
-            user.UserName = "default_global";
-            user.Email = "default@global.com";
+            user.UserName = "usuario_global";
+            user.Email = "usuario_app@global.com.br";
 
-            string userPWD = "globalSomepassword20+20";
+            string userPWD = "@Globalapp123";
 
             IdentityResult chkUser = await _userManager.CreateAsync(user, userPWD);
 

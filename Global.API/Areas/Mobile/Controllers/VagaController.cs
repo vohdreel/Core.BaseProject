@@ -253,7 +253,7 @@ namespace Global.API.Areas.Mobile.Controllers
 
 
         [HttpGet("GetVagasPorDistancia")]
-        public object GetVagasPorDistancia(int idCandidato, int distanciaMinima, int distanciaMaxima)
+        public object GetVagasPorDistancia(int idCandidato, int distanciaMinima, int distanciaMaxima, int salarioMinimo, int salarioMaximo)
         {
 
             using (var candidatoService = new CandidatoService())
@@ -270,7 +270,7 @@ namespace Global.API.Areas.Mobile.Controllers
                     };
 
                 var vagas = service
-                    .BuscarVagasPorDistancia(coordenadasCandidato, distanciaMinima, distanciaMaxima)
+                    .BuscarVagasPorDistancia(coordenadasCandidato, distanciaMinima, distanciaMaxima, salarioMinimo, salarioMaximo)
                     .Select(x => new ViewModel.Vaga
                     {
                         IdVaga = x.Id,
