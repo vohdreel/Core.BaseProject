@@ -1,5 +1,7 @@
 ﻿using Global.DAO.Context;
+using Global.DAO.Interface.Repository;
 using Global.DAO.Model;
+using Global.DAO.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Global.DAO.Repository
 {
-    public class Repository : GenericRepository<Candidato, GlobalContext>
+    public class RepositoryCandidato : Repository<Candidato, GlobalContext>, IRepositoryCandidato
     {
 
-        public Repository() :base(){ }
+        public RepositoryCandidato() :base(){ }
 
-        public Repository(GlobalContext context) : base(context) { }
+        public RepositoryCandidato(GlobalContext context) : base(context) { }
     }
 }

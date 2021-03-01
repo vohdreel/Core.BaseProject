@@ -13,7 +13,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 
-namespace Global.DAO.Repository.Generic
+namespace Global.DAO.Repository
 {
     public abstract class Repository<TEntity, TContext> : IDisposable, IRepository<TEntity>
         where TEntity : class

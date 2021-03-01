@@ -279,11 +279,13 @@ namespace Global.API
             #region Servicos
 
             services.AddScoped<IServiceDocumento, ServiceDocumento>();
+            services.AddScoped<IServiceCandidato, ServiceCandidato>();
 
             #endregion
 
             #region Repositório
             services.AddScoped<IRepositoryDocumento, RepositoryDocumento>();
+            services.AddScoped<IRepositoryCandidato, RepositoryCandidato>();
 
 
             #endregion
