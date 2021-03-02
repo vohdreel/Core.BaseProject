@@ -34,6 +34,13 @@ namespace Global.DAO.Service
 
         }
 
+        public Empresa BuscarPorNomeFantasia(string NomeFantasia)
+        {
+
+            return Repository.Get(x => x.NomeFantasia == NomeFantasia).FirstOrDefault();
+
+        }
+
         public bool Salvar(Empresa Dados)
         {
             

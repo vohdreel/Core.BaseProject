@@ -16,6 +16,9 @@ using Global.Util;
 using Global.DAO.Model;
 using Global.DAO.Service;
 using Newtonsoft.Json.Linq;
+using Global.Util.SystemEnumerations;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Global.API.Controllers
 {
@@ -28,12 +31,15 @@ namespace Global.API.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private SignInManager<IdentityUser> _signInManager;
         private readonly IConfiguration _config;
+        private IHttpContextAccessor _httpContextAccessor;
+
 
         public HomeController(ILogger<HomeController> logger,
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
             SignInManager<IdentityUser> signInManager,
-            IConfiguration config
+            IConfiguration config,
+            IHttpContextAccessor httpContextAccessor
             )
         {
             _logger = logger;
@@ -41,6 +47,7 @@ namespace Global.API.Controllers
             _roleManager = roleManager;
             _signInManager = signInManager;
             _config = config;
+
 
         }
         [HttpGet]
@@ -136,6 +143,85 @@ namespace Global.API.Controllers
             return 0;
 
         }
+
+        [AllowAnonymous]
+        [HttpGet("FeedTest")]
+        public dynamic FeedTest()
+        {
+            var feedArray = HttpHelper
+                .Get<JObject>(
+                "https://jobs.i-hunter.com/",
+                "globalempregos/feed/indeed",
+                isXML: true);
+
+
+            JArray jobs = feedArray["source"]["jobs"]["job"] as JArray;
+
+            foreach (JObject job in jobs)
+            {
+                ///primeiro verificar se a empresa existe
+                Vaga vaga = new Vaga();
+                Empresa empresa = new EmpresaService().BuscarPorNomeFantasia(job["company"].ToString());
+                if (empresa == null)
+                {
+                    empresa = new Empresa()
+                    {
+                        NomeFantasia = job["company"]["#cdata-section"].ToString(),
+                        EmailContato = job["email"]["#cdata-section"].ToString(),
+                    };
+                };
+
+                string vagaText = job["title"]["#cdata-section"].ToString();
+
+                Regex regex = new Regex(@".*?-\s+(?<cargo>.*?)\s+-");
+                Match match = regex.Match(vagaText);
+                if (match.Success)
+                {
+                    string nomeVaga = match.Groups["cargo"].Value;
+                    CargoService cargoService = new CargoService();
+
+                }
+
+
+
+
+
+
+                ProcessoSeletivo processoSeletivo = new ProcessoSeletivo()
+                {
+                    DataInicioProcesso = Convert.ToDateTime(job["date"]["#cdata-section"].ToString()),
+                    DataTerminoProcesso = Convert.ToDateTime(job["expiration_date"]["#cdata-section"].ToString()),
+                    StatusProcesso = (int)StatusProcesso.EmAndamento,
+                    NomeProcesso = job["title"]["#cdata-section"].ToString(),
+                    IdEmpresaNavigation = empresa,
+                    Vaga = new List<Vaga>() {
+                        new Vaga()
+                        {
+                            Cidade = job["city"]["#cdata-section"].ToString(),
+                            Estado = job["state"]["#cdata-section"].ToString(),
+                            ReferenceNumber =job["referencenumber"]["#cdata-section"].Value<int>(),
+                            Requisitos= job["description"]["#cdata-section"].ToString(),
+                            UrlVaga = job["url"]["#cdata-section"].ToString()
+                        }
+                    }
+                };                //regex para buscar modalidade se tiver
+
+                //regex para buscar salario se tiver
+
+
+
+            }
+
+
+
+
+            return feedArray;
+
+
+            //ver
+
+        }
+
 
         [AllowAnonymous]
         [HttpGet("appLogin")]
@@ -243,8 +329,8 @@ namespace Global.API.Controllers
                     //O User estará vazio até que um JWT gerado pelo sistema seja encontrado na requisição
                     HttpContext.Session.SetString("JWToken", token);
 
-                    HttpContext.Response.Cookies
-                       .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
+                    //HttpContext.Response.Cookies
+                    //   .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
 
 
                     return Json("Logged");
@@ -265,6 +351,8 @@ namespace Global.API.Controllers
                 HttpContext.Response.Cookies.Append(cookie.Key, "", TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment")));
                 //HttpContext.Response.Cookies.Delete(cookie.Key);
             }
+
+            HttpContext.Session.Clear();
             return Json("Logged Out");
         }
 

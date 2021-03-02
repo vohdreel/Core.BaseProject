@@ -141,5 +141,14 @@ namespace Global.Util.SystemEnumerations
 
     }
 
+    public enum StatusProcesso
+    {
+        [Display(Name = "Em Andamento")]
+        EmAndamento = 1,
+        [Display(Name = "Encerrado")]
+        Encerrado = 2,
+
+    }
+
 
 }

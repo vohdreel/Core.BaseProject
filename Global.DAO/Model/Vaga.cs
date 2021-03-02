@@ -45,6 +45,9 @@ namespace Global.DAO.Model
         public string Numero { get; set; }
         [StringLength(40)]
         public string Complemento { get; set; }
+        public int? ReferenceNumber { get; set; }
+        [StringLength(200)]
+        public string UrlVaga { get; set; }
 
         [ForeignKey(nameof(IdCargo))]
         [InverseProperty(nameof(Cargo.Vaga))]

@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Global.DAO.Model;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Global.DAO.Procedure.Models;
 
 namespace Global.DAO.Context
 {
@@ -44,16 +43,15 @@ namespace Global.DAO.Context
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=prolead.database.windows.net;Database=GlobalEmpregos;user id=anima_sa;password=A^BCxSFd#%qHv=W79uda;Trusted_Connection=True;Integrated Security=False;MultipleActiveResultSets=true");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-C344KI6;Database=GlobalEmpregos;Trusted_Connection=True;MultipleActiveResultSets=true");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();
-
             modelBuilder.Entity<AreaInteresse>(entity =>
             {
                 entity.HasOne(d => d.IdCandidatoNavigation)
@@ -66,7 +64,8 @@ namespace Global.DAO.Context
                     .HasForeignKey(d => d.IdEnumAgrupamento)
                     .HasConstraintName("FK_EnumAgrupamento_AreaInteresse");
             });
-           
+
+       
 
             modelBuilder.Entity<Being>(entity =>
             {
@@ -231,6 +230,10 @@ namespace Global.DAO.Context
 
                 entity.Property(e => e.Cnpj).IsUnicode(false);
 
+                entity.Property(e => e.EmailContato)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
                 entity.Property(e => e.Endereco).IsUnicode(false);
 
                 entity.Property(e => e.Estado).IsUnicode(false);
@@ -360,6 +363,10 @@ namespace Global.DAO.Context
                 entity.Property(e => e.Numero).IsUnicode(false);
 
                 entity.Property(e => e.Requisitos).IsUnicode(false);
+
+                entity.Property(e => e.UrlVaga)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.HasOne(d => d.IdCargoNavigation)
                     .WithMany(p => p.Vaga)

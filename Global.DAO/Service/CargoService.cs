@@ -66,6 +66,14 @@ namespace Global.DAO.Service
             return resultado;
         }
 
+        public bool VerificarExistenciaCargo(int Id)
+        {
+            var dados = Repository.GetByID(Id);
+            bool resultado = Repository.Delete(dados);
+
+            return resultado;
+        }
+
         public GlobalContext GetContext()
         {
             return Repository.GetContext();
