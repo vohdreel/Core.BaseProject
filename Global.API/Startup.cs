@@ -152,9 +152,6 @@ namespace Global.API {
 
                           //Configuração geral dos cookies para validar no Azure Dev Ops
                           options.Cookie.SameSite = SameSiteMode.None;
-                          options.Cookie.IsEssential = true;
-                          options.Cookie.Path = "/";
-                          options.Cookie.HttpOnly = true;
 
                           if (Configuration.GetProperty<bool>("ApiConfig", "useEntityCore"))
                           {
