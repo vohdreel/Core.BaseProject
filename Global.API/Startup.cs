@@ -144,7 +144,7 @@ namespace Global.API {
                       .AddCookie(options =>
                       {
                           options.ExpireTimeSpan = TimeSpan.FromDays(30);
-                          options.SlidingExpiration = false;
+                          options.SlidingExpiration = true;
                           options.ExpireTimeSpan = TimeSpan.FromDays(30);
                           options.LoginPath = "/Account/Login";
                           options.LogoutPath = "/Account/Logout";
