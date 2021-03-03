@@ -63,8 +63,8 @@ namespace Global.API.Controllers
         public async Task UserAndRoles()
         {
             var user = new IdentityUser();
-            user.UserName = "usuario_global";
-            user.Email = "usuario_app@global.com.br";
+            user.UserName = "paula_mattus";
+            user.Email = "paula.mattus@globalempregos.com.br";
 
             string userPWD = "@Globalapp123";
 
