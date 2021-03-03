@@ -226,7 +226,7 @@ namespace Global.API.Controllers
                             new Vaga()
                             {
                                 Cidade = job["city"]["#cdata-section"].ToString(),
-                                Estado = job["state"]["#cdata-section"].ToString(),
+                                Estado = job["state"]["#cdata-section"].ToString().ConverterEstados(),
                                 ReferenceNumber =job["referencenumber"]["#cdata-section"].Value<int>(),
                                 Requisitos= job["description"]["#cdata-section"].ToString(),
                                 UrlVaga = job["url"]["#cdata-section"].ToString(),

@@ -241,8 +241,8 @@ namespace Global.DAO.Service
         }
 
         public bool VerificarVagaPorReferenceNumber(int referenceNumber) 
-        { 
-            return Repository.Get(x => x.ReferenceNumber == referenceNumber).FirstOrDefault() != null
+        {
+            return Repository.Get(x => x.ReferenceNumber == referenceNumber).FirstOrDefault() != null;
         
         
         

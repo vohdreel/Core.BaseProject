@@ -28,7 +28,7 @@ namespace Global.Util
         public static string ConverterEstados(this string text) 
         {
 
-			switch (text.RemoveDiacritics().ToUpper())
+			switch (text.ToUpper())
 			{
 				/* UFs */
 				case "AC": text = "Acre"; break;
