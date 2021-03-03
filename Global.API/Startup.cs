@@ -81,27 +81,6 @@ namespace Global.API {
                     .AllowCredentials());
             });
 
-            //services.AddDistributedMemoryCache();
-            //services.ConfigureNonBreakingSameSiteCookies();
-
-
-            //Configuração De Sessão 
-            //services.AddSession(options => {
-            //    options.Cookie.SameSite = SameSiteMode.None;
-            //    options.IdleTimeout = TimeSpan.FromMinutes(120);
-            //    options.Cookie.HttpOnly = true;
-            //    //// Make the session cookie essential
-            //    options.Cookie.IsEssential = true;
-            //    //options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            //});
-
-            //Configuração De Cache (refernete a Sessão)
-            //services.AddDistributedMemoryCache();
-
-            ////Configuração De SameSite Cookies
-            //services.ConfigureNonBreakingSameSiteCookies();
-
-
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -147,8 +126,6 @@ namespace Global.API {
                     OnMessageReceived = context =>
                     {
                         context.Token = context.Request.Cookies["access_token"];
-                        //if (string.IsNullOrEmpty(context.Token))
-                        //    //context.Token = context.Request.HttpContext.Session.GetString("JWToken");
 
                         return Task.CompletedTask;
                     },
@@ -328,25 +305,10 @@ namespace Global.API {
             app.UseRouting();
 
             app.UseCookiePolicy();
-            ////Add User session
-            //app.UseSession();
 
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
-
-            //Add JWToken to all incoming HTTP Request Header
-            //app.Use((context, next) =>
-            //{
-            //    var JWToken = context.Session.GetString("JWToken");
-            //    if (!string.IsNullOrEmpty(JWToken))
-            //    {
-            //        context.Request.Headers.Add("Authorization", "Bearer " + JWToken);
-            //    }
-            //    return next();
-            //});
-            //Add JWToken Authentication service
-
 
             if (Configuration.GetProperty<bool>("ApiConfig", "useMVC"))
             {
