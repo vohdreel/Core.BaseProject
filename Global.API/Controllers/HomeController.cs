@@ -19,6 +19,7 @@ using Newtonsoft.Json.Linq;
 using Global.Util.SystemEnumerations;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace Global.API.Controllers
 {
@@ -155,10 +156,15 @@ namespace Global.API.Controllers
                 isXML: true);
 
 
+            ProcessoSeletivoService processoService = new ProcessoSeletivoService();
+            VagaService vagaService = new VagaService();
+
             JArray jobs = feedArray["source"]["jobs"]["job"] as JArray;
 
             foreach (JObject job in jobs)
             {
+                int enumTipoContratacao = 0;
+                decimal valueSalario = 0;
                 ///primeiro verificar se a empresa existe
                 Vaga vaga = new Vaga();
                 Empresa empresa = new EmpresaService().BuscarPorNomeFantasia(job["company"].ToString());
@@ -169,23 +175,40 @@ namespace Global.API.Controllers
                         NomeFantasia = job["company"]["#cdata-section"].ToString(),
                         EmailContato = job["email"]["#cdata-section"].ToString(),
                     };
-                };
-
-                string vagaText = job["title"]["#cdata-section"].ToString();
-
-                Regex regex = new Regex(@".*?-\s+(?<cargo>.*?)\s+-");
-                Match match = regex.Match(vagaText);
-                if (match.Success)
-                {
-                    string nomeVaga = match.Groups["cargo"].Value;
-                    CargoService cargoService = new CargoService();
-
                 }
 
+                Cargo cargoVaga = new Cargo();
+                string rawVagaTitle = job["title"]["#cdata-section"].ToString();
 
+                Regex regex = new Regex(@".*?-\s+(?<cargo>.*?)\s+-");
+                Match match = regex.Match(rawVagaTitle);
+                if (match.Success)
+                {
+                    string nameVaga = match.Groups["cargo"].Value;
+                    CargoService cargoService = new CargoService();
+                    Cargo cargoVagaBase = cargoService.BuscarCargoFeed(nameVaga);
+                    if (cargoVagaBase == null)
+                    {
+                        cargoVaga = new Cargo()
+                        {
+                            NomeCargo = nameVaga,
+                            IdEnumAgrupamento = new EnumAgrupamentoService().BuscarPorNome("Prestação de Serviços").Id
 
+                        };
+                    }
 
+                }
+                string rawVagaDescription = job["description"]["#cdata-section"].ToString();
 
+                regex = new Regex(@"^.*?Tipo de contratação.*?\s+(?<tipoContratacao>.*?\s+)");
+                match = regex.Match(rawVagaDescription);
+                if (match.Success)
+                    enumTipoContratacao = (int)(VagaModalidade)Enum.Parse(typeof(VagaModalidade), match.Groups["tipoContratacao"].Value.RemoveDiacritics());
+
+                regex = new Regex(@"^.*?Salário.*?\s+(?<salario>.*?\s+)");
+                match = regex.Match(rawVagaDescription);
+                if (match.Success)
+                    valueSalario = Convert.ToDecimal(match.Groups["salario"].Value, new NumberFormatInfo() { NumberDecimalSeparator = "," });
 
                 ProcessoSeletivo processoSeletivo = new ProcessoSeletivo()
                 {
@@ -201,12 +224,23 @@ namespace Global.API.Controllers
                             Estado = job["state"]["#cdata-section"].ToString(),
                             ReferenceNumber =job["referencenumber"]["#cdata-section"].Value<int>(),
                             Requisitos= job["description"]["#cdata-section"].ToString(),
-                            UrlVaga = job["url"]["#cdata-section"].ToString()
+                            UrlVaga = job["url"]["#cdata-section"].ToString(),
+                            DisponibilidadeTransferencia = (int)Disponibilidade.Negociavel,
+                            DisponibilidadeViagem = (int)Disponibilidade.Negociavel,
+                            Jornada = (int)DisponibilidadeHorario.Integral,
+                            StatusVaga = (int)StatusVaga.Aberta,
+                            Modalidade = enumTipoContratacao,
+                            Salario = valueSalario,
+                            IdCargoNavigation = cargoVaga
+
+
                         }
                     }
-                };                //regex para buscar modalidade se tiver
+                };
 
-                //regex para buscar salario se tiver
+                var x = 0;
+
+
 
 
 

@@ -66,12 +66,16 @@ namespace Global.DAO.Service
             return resultado;
         }
 
-        public bool VerificarExistenciaCargo(int Id)
+        /// <summary>
+        /// Verifica a existencia de uma vaga encontrada no Feed do Sistema IHunter na base da Global
+        /// </summary>
+        /// <remarks>
+        /// Essas vagas sempre serão comparadas pelo nome e pelo nome e pelo enumAgrupamento fixo "Prestação de Serviços"
+        /// </remarks>
+        public Cargo BuscarCargoFeed(string nomeCargo)
         {
-            var dados = Repository.GetByID(Id);
-            bool resultado = Repository.Delete(dados);
-
-            return resultado;
+            return Repository.Get(x => x.NomeCargo == nomeCargo && x.IdEnumAgrupamentoNavigation.NomeAgrupamento == "Prestação de Serviços", includeProperties: "IdEnumAgrupamentoNavigation")
+                .FirstOrDefault();
         }
 
         public GlobalContext GetContext()

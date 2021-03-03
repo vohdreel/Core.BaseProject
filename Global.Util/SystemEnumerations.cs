@@ -14,7 +14,10 @@ namespace Global.Util.SystemEnumerations
         [Display(Name = "Estário")]
         Estagio = 3,
         [Display(Name = "Temporário")]
-        Temporario = 4
+        Temporario = 4,
+        [Display(Name = "Terceirizado")]
+        Terceirizado = 5
+
 
     }
 
@@ -73,6 +76,17 @@ namespace Global.Util.SystemEnumerations
 
     }
 
+    public enum StatusVaga
+    {
+        [Display(Name = "Aberta")]
+        Aberta = 1,
+        [Display(Name = "Preenchida")]
+        Preenchida = 2,
+        [Display(Name = "Revogada")]
+        Revogada = 3
+
+    }
+
     public enum DisponibilidadeHorario
     {
 
@@ -81,7 +95,7 @@ namespace Global.Util.SystemEnumerations
         [Display(Name = "Total")]
         Total = 2,
         [Display(Name = "Pela Manhã")]
-        PelaManha= 3,
+        PelaManha = 3,
         [Display(Name = "Pela Tarde")]
         PelaTarde = 4,
         [Display(Name = "Pela Noite")]
@@ -149,6 +163,7 @@ namespace Global.Util.SystemEnumerations
         Encerrado = 2,
 
     }
+
 
 
 }
