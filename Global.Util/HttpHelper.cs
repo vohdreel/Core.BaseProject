@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Xml;
 
 namespace Global.Util
 {
@@ -43,7 +44,7 @@ namespace Global.Util
 
         }
 
-        public static T Get<T>(string uriBaseAddress, string route, dynamic parameters = null, dynamic headerOptions = null)
+        public static T Get<T>(string uriBaseAddress, string route, dynamic parameters = null, dynamic headerOptions = null, bool isXML = false)
         {
             using (var httpClient = new HttpClient())
             {
@@ -80,7 +81,19 @@ namespace Global.Util
                 if (httpResponse.IsSuccessStatusCode)
                 {
                     if (!string.IsNullOrEmpty(result))
-                        return JToken.Parse(result).ToObject<T>();
+                    {
+                        if (!isXML)
+                            return JToken.Parse(result).ToObject<T>();
+                        else
+                        {
+
+                            XmlDocument xml = new XmlDocument();
+                            xml.LoadXml(result);
+                            string jsonText = JsonConvert.SerializeXmlNode(xml);
+                            return JToken.Parse(jsonText).ToObject<T>();
+
+                        }
+                    }
                 }
                 else
                     throw new Exception(JToken.Parse(result)["Message"].ToString());

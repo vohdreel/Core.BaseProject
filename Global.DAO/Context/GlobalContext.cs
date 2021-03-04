@@ -2,10 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Global.DAO.Model;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Global.DAO.Procedure.Models;
 
 namespace Global.DAO.Context
 {
-    public partial class GlobalContext : DbContext
+    public partial class GlobalContext : IdentityDbContext
     {
         public GlobalContext()
         {
@@ -50,6 +52,7 @@ namespace Global.DAO.Context
         {
 
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();
 
             modelBuilder.Entity<AreaInteresse>(entity =>
             {
