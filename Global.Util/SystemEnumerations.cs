@@ -11,7 +11,7 @@ namespace Global.Util.SystemEnumerations
         CLT = 1,
         [Display(Name = "PJ")]
         PJ = 2,
-        [Display(Name = "Estário")]
+        [Display(Name = "Estágio")]
         Estagio = 3,
         [Display(Name = "Temporário")]
         Temporario = 4
