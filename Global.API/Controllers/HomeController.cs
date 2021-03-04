@@ -90,6 +90,21 @@ namespace Global.API.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("AddUserToRoles")]
+        public async Task AddUserToRoles()
+        {
+            var user = await _userManager.FindByIdAsync("3bf57628-e406-4936-a446-fa1ddcac9d5f");
+
+            // creating Creating Manager role     
+            var x = await _roleManager.RoleExistsAsync("Manager");
+            if (!x)
+            {
+                await _userManager.AddToRoleAsync(user, "Manager");
+            }
+
+        }
+
+        [AllowAnonymous]
         [HttpGet("CreateRoles")]
         public async Task CreateRoles()
         {
