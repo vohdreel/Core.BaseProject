@@ -66,6 +66,14 @@ namespace Global.DAO.Service
             return resultado;
         }
 
+
+        public Cargo BuscarCargoFeed(string nomeCargo)
+        {
+            return Repository.Get(x => x.NomeCargo == nomeCargo && x.IdEnumAgrupamentoNavigation.NomeAgrupamento == "Prestação de Serviços")
+                .FirstOrDefault();
+        }
+
+
         public GlobalContext GetContext()
         {
             return Repository.GetContext();
