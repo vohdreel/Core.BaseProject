@@ -141,7 +141,11 @@ namespace Global.DAO.Service
 
         }
 
+        public Candidato[] VerificarCandidatoSemUsuario()
+        {
+            return Repository.Get(x => string.IsNullOrEmpty(x.IdAspNetUsers)).ToArray();
 
+        }
         public GlobalContext GetContext()
         {
             return Repository.GetContext();
