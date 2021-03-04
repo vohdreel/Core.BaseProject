@@ -2,12 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Global.DAO.Model;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Global.DAO.Procedure.Models;
 
 namespace Global.DAO.Context
 {
-    public partial class GlobalContext : IdentityDbContext
+    public partial class GlobalContext : DbContext
     {
         public GlobalContext()
         {
@@ -50,9 +48,8 @@ namespace Global.DAO.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();
+            base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<AreaInteresse>(entity =>
             {
@@ -65,8 +62,7 @@ namespace Global.DAO.Context
                     .WithMany(p => p.AreaInteresse)
                     .HasForeignKey(d => d.IdEnumAgrupamento)
                     .HasConstraintName("FK_EnumAgrupamento_AreaInteresse");
-            });
-           
+            });       
 
             modelBuilder.Entity<Being>(entity =>
             {
@@ -231,6 +227,10 @@ namespace Global.DAO.Context
 
                 entity.Property(e => e.Cnpj).IsUnicode(false);
 
+                entity.Property(e => e.EmailContato)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
                 entity.Property(e => e.Endereco).IsUnicode(false);
 
                 entity.Property(e => e.Estado).IsUnicode(false);
@@ -360,6 +360,10 @@ namespace Global.DAO.Context
                 entity.Property(e => e.Numero).IsUnicode(false);
 
                 entity.Property(e => e.Requisitos).IsUnicode(false);
+
+                entity.Property(e => e.UrlVaga)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.HasOne(d => d.IdCargoNavigation)
                     .WithMany(p => p.Vaga)

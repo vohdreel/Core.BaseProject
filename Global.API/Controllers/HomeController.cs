@@ -137,6 +137,8 @@ namespace Global.API.Controllers
 
         }
 
+
+
         [AllowAnonymous]
         [HttpGet("appLogin")]
         public async Task<JsonResult> appLogin(string email, string password)
