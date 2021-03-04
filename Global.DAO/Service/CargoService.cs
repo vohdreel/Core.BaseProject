@@ -74,7 +74,7 @@ namespace Global.DAO.Service
         /// </remarks>
         public Cargo BuscarCargoFeed(string nomeCargo)
         {
-            return Repository.Get(x => x.NomeCargo == nomeCargo && x.IdEnumAgrupamentoNavigation.NomeAgrupamento == "Prestação de Serviços", includeProperties: "IdEnumAgrupamentoNavigation")
+            return Repository.Get(x => x.NomeCargo == nomeCargo && x.IdEnumAgrupamentoNavigation.NomeAgrupamento == "Prestação de Serviços")
                 .FirstOrDefault();
         }
 

@@ -180,18 +180,18 @@ namespace Global.API.Controllers
                             EmailContato = job["email"]["#cdata-section"].ToString(),
                         };
                     }
-
-                    Cargo cargoVaga = new Cargo();
                     string rawVagaTitle = job["title"]["#cdata-section"].ToString();
 
-                    Regex regex = new Regex(@".*?-\s+(?<cargo>.*?)\s+-");
+                    //Regex regex = new Regex(@".*?-\s*(?<cargo>.*?)\s*-");
+                    Regex regex = new Regex(@".*?-\s+(?<cargo>.*?(?(?=\s*-)\s*-|((?!\s-).*-|$)))");
                     Match match = regex.Match(rawVagaTitle);
+                    Cargo cargoVaga = new Cargo();
                     if (match.Success)
                     {
-                        string nameVaga = match.Groups["cargo"].Value;
+                        string nameVaga = match.Groups["cargo"].Value.Replace("-", "").Trim();
                         CargoService cargoService = new CargoService();
-                        Cargo cargoVagaBase = cargoService.BuscarCargoFeed(nameVaga);
-                        if (cargoVagaBase == null)
+                        cargoVaga = cargoService.BuscarCargoFeed(nameVaga);
+                        if (cargoVaga == null)
                         {
                             cargoVaga = new Cargo()
                             {
@@ -199,10 +199,11 @@ namespace Global.API.Controllers
                                 IdEnumAgrupamento = new EnumAgrupamentoService().BuscarPorNome("Prestação de Serviços").Id
 
                             };
+                            cargoService.Salvar(cargoVaga);
                         }
 
                     }
-                    string rawVagaDescription = job["description"]["#cdata-section"].ToString();
+                    string rawVagaDescription = job["description"]["#cdata-section"].ToString().Replace("\r\n", " ");
 
                     regex = new Regex(@"^.*?Tipo de contratação.*?\s+(?<tipoContratacao>.*?\s+)");
                     match = regex.Match(rawVagaDescription);
@@ -212,8 +213,19 @@ namespace Global.API.Controllers
                     regex = new Regex(@"^.*?Salário.*?\s+(?<salario>.*?\s+)");
                     match = regex.Match(rawVagaDescription);
                     if (match.Success)
-                        valueSalario = Convert.ToDecimal(match.Groups["salario"].Value, new NumberFormatInfo() { NumberDecimalSeparator = "," });
+                    {
+                        try
+                        {
+                            valueSalario = Convert.ToDecimal(match.Groups["salario"].Value.Replace(".", ""), new NumberFormatInfo() { NumberDecimalSeparator = "," });
 
+                        }
+                        catch (Exception e)
+                        {
+                            valueSalario = 0;
+                        }
+
+
+                    }
                     ProcessoSeletivo processoSeletivo = new ProcessoSeletivo()
                     {
                         DataInicioProcesso = Convert.ToDateTime(job["date"]["#cdata-section"].ToString()),
@@ -236,7 +248,7 @@ namespace Global.API.Controllers
                                 StatusVaga = (int)StatusVaga.Aberta,
                                 Modalidade = enumTipoContratacao,
                                 Salario = valueSalario,
-                                IdCargoNavigation = cargoVaga
+                                IdCargo = cargoVaga.Id,
 
 
                             }
