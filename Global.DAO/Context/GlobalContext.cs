@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Global.DAO.Model;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Global.DAO.Procedure.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Global.DAO.Context
 {
@@ -19,13 +19,6 @@ namespace Global.DAO.Context
         }
 
         public virtual DbSet<AreaInteresse> AreaInteresse { get; set; }
-        public virtual DbSet<AspNetRoleClaims> AspNetRoleClaims { get; set; }
-        public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
-        public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
-        public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
-        public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
-        public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
-        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<Being> Being { get; set; }
         public virtual DbSet<Candidato> Candidato { get; set; }
         public virtual DbSet<Candidatura> Candidatura { get; set; }
@@ -57,9 +50,7 @@ namespace Global.DAO.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();
 
             modelBuilder.Entity<AreaInteresse>(entity =>
@@ -73,7 +64,7 @@ namespace Global.DAO.Context
                     .WithMany(p => p.AreaInteresse)
                     .HasForeignKey(d => d.IdEnumAgrupamento)
                     .HasConstraintName("FK_EnumAgrupamento_AreaInteresse");
-            });
+            });        
 
             modelBuilder.Entity<Being>(entity =>
             {
@@ -238,6 +229,10 @@ namespace Global.DAO.Context
 
                 entity.Property(e => e.Cnpj).IsUnicode(false);
 
+                entity.Property(e => e.EmailContato)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
                 entity.Property(e => e.Endereco).IsUnicode(false);
 
                 entity.Property(e => e.Estado).IsUnicode(false);
@@ -367,6 +362,10 @@ namespace Global.DAO.Context
                 entity.Property(e => e.Numero).IsUnicode(false);
 
                 entity.Property(e => e.Requisitos).IsUnicode(false);
+
+                entity.Property(e => e.UrlVaga)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.HasOne(d => d.IdCargoNavigation)
                     .WithMany(p => p.Vaga)

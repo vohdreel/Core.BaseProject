@@ -18,10 +18,10 @@ namespace Global.DAO.Service
         private readonly IRepositoryCandidato RepositoryCandidato;
 
 
-        public ServiceCandidato(IRepositoryCandidato RepositoryCandidatoCandidato)
+        public ServiceCandidato(IRepositoryCandidato repositoryCandidato)
         {
 
-            RepositoryCandidato = RepositoryCandidatoCandidato;
+            RepositoryCandidato = repositoryCandidato;
 
         }
 
