@@ -256,11 +256,6 @@ namespace Global.API.Controllers
                     };
 
                     bool success = processoService.Salvar(processoSeletivo);
-
-
-
-
-
                 }
             }
 
