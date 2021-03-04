@@ -7,18 +7,14 @@ namespace Global.Util.SystemEnumerations
 {
     public enum VagaModalidade
     {
-        [Display(Name = "A Combinar", ShortName = "N/A")]
-        NaoDisponivel = 0,
-        [Display(Name = "CLT", ShortName = "CLT")]
+        [Display(Name = "CLT")]
         CLT = 1,
-        [Display(Name = "PJ", ShortName = "PJ")]
+        [Display(Name = "PJ")]
         PJ = 2,
-        [Display(Name = "Estágio", ShortName ="ESTAG")]
+        [Display(Name = "Estágio")]
         Estagio = 3,
-        [Display(Name = "Temporário", ShortName = "TEMP")]
-        Temporario = 4,
-        [Display(Name = "Terceirizado", ShortName = "TERC")]
-        Terceirizado = 5
+        [Display(Name = "Temporário")]
+        Temporario = 4
 
     }
 

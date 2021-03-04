@@ -16,8 +16,7 @@ namespace Global.DAO.Service
     {
         private VagaRepository Repository { get; set; }
 
-        public VagaService
-            ()
+        public VagaService()
         {
 
             Repository = new VagaRepository();
@@ -237,7 +236,7 @@ namespace Global.DAO.Service
             if (!string.IsNullOrEmpty(extensao) && !string.IsNullOrEmpty(base64))
                 return extensao + ',' + base64;
             else
-                return "https://via.placeholder.com/150x150";
+                return "https://via.placeholder.com/50x50";
 
         }
 
