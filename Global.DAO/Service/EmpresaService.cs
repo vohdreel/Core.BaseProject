@@ -59,6 +59,13 @@ namespace Global.DAO.Service
             return resultado;
         }
 
+        public Empresa BuscarPorNomeFantasia(string NomeFantasia)
+        {
+
+            return Repository.Get(x => x.NomeFantasia == NomeFantasia).FirstOrDefault();
+
+        }
+
         public GlobalContext GetContext()
         {
             return Repository.GetContext();
