@@ -20,7 +20,7 @@ namespace Global.API.ViewModel
             IdCandidato = model.IdCandidato;
             Empresa = model.Empresa;
             Cargo = model.Cargo;
-            DataAdmissao = model.DataAdmissão;
+            DataAdmissao = model.DataAdmissao;
             DataDesligamento = model.DataDesligamento;      
         
         }

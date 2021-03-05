@@ -15,7 +15,7 @@ namespace Global.DAO.Model
         [StringLength(250)]
         public string Cargo { get; set; }
         [Column(TypeName = "date")]
-        public DateTime? DataAdmissão { get; set; }
+        public DateTime? DataAdmissao { get; set; }
         [Column(TypeName = "date")]
         public DateTime? DataDesligamento { get; set; }
 
