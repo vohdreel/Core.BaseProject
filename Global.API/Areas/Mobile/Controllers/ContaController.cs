@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using Environment = Gyan.Web.Identity.Data.Authentication.Environment;
 using FromBodyAttribute = Microsoft.AspNetCore.Mvc.FromBodyAttribute;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
@@ -54,6 +56,8 @@ namespace Global.API.Areas.Mobile.Controllers
             password = System.Uri.UnescapeDataString(password);
             IdentityUser user = new IdentityUser();
             user = await _userManager.FindByEmailAsync(email);
+            if(user == null)
+                user = await _userManager.FindByNameAsync(email);
             if (user != null && await _userManager.CheckPasswordAsync(user, password))
             {
                 // user is valid do whatever you want
@@ -62,7 +66,7 @@ namespace Global.API.Areas.Mobile.Controllers
                     {
                         unverified = true,
                         Ok = false,
-                        Message = "Essa conta ainda não foi confirmada. Por favor verifique sua caixa de mensagens."
+                        Message = "Essa conta ainda não foi confirmada. Por favor verifique sua caixa de mensagens. (Em alguns casos, a mensagem pode ser marcado como spam)!"
                     };
 
 
@@ -194,6 +198,8 @@ namespace Global.API.Areas.Mobile.Controllers
 
         }
 
+
+
         [HttpPost("EnviarLinkRedefinirSenha")]
         [AllowAnonymous]
         public async Task<object> ForgotPassword(string email)
@@ -286,7 +292,7 @@ namespace Global.API.Areas.Mobile.Controllers
         public async Task<object> SingUp([FromBody] dynamic userInfo)
         {
             var user = new IdentityUser();
-            user.UserName = userInfo.UserName;
+            user.UserName = userInfo.Cpf;
             user.UserName = user.UserName.RemoveDiacritics();
             user.Email = userInfo.Email;
 
@@ -321,6 +327,15 @@ namespace Global.API.Areas.Mobile.Controllers
                     try
                     {
                         await SendEmailForEmailConfirmation(user.Email, user);
+                        //var apiKey = Environment.GetEnvironmentVariable("NAME_OF_THE_ENVIRONMENT_VARIABLE_FOR_YOUR_SENDGRID_KEY");
+                        //var client = new SendGridClient(apiKey);
+                        //var from = new EmailAddress("test@example.com", "Example User");
+                        //var subject = "Sending with SendGrid is Fun";
+                        //var to = new EmailAddress("test@example.com", "Example User");
+                        //var plainTextContent = "and easy to do anywhere, even with C#";
+                        //var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
+                        //var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+                        //var response = await client.SendEmailAsync(msg);
                     }
                     catch (Exception e) { }
                 }

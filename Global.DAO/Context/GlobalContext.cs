@@ -29,6 +29,7 @@ namespace Global.DAO.Context
         public virtual DbSet<EnumAgrupamento> EnumAgrupamento { get; set; }
         public virtual DbSet<EnumPais> EnumPais { get; set; }
         public virtual DbSet<EnumTipoDocumento> EnumTipoDocumento { get; set; }
+        public virtual DbSet<ExperienciaProfissional> ExperienciaProfissional { get; set; }
         public virtual DbSet<Machine> Machine { get; set; }
         public virtual DbSet<MechaUser> MechaUser { get; set; }
         public virtual DbSet<Notificacao> Notificacao { get; set; }
@@ -44,12 +45,13 @@ namespace Global.DAO.Context
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=prolead.database.windows.net;Database=GlobalEmpregos;user id=anima_sa;password=A^BCxSFd#%qHv=W79uda;Trusted_Connection=True;Integrated Security=False;MultipleActiveResultSets=true");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-C344KI6;Database=GlobalEmpregos;Trusted_Connection=True;MultipleActiveResultSets=true");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();
@@ -65,7 +67,7 @@ namespace Global.DAO.Context
                     .WithMany(p => p.AreaInteresse)
                     .HasForeignKey(d => d.IdEnumAgrupamento)
                     .HasConstraintName("FK_EnumAgrupamento_AreaInteresse");
-            });          
+            });
 
             modelBuilder.Entity<Being>(entity =>
             {
@@ -265,6 +267,22 @@ namespace Global.DAO.Context
             modelBuilder.Entity<EnumTipoDocumento>(entity =>
             {
                 entity.Property(e => e.NomeTipoDocumento).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ExperienciaProfissional>(entity =>
+            {
+                entity.Property(e => e.Cargo)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.Empresa)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.HasOne(d => d.IdCandidatoNavigation)
+                    .WithMany(p => p.ExperienciaProfissional)
+                    .HasForeignKey(d => d.IdCandidato)
+                    .HasConstraintName("FK_Candidato_FormacaoCandidato");
             });
 
             modelBuilder.Entity<Machine>(entity =>

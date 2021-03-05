@@ -61,7 +61,7 @@ namespace Global.DAO.Service
         public bool ExisteCpfUsuario(string cpf)
         {
 
-            return Repository.Get(x => x.Cpf == cpf).FirstOrDefault() != null;
+            return Repository.Get(x => x.Cpf == cpf.Replace(".", "").Replace("-","")).FirstOrDefault() != null;
 
 
         }

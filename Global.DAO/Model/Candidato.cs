@@ -13,6 +13,7 @@ namespace Global.DAO.Model
             Candidatura = new HashSet<Candidatura>();
             CargoInteresse = new HashSet<CargoInteresse>();
             Documento = new HashSet<Documento>();
+            ExperienciaProfissional = new HashSet<ExperienciaProfissional>();
             Notificacao = new HashSet<Notificacao>();
             TelefoneCandidato = new HashSet<TelefoneCandidato>();
             VagaFavorita = new HashSet<VagaFavorita>();
@@ -137,6 +138,8 @@ namespace Global.DAO.Model
         public virtual ICollection<CargoInteresse> CargoInteresse { get; set; }
         [InverseProperty("IdCandidatoNavigation")]
         public virtual ICollection<Documento> Documento { get; set; }
+        [InverseProperty("IdCandidatoNavigation")]
+        public virtual ICollection<ExperienciaProfissional> ExperienciaProfissional { get; set; }
         [InverseProperty("IdCandidatoNavigation")]
         public virtual ICollection<Notificacao> Notificacao { get; set; }
         [InverseProperty("IdCandidatoNavigation")]

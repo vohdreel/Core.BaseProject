@@ -149,6 +149,7 @@ namespace Global.API.Controllers
         {
             IdentityUser user = new IdentityUser();
             user = await _userManager.FindByNameAsync(email);
+
             if (user != null && await _userManager.CheckPasswordAsync(user, password))
             {
                 // user is valid do whatever you want

@@ -99,8 +99,6 @@ namespace Global.API.Areas.Mobile.Controllers
             }
         }
 
-
-
         [HttpGet("ObterInformacoesPessoais")]
         public object ObterInformacoesPessoais(int idCandidato, bool isObjetivo = false)
         {
@@ -142,6 +140,32 @@ namespace Global.API.Areas.Mobile.Controllers
 
 
             }
+        }
+
+
+        [HttpGet("ObterExperienciasProfissionais")]
+        public object ObterExperienciasProfissionais(int IdCandidato)
+        {
+            using (var service = new ExperienciaProfissionalService())
+            {
+                ViewModel.ExperienciaProfissional[] experienciaProfissional = service
+                    .BuscarPorCandidato(IdCandidato)
+                    .Select(x => new ViewModel.ExperienciaProfissional(x)).ToArray();
+
+                return experienciaProfissional;
+            }
+
+        }
+
+        [HttpPost("SalvarNovaExpericenciaProfissional")]
+        public object SalvarNovaExpericenciaProfissional(ExperienciaProfissional experienciaProfissional)
+        {
+            using (var service = new ExperienciaProfissionalService())
+            {
+                bool success = service.Salvar(experienciaProfissional);
+                return success;
+            }
+
         }
     }
 }
