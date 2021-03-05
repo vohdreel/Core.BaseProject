@@ -50,8 +50,8 @@ namespace Global.DAO.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();
 
             modelBuilder.Entity<AreaInteresse>(entity =>
@@ -65,7 +65,7 @@ namespace Global.DAO.Context
                     .WithMany(p => p.AreaInteresse)
                     .HasForeignKey(d => d.IdEnumAgrupamento)
                     .HasConstraintName("FK_EnumAgrupamento_AreaInteresse");
-            });       
+            });          
 
             modelBuilder.Entity<Being>(entity =>
             {

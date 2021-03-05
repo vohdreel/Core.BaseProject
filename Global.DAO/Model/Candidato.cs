@@ -112,7 +112,6 @@ namespace Global.DAO.Model
         public int? PretensaoSalarial { get; set; }
         public bool? TermoCompromisso { get; set; }
         public bool MaterConectado { get; set; }
-        [Required]
         [StringLength(100)]
         public string IdAspNetUsers { get; set; }
         [Column("FCMToken")]

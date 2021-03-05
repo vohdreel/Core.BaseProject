@@ -33,6 +33,18 @@ namespace Global.Util
 			  .Select(s => s[random.Next(s.Length)]).ToArray());
 		}
 
+		public static string RandomPassword(int length)
+		{
+			const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+			const string numbers = "0123456789";
+
+			return "!@" + new string(Enumerable.Repeat(chars, length / 2)
+			  .Select(s => s[random.Next(s.Length)]).ToArray())
+				+ new string(Enumerable.Repeat(numbers, length / 2)
+			  .Select(s => s[random.Next(s.Length)]).ToArray())
+				;
+		}
+
 		public static string ConverterEstados(this string text)
 		{
 

@@ -167,16 +167,22 @@ namespace Global.API.Controllers
                 Candidato[] candidatos = service.VerificarCandidatoSemUsuario();
                 foreach (Candidato candidato in candidatos)
                 {
-
+                     
                     IdentityUser user = new IdentityUser();
                     user.UserName = candidato.Nome.Replace(" ", "_").RemoveDiacritics().ToLower();
                     user.Email = candidato.Email;
 
-                    string password = TextExtensions.RandomString(6);
+                    string password = TextExtensions.RandomPassword(6);
 
                     IdentityResult chkUser = await _userManager.CreateAsync(user, password);
                     if (chkUser.Succeeded)
                     {
+                        candidato.IdAspNetUsers = user.Id;
+                        bool success = service.AtualizarCandidato(candidato);
+
+                        if (success) { 
+                        
+                        }
 
                     }
                 }
