@@ -188,7 +188,18 @@ namespace Global.API.Areas.Mobile.Controllers
                         }
                 };
 
-                await _emailService.SendEmailForEmailConfirmation(options);
+                options = _emailService.ReturnConfirmationBody(options);
+                //var apiKey = Environment.GetEnvironmentVariable("NAME_OF_THE_ENVIRONMENT_VARIABLE_FOR_YOUR_SENDGRID_KEY");
+                //var client = new SendGridClient(apiKey);
+                //var from = new EmailAddress("test@example.com", "Example User");
+                //var subject = options.Subject;
+                //var to = new EmailAddress(user.Email);
+                //var plainTextContent = "and easy to do anywhere, even with C#";
+                //var htmlContent = options.Body;
+                //var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+                //var response = await client.SendEmailAsync(msg);
+
+
                 return true;
             }
             catch (Exception e)
@@ -327,15 +338,7 @@ namespace Global.API.Areas.Mobile.Controllers
                     try
                     {
                         await SendEmailForEmailConfirmation(user.Email, user);
-                        //var apiKey = Environment.GetEnvironmentVariable("NAME_OF_THE_ENVIRONMENT_VARIABLE_FOR_YOUR_SENDGRID_KEY");
-                        //var client = new SendGridClient(apiKey);
-                        //var from = new EmailAddress("test@example.com", "Example User");
-                        //var subject = "Sending with SendGrid is Fun";
-                        //var to = new EmailAddress("test@example.com", "Example User");
-                        //var plainTextContent = "and easy to do anywhere, even with C#";
-                        //var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
-                        //var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-                        //var response = await client.SendEmailAsync(msg);
+                        
                     }
                     catch (Exception e) { }
                 }
