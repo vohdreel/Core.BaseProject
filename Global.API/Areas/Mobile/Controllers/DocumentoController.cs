@@ -97,5 +97,18 @@ namespace Global.API.Areas.Mobile.Controllers
 
         }
 
+        [HttpPost("DeletarArquivo")]
+        public object DeletarArquivo(int IdArquivo)
+        {
+
+            using (var service = new DocumentoService())
+            {
+                bool salvar = service.Excluir(IdArquivo);
+                return new { ok = salvar, message = salvar ? "Arquivo excluído com sucesso!" : "Ocorreu um erro ao tentar excluir, tente novamente mais tarde!" };
+            }
+
+
+        }
+
     }
 }

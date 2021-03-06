@@ -7,22 +7,23 @@ namespace Global.API.ViewModel
 {
     public class ExperienciaProfissional
     {
-        public int IdExperiencia { get; set; }
+        public int Id { get; set; }
         public int IdCandidato { get; set; }
         public string Empresa { get; set; }        
         public string Cargo { get; set; }        
-        public DateTime? DataAdmissao { get; set; }        
-        public DateTime? DataDesligamento { get; set; }
+        public string DataAdmissao { get; set; }        
+        public string DataDesligamento { get; set; }
 
         public ExperienciaProfissional(Global.DAO.Model.ExperienciaProfissional model)
         {
-            IdExperiencia = model.Id;
+            Id = model.Id;
             IdCandidato = model.IdCandidato;
             Empresa = model.Empresa;
             Cargo = model.Cargo;
-            DataAdmissao = model.DataAdmissao;
-            DataDesligamento = model.DataDesligamento;      
-        
+            DataAdmissao = model.DataAdmissao.Value.ToString("dd/MM/yyyy") ;
+            DataDesligamento = model.DataDesligamento.Value.ToString("dd/MM/yyyy");
+
+
         }
     }
 }

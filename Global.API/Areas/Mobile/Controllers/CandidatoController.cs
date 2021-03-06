@@ -158,12 +158,32 @@ namespace Global.API.Areas.Mobile.Controllers
         }
 
         [HttpPost("SalvarNovaExpericenciaProfissional")]
-        public object SalvarNovaExpericenciaProfissional(ExperienciaProfissional experienciaProfissional)
+        public object SalvarNovaExpericenciaProfissional([FromBody] ExperienciaProfissional experienciaProfissional)
         {
             using (var service = new ExperienciaProfissionalService())
             {
-                bool success = service.Salvar(experienciaProfissional);
-                return success;
+                bool success = true; string message = "";
+                if (experienciaProfissional.Id == 0)
+                {
+                    success = service.Salvar(experienciaProfissional); message = "Nova experiênica cadastrada com sucesso!";
+                }
+                else
+                {
+                    success = service.Editar(experienciaProfissional); message = "Nova experiênica atualizada com sucesso!";
+                }
+
+                return new { ok = success, message = success ? message : "Ocorreu um erro ao tentar salvar, tente novamente mais tarde!" };
+            }
+
+        }
+
+        [HttpGet("DeletarExperienciaProfissional")]
+        public object DeletarExperienciaProfissional(int IdExperiencia)
+        {
+            using (var service = new ExperienciaProfissionalService())
+            {
+                bool success = service.Excluir(IdExperiencia);
+                return new { ok = success, message = success ? "Nova experiênica excluída com sucesso!" : "Ocorreu um erro ao tentar excluir, tente novamente mais tarde!" };
             }
 
         }
