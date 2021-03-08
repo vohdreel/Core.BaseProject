@@ -196,7 +196,15 @@ namespace Global.API.Controllers
         }
 
 
-
+        [HttpGet("GetBanners")]
+        public object GetBanner() 
+        {
+            using (var service = new BannerService())
+            {
+                return service.BuscarTodos().Select(x => new ViewModel.Banner(x));            
+            }
+        
+        }
 
     }
 }

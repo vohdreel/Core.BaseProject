@@ -19,6 +19,7 @@ namespace Global.DAO.Context
         }
 
         public virtual DbSet<AreaInteresse> AreaInteresse { get; set; }
+        public virtual DbSet<Banner> Banner { get; set; }
         public virtual DbSet<Being> Being { get; set; }
         public virtual DbSet<Candidato> Candidato { get; set; }
         public virtual DbSet<Candidatura> Candidatura { get; set; }
@@ -67,6 +68,17 @@ namespace Global.DAO.Context
                     .WithMany(p => p.AreaInteresse)
                     .HasForeignKey(d => d.IdEnumAgrupamento)
                     .HasConstraintName("FK_EnumAgrupamento_AreaInteresse");
+            });
+
+            modelBuilder.Entity<Banner>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.Base64Code).IsUnicode(false);
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.UrlRedirect).IsUnicode(false);
             });
 
             modelBuilder.Entity<Being>(entity =>

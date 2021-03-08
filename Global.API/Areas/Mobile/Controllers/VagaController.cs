@@ -372,6 +372,7 @@ namespace Global.API.Areas.Mobile.Controllers
             }
 
 
+
         }
 
         [HttpPost("FavoritarVaga")]
