@@ -348,16 +348,16 @@ namespace Global.API.Controllers
             IdentityUser user = new IdentityUser();
             try
             {
-                user = await _userManager.FindByNameAsync("default");
+                user = await _userManager.FindByNameAsync("44649563860");
             }
             catch (Exception e)
             {
 
 
             }
-            if (user != null && await _userManager.CheckPasswordAsync(user, "Somepassword19+96+96"))
+            if (user != null && await _userManager.CheckPasswordAsync(user, "globalSomepassword20+20"))
             {
-                var result = await _signInManager.PasswordSignInAsync(user, "Somepassword19+96+96", false, false);
+                var result = await _signInManager.PasswordSignInAsync(user, "globalSomepassword20+20", false, false);
 
                 if (result.Succeeded)
                 {
@@ -399,7 +399,7 @@ namespace Global.API.Controllers
                 //HttpContext.Response.Cookies.Delete(cookie.Key);
             }
 
-            HttpContext.Session.Clear();
+            HttpContext.Session.Remove("JWToken");
             return Json("Logged Out");
         }
 
