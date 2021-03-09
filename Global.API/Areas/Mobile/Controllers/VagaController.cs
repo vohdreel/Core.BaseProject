@@ -259,7 +259,6 @@ namespace Global.API.Areas.Mobile.Controllers
             }
         }
 
-
         [HttpGet("GetVagasPorDistancia")]
         public object GetVagasPorDistancia(int idCandidato, int distanciaMinima, int distanciaMaxima, int salarioMinimo, int salarioMaximo)
         {
@@ -307,9 +306,6 @@ namespace Global.API.Areas.Mobile.Controllers
             }
 
         }
-
-
-
 
         [HttpGet("GetVagasFavoritasCandidato")]
         public ViewModel.Vaga[] GetVagasFavoritasCandidato(int idCandidato)

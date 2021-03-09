@@ -223,7 +223,7 @@ namespace Global.DAO.Service
                     }
                 }
             }
-            fullAddress += () 
+            fullAddress += vaga.Cidade + ", " + vaga.Estado;
 
             return fullAddress;
 

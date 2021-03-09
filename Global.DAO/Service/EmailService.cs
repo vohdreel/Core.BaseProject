@@ -54,6 +54,18 @@ namespace Global.DAO.Service
             return userEmailOptions;
         }
 
+        public UserEmailOptions ReturnForgotPasswordBody(UserEmailOptions userEmailOptions)
+        {
+            userEmailOptions.Subject = UpdatePlaceHolders("Olá {{UserName}}, redefina sua senha.", userEmailOptions.PlaceHolders);
+
+            userEmailOptions.Body = UpdatePlaceHolders(GetEmailBody("ForgotPassword"), userEmailOptions.PlaceHolders);
+
+            return userEmailOptions;
+        }
+
+
+
+
         public async Task SendEmailForForgotPassword(UserEmailOptions userEmailOptions)
         {
             userEmailOptions.Subject = UpdatePlaceHolders("Olá {{UserName}}, redefina sua senha.", userEmailOptions.PlaceHolders);

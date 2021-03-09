@@ -60,14 +60,14 @@ namespace Global.API.Areas.Mobile.Controllers
                 user = await _userManager.FindByNameAsync(email);
             if (user != null && await _userManager.CheckPasswordAsync(user, password))
             {
-                // user is valid do whatever you want
-                //if (!await _userManager.IsEmailConfirmedAsync(user))
-                //    return new
-                //    {
-                //        unverified = true,
-                //        Ok = false,
-                //        Message = "Essa conta ainda não foi confirmada. Por favor verifique sua caixa de mensagens. (Em alguns casos, a mensagem pode ser marcado como spam)!"
-                //    };
+                //user is valid do whatever you want
+                if (!await _userManager.IsEmailConfirmedAsync(user))
+                    return new
+                    {
+                        unverified = true,
+                        Ok = false,
+                        Message = "Essa conta ainda não foi confirmada. Por favor verifique sua caixa de mensagens. (Em alguns casos, a mensagem pode ser marcado como spam)!"
+                    };
 
 
                 var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
@@ -196,7 +196,7 @@ namespace Global.API.Areas.Mobile.Controllers
 
                 options = _emailService.ReturnConfirmationBody(options);
                 var client = new SendGridClient("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");
-                var from = new EmailAddress("no-reply@global.com", "Global Empregos");
+                var from = new EmailAddress("management.globalempregos@gmail.com", "Global Empregos");
                 var subject = options.Subject;
                 var to = new EmailAddress(email);
                 //var plainTextContent = "and easy to do anywhere, even with C#";
@@ -214,7 +214,7 @@ namespace Global.API.Areas.Mobile.Controllers
         }
         
 
-        public async Task<bool> SendEmailForEmailConfirmation(string email, IdentityUser user)
+        public async Task<bool> SendEmailForEmailConfirmation(string email, IdentityUser user, string nomeCandidato)
         {
             try
             {
@@ -230,17 +230,16 @@ namespace Global.API.Areas.Mobile.Controllers
                     ToEmails = new List<string>() { user.Email },
                     PlaceHolders = new List<KeyValuePair<string, string>>()
                         {
-                            new KeyValuePair<string, string>("{{UserName}}", user.UserName),
+                            new KeyValuePair<string, string>("{{UserName}}", nomeCandidato),
                             new KeyValuePair<string, string>("{{Link}}", emailConfirmLink)
                         }
                 };
 
                 options = _emailService.ReturnConfirmationBody(options);
                 var client = new SendGridClient("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");
-                var from = new EmailAddress("no-reply@global.com", "Global Empregos");
+                var from = new EmailAddress("management.globalempregos@gmail.com", "Global Empregos");
                 var subject = options.Subject;
                 var to = new EmailAddress(user.Email);
-                //var plainTextContent = "and easy to do anywhere, even with C#";
                 var htmlContent = options.Body;
                 var msg = MailHelper.CreateSingleEmail(from, to, subject, htmlContent, htmlContent);
                 var response = await client.SendEmailAsync(msg);
@@ -263,8 +262,13 @@ namespace Global.API.Areas.Mobile.Controllers
         {
             var user = await _userManager.FindByEmailAsync(email);
 
+
             if (user != null && await _userManager.IsEmailConfirmedAsync(user))
             {
+                string nomeCandidato = new CandidatoService()
+                    .BuscarCandidato(user.Id)
+                    .Nome;
+
                 await _userManager.RemoveAuthenticationTokenAsync(user, TokenOptions.DefaultProvider, "ResetPassword");
 
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -277,14 +281,19 @@ namespace Global.API.Areas.Mobile.Controllers
                     ToEmails = new List<string>() { user.Email },
                     PlaceHolders = new List<KeyValuePair<string, string>>()
                         {
-                            new KeyValuePair<string, string>("{{UserName}}", user.UserName),
+                            new KeyValuePair<string, string>("{{UserName}}", nomeCandidato),
                             new KeyValuePair<string, string>("{{Link}}", passwordResetLink)
                         }
                 };
 
-                await _emailService.SendEmailForForgotPassword(options);
-
-                //_logger.Log(LogLevel.Warning, passwordResetLink);
+                options = _emailService.ReturnForgotPasswordBody(options);
+                var client = new SendGridClient("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");
+                var from = new EmailAddress("management.globalempregos@gmail.com", "Global Empregos");
+                var subject = options.Subject;
+                var to = new EmailAddress(user.Email);
+                var htmlContent = options.Body;
+                var msg = MailHelper.CreateSingleEmail(from, to, subject, htmlContent, htmlContent);
+                var response = await client.SendEmailAsync(msg);
 
                 return new
                 {
@@ -383,7 +392,7 @@ namespace Global.API.Areas.Mobile.Controllers
                 {
                     try
                     {
-                        await SendEmailForEmailConfirmation(user.Email, user);
+                        await SendEmailForEmailConfirmation(user.Email, user, candidato.Nome);
 
                     }
                     catch (Exception e) { }

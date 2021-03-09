@@ -16,6 +16,9 @@ namespace Global.DAO.Service
 
         UserEmailOptions ReturnConfirmationBody(UserEmailOptions userEmailOptions);
 
+        UserEmailOptions ReturnForgotPasswordBody(UserEmailOptions userEmailOptions);
+
+
 
     }
 }
