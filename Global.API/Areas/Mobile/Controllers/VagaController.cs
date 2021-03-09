@@ -40,7 +40,7 @@ namespace Global.API.Areas.Mobile.Controllers
                 var vagas = service.BuscarVagasGerais().Select(x => new ViewModel.Vaga
                 {
                     IdVaga = x.Id,
-                    NomeCargo = x.ReferenceNumber != null || x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
+                    NomeCargo = x.ReferenceNumber != null && x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
                     NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
                     Salario = x.Salario == null || x.Salario.Value == 0 ? "A combinar" : x.Salario?.ToString("c"),
                     Modalidade = ((VagaModalidade)x.Modalidade).GetEnumDisplayName(),
@@ -69,7 +69,7 @@ namespace Global.API.Areas.Mobile.Controllers
                 var vagas = service.BuscarVagasGeraisRecentes(idPrimeiraVaga).Select(x => new ViewModel.Vaga
                 {
                     IdVaga = x.Id,
-                    NomeCargo = x.ReferenceNumber != null || x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
+                    NomeCargo = x.ReferenceNumber != null && x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
                     NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
                     Salario = x.Salario == null || x.Salario.Value == 0 ? "A combinar" : x.Salario?.ToString("c"),
                     Modalidade = ((VagaModalidade)x.Modalidade).GetEnumDisplayName(),
@@ -97,7 +97,7 @@ namespace Global.API.Areas.Mobile.Controllers
                 var vagas = service.BuscarVagasGeraisAntigas(idUltimaVaga).Select(x => new ViewModel.Vaga
                 {
                     IdVaga = x.Id,
-                    NomeCargo = x.ReferenceNumber != null || x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
+                    NomeCargo = x.ReferenceNumber != null && x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
                     NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
                     Salario = x.Salario == null || x.Salario.Value == 0 ? "A combinar" : x.Salario?.ToString("c"),
                     Modalidade = ((VagaModalidade)x.Modalidade).GetEnumDisplayName(),
@@ -125,7 +125,7 @@ namespace Global.API.Areas.Mobile.Controllers
                 var vagas = service.BuscarVagasDirecionadas(idCandidato, _config.GetProperty<int>("NivelDeAfinidade")).Select(x => new ViewModel.Vaga
                 {
                     IdVaga = x.Id,
-                    NomeCargo = x.ReferenceNumber != null || x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
+                    NomeCargo = x.ReferenceNumber != null && x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
                     NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
                     Salario = x.Salario == null || x.Salario.Value == 0 ? "A combinar" : x.Salario?.ToString("c"),
                     Modalidade = ((VagaModalidade)x.Modalidade).GetEnumDisplayName(),
@@ -154,7 +154,7 @@ namespace Global.API.Areas.Mobile.Controllers
                 var vagas = service.BuscarVagasDirecionadasRecentes(idCandidato, idPrimeiraVaga, _config.GetProperty<int>("NivelDeAfinidade")).Select(x => new ViewModel.Vaga
                 {
                     IdVaga = x.Id,
-                    NomeCargo = x.ReferenceNumber != null || x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
+                    NomeCargo = x.ReferenceNumber != null && x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
                     NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
                     Salario = x.Salario == null || x.Salario.Value == 0 ? "A combinar" : x.Salario?.ToString("c"),
                     Modalidade = ((VagaModalidade)x.Modalidade).GetEnumDisplayName(),
@@ -182,7 +182,7 @@ namespace Global.API.Areas.Mobile.Controllers
                 var vagas = service.BuscarVagasDirecionadasAntigas(idCandidato, idUltimaVaga, _config.GetProperty<int>("NivelDeAfinidade")).Select(x => new ViewModel.Vaga
                 {
                     IdVaga = x.Id,
-                    NomeCargo = x.ReferenceNumber != null || x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
+                    NomeCargo = x.ReferenceNumber != null && x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
                     NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
                     Salario = x.Salario == null || x.Salario.Value == 0 ? "A combinar" : x.Salario?.ToString("c"),
                     Modalidade = ((VagaModalidade)x.Modalidade).GetEnumDisplayName(),
@@ -213,7 +213,7 @@ namespace Global.API.Areas.Mobile.Controllers
                 var vagas = service.BuscarVagasCampoDeBusca(stringBusca).Select(x => new ViewModel.Vaga
                 {
                     IdVaga = x.Id,
-                    NomeCargo = x.ReferenceNumber != null || x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
+                    NomeCargo = x.ReferenceNumber != null && x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
                     NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
                     Salario = x.Salario == null || x.Salario.Value == 0 ? "A combinar" : x.Salario?.ToString("c"),
                     Modalidade = ((VagaModalidade)x.Modalidade).GetEnumDisplayName(),
@@ -240,7 +240,7 @@ namespace Global.API.Areas.Mobile.Controllers
                 var vagas = service.BuscarVagasCampoDeBuscaAntigas(stringBusca, idUltimaVaga).Select(x => new ViewModel.Vaga
                 {
                     IdVaga = x.Id,
-                    NomeCargo = x.ReferenceNumber != null || x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
+                    NomeCargo = x.ReferenceNumber != null && x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
                     NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
                     Salario = x.Salario == null || x.Salario.Value == 0 ? "A combinar" : x.Salario?.ToString("c"),
                     Modalidade = ((VagaModalidade)x.Modalidade).GetEnumDisplayName(),
@@ -281,7 +281,7 @@ namespace Global.API.Areas.Mobile.Controllers
                     .Select(x => new ViewModel.Vaga
                     {
                         IdVaga = x.Id,
-                        NomeCargo = x.ReferenceNumber != null || x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
+                        NomeCargo = x.ReferenceNumber != null && x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
                         NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
                         Salario = x.Salario == null || x.Salario.Value == 0 ? "A combinar" : x.Salario?.ToString("c"),
                         Modalidade = ((VagaModalidade)x.Modalidade).GetEnumDisplayName(),
@@ -317,7 +317,7 @@ namespace Global.API.Areas.Mobile.Controllers
                     .Select(x => new ViewModel.Vaga
                     {
                         IdVaga = x.Id,
-                        NomeCargo = x.ReferenceNumber != null || x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
+                        NomeCargo = x.ReferenceNumber != null && x.ReferenceNumber != 0 ? x.ReferenceNumber + " - " + x.IdCargoNavigation.NomeCargo : x.IdCargoNavigation.NomeCargo,
                         NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
                         Salario = x.Salario == null || x.Salario.Value == 0 ? "A combinar" : x.Salario?.ToString("c"),
                         Modalidade = ((VagaModalidade)x.Modalidade).GetEnumDisplayName(),
@@ -349,7 +349,7 @@ namespace Global.API.Areas.Mobile.Controllers
                 return new ViewModel.Vaga()
                 {
                     IdVaga = vaga.Id,
-                    NomeCargo = vaga.ReferenceNumber != null || vaga.ReferenceNumber != 0 ? vaga.ReferenceNumber + " - " + vaga.IdCargoNavigation.NomeCargo : vaga.IdCargoNavigation.NomeCargo,
+                    NomeCargo = vaga.ReferenceNumber != null && vaga.ReferenceNumber != 0 ? vaga.ReferenceNumber + " - " + vaga.IdCargoNavigation.NomeCargo : vaga.IdCargoNavigation.NomeCargo,
                     NomeEmpresa = vaga.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
                     Salario = vaga.Salario == null || vaga.Salario.Value == 0 ? "A combinar" : vaga.Salario?.ToString("c"),
                     Modalidade = ((VagaModalidade)vaga.Modalidade).GetEnumDisplayName(),

@@ -117,12 +117,12 @@ namespace Global.API.Areas.Mobile.Controllers
 
                 EnumAgrupamento[] areas = new EnumAgrupamentoService().BuscarTodos();
 
-                int[] idsCargosSelecionados = new CargoInteresseService().BuscarTodosPorCandidato(idCandidato)
-                    .Select(x => x.IdCargo)
+                Cargo[] idsCargosSelecionados = new CargoInteresseService().BuscarTodosPorCandidato(idCandidato)
+                    .Select(x => x.IdCargoNavigation)
                     .ToArray();
 
-                int[] idsEnumAgrupamentoSelecionados = new AreaInteresseService().BuscarTodosPorCandidato(idCandidato)
-                    .Select(x => x.IdEnumAgrupamento)
+                EnumAgrupamento[] idsEnumAgrupamentoSelecionados = new AreaInteresseService().BuscarTodosPorCandidato(idCandidato)
+                    .Select(x => x.IdEnumAgrupamentoNavigation)
                     .ToArray();
 
 

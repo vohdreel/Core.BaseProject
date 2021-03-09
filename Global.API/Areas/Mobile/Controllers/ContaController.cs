@@ -61,13 +61,13 @@ namespace Global.API.Areas.Mobile.Controllers
             if (user != null && await _userManager.CheckPasswordAsync(user, password))
             {
                 //user is valid do whatever you want
-                if (!await _userManager.IsEmailConfirmedAsync(user))
-                    return new
-                    {
-                        unverified = true,
-                        Ok = false,
-                        Message = "Essa conta ainda não foi confirmada. Por favor verifique sua caixa de mensagens. (Em alguns casos, a mensagem pode ser marcado como spam)!"
-                    };
+                //if (!await _userManager.IsEmailConfirmedAsync(user))
+                //    return new
+                //    {
+                //        unverified = true,
+                //        Ok = false,
+                //        Message = "Essa conta ainda não foi confirmada. Por favor verifique sua caixa de mensagens. (Em alguns casos, a mensagem pode ser marcado como spam)!"
+                //    };
 
 
                 var result = await _signInManager.PasswordSignInAsync(user, password, false, false);

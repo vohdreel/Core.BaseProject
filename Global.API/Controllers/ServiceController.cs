@@ -208,14 +208,14 @@ namespace Global.API.Controllers
                     Cargo cargoVaga = new Cargo();
                     if (match.Success)
                     {
-                        string nameVaga = match.Groups["cargo"].Value.Replace("-", "").Trim();
+                        string nameCargoVaga = match.Groups["cargo"].Value.Replace("-", "").Trim();
                         CargoService cargoService = new CargoService();
-                        cargoVaga = cargoService.BuscarCargoPorNome(nameVaga);
+                        cargoVaga = cargoService.BuscarCargoPorNome(nameCargoVaga);
                         if (cargoVaga == null)
                         {
                             cargoVaga = new Cargo()
                             {
-                                NomeCargo = nameVaga,
+                                NomeCargo = nameCargoVaga,
                                 IdEnumAgrupamento = new EnumAgrupamentoService().BuscarPorNome("Prestação de Serviços").Id
 
                             };
