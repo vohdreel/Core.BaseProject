@@ -167,6 +167,53 @@ namespace Global.API.Areas.Mobile.Controllers
 
         }
 
+        [HttpGet("FakeEmail")]
+        public async Task<bool> FakeEmail() {
+
+            try
+            {
+
+                var user = await _userManager.FindByNameAsync("44649563860");
+                string email = "phmqaaa@gmail.com";
+
+
+                await _userManager.UpdateSecurityStampAsync(user);
+
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                var emailConfirmLink = Url.Action("ConfirmEmail", "Account",
+                            new { email = email, token = token }, Request.Scheme);
+
+                UserEmailOptions options = new UserEmailOptions
+                {
+                    ToEmails = new List<string>() { user.Email },
+                    PlaceHolders = new List<KeyValuePair<string, string>>()
+                        {
+                            new KeyValuePair<string, string>("{{UserName}}", user.UserName),
+                            new KeyValuePair<string, string>("{{Link}}", emailConfirmLink)
+                        }
+                };
+
+                options = _emailService.ReturnConfirmationBody(options);
+                var client = new SendGridClient("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");
+                var from = new EmailAddress("no-reply@global.com", "Global Empregos");
+                var subject = options.Subject;
+                var to = new EmailAddress(email);
+                //var plainTextContent = "and easy to do anywhere, even with C#";
+                var htmlContent = options.Body;
+                var msg = MailHelper.CreateSingleEmail(from, to, subject, htmlContent, htmlContent);
+                var response = await client.SendEmailAsync(msg);
+
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+        
+
         public async Task<bool> SendEmailForEmailConfirmation(string email, IdentityUser user)
         {
             try

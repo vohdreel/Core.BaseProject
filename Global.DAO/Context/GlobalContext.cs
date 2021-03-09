@@ -46,7 +46,7 @@ namespace Global.DAO.Context
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=prolead.database.windows.net;Database=GlobalEmpregos;user id=anima_sa;password=A^BCxSFd#%qHv=W79uda;Trusted_Connection=True;Integrated Security=False;MultipleActiveResultSets=true");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-C344KI6;Database=GlobalEmpregos;Trusted_Connection=True;MultipleActiveResultSets=true");
             }
         }
 
@@ -54,7 +54,6 @@ namespace Global.DAO.Context
         {
 
             base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();
 
             modelBuilder.Entity<AreaInteresse>(entity =>
@@ -69,6 +68,7 @@ namespace Global.DAO.Context
                     .HasForeignKey(d => d.IdEnumAgrupamento)
                     .HasConstraintName("FK_EnumAgrupamento_AreaInteresse");
             });
+
 
             modelBuilder.Entity<Banner>(entity =>
             {

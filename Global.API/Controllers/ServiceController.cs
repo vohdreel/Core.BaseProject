@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using ExcelDataReader;
 using Global.DAO.Model;
 using Global.DAO.Service;
 using Global.Util;
 using Global.Util.SystemEnumerations;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -21,16 +24,21 @@ namespace Global.API.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
 
         public ServiceController(
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            SignInManager<IdentityUser> signInManager
-            )
+            SignInManager<IdentityUser> signInManager,
+            IWebHostEnvironment webHostEnvironment)
+
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
+            _webHostEnvironment = webHostEnvironment;
+
         }
 
 
@@ -79,7 +87,7 @@ namespace Global.API.Controllers
                     {
                         string nameVaga = match.Groups["cargo"].Value.Replace("-", "").Trim();
                         CargoService cargoService = new CargoService();
-                        cargoVaga = cargoService.BuscarCargoFeed(nameVaga);
+                        cargoVaga = cargoService.BuscarCargoPorNome(nameVaga);
                         if (cargoVaga == null)
                         {
                             cargoVaga = new Cargo()
@@ -167,7 +175,7 @@ namespace Global.API.Controllers
                 Candidato[] candidatos = service.VerificarCandidatoSemUsuario();
                 foreach (Candidato candidato in candidatos)
                 {
-                     
+
                     IdentityUser user = new IdentityUser();
                     user.UserName = candidato.Nome.Replace(" ", "_").RemoveDiacritics().ToLower();
                     user.Email = candidato.Email;
@@ -180,8 +188,9 @@ namespace Global.API.Controllers
                         candidato.IdAspNetUsers = user.Id;
                         bool success = service.AtualizarCandidato(candidato);
 
-                        if (success) { 
-                        
+                        if (success)
+                        {
+
                         }
 
                     }
@@ -197,14 +206,98 @@ namespace Global.API.Controllers
 
 
         [HttpGet("GetBanners")]
-        public object GetBanner() 
+        public object GetBanner()
         {
             using (var service = new BannerService())
             {
-                return service.BuscarTodos().Select(x => new ViewModel.Banner(x));            
+                return service.BuscarTodos().Select(x => new ViewModel.Banner(x));
             }
-        
+
         }
+
+
+        [HttpGet("GenerateCargos")]
+        public object GenerateCargos()
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+            string lastAgrupamento = "";
+
+            string ContentRootPath = _webHostEnvironment.ContentRootPath;
+
+            string templatePath = @"\File\Listagem_Cargos_Select.xlsx";
+
+            var completePath = ContentRootPath + templatePath;
+
+            using (var cargoService = new CargoService())
+            using (var agrupamentoService = new EnumAgrupamentoService())
+            using (var stream = System.IO.File.Open(completePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    do
+                    {
+                        while (reader.Read()) //Each ROW
+                        {
+                            string stringAgrupamento = reader.GetString(2);
+
+                            if (string.IsNullOrEmpty(stringAgrupamento))
+                                stringAgrupamento = lastAgrupamento;
+                            else
+                                lastAgrupamento = stringAgrupamento;
+
+
+                            string stringNomeCargo = reader.GetString(1);
+                            int referenceNumber = 0;
+                            string stringReferenceNumber = reader.GetValue(0)?.ToString() ?? "0";
+                            Int32.TryParse(stringReferenceNumber, out referenceNumber);
+
+                            if (string.IsNullOrEmpty(stringAgrupamento) || stringAgrupamento == "??" || stringAgrupamento == "Excluir" || referenceNumber == 0)
+                                continue;
+
+                            if (cargoService.BuscarCargoPorReferenceNumberENomeCargo(referenceNumber, stringNomeCargo) == null)
+                            {
+
+
+                                EnumAgrupamento agrupamento = agrupamentoService.BuscarPorNome(stringAgrupamento);
+                                if (agrupamento == null)
+                                {
+                                    agrupamento = new EnumAgrupamento()
+                                    {
+                                        NomeAgrupamento = stringAgrupamento
+                                    };
+                                    agrupamentoService.Salvar(agrupamento);
+                                };
+
+                                Cargo cargo = new Cargo()
+                                {
+                                    NomeCargo = stringNomeCargo,
+                                    DescricaoCargo = referenceNumber != 0 ?
+                                                referenceNumber + " - " + stringNomeCargo :
+                                                stringNomeCargo,
+                                    IdEnumAgrupamento = agrupamento.Id,
+                                    ReferenceNumber = referenceNumber
+
+
+
+                                };
+
+                                bool sucess = cargoService.Salvar(cargo);
+                            }
+
+                        }
+                    } while (reader.NextResult()); //Move to NEXT SHEET
+
+                }
+            }
+
+            return 0;
+        }
+
+
+
+
+
 
     }
 }
