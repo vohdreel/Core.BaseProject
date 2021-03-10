@@ -179,81 +179,85 @@ namespace Global.API.Controllers
             ProcessoSeletivoService processoService = new ProcessoSeletivoService();
             VagaService vagaService = new VagaService();
 
+            JArray rejetctedVagas = new JArray();
+
             JArray jobs = feedArray["source"]["jobs"]["job"] as JArray;
 
             foreach (JObject job in jobs)
             {
-                int referenceNumber = job["referencenumber"]["#cdata-section"].Value<int>();
-
-                if (!vagaService.VerificarVagaPorReferenceNumber(referenceNumber))
+                try
                 {
-                    int enumTipoContratacao = 0;
-                    decimal valueSalario = 0;
-                    ///primeiro verificar se a empresa existe
-                    Vaga vaga = new Vaga();
-                    Empresa empresa = new EmpresaService().BuscarPorNomeFantasia(job["company"].ToString());
-                    if (empresa == null)
-                    {
-                        empresa = new Empresa()
-                        {
-                            NomeFantasia = job["company"]["#cdata-section"].ToString(),
-                            EmailContato = job["email"]["#cdata-section"].ToString(),
-                        };
-                    }
-                    string rawVagaTitle = job["title"]["#cdata-section"].ToString();
+                    int referenceNumber = job["referencenumber"]["#cdata-section"].Value<int>();
 
-                    //Regex regex = new Regex(@".*?-\s*(?<cargo>.*?)\s*-");
-                    Regex regex = new Regex(@".*?-\s+(?<cargo>.*?(?(?=\s*-)\s*-|((?!\s-).*-|$)))");
-                    Match match = regex.Match(rawVagaTitle);
-                    Cargo cargoVaga = new Cargo();
-                    if (match.Success)
+                    if (!vagaService.VerificarVagaPorReferenceNumber(referenceNumber))
                     {
-                        string nameCargoVaga = match.Groups["cargo"].Value.Replace("-", "").Trim();
-                        CargoService cargoService = new CargoService();
-                        cargoVaga = cargoService.BuscarCargoPorNome(nameCargoVaga);
-                        if (cargoVaga == null)
+                        int enumTipoContratacao = 0;
+                        decimal valueSalario = 0;
+                        ///primeiro verificar se a empresa existe
+                        Vaga vaga = new Vaga();
+                        Empresa empresa = new EmpresaService().BuscarPorNomeFantasia(job["company"].ToString());
+                        if (empresa == null)
                         {
-                            cargoVaga = new Cargo()
+                            empresa = new Empresa()
                             {
-                                NomeCargo = nameCargoVaga,
-                                IdEnumAgrupamento = new EnumAgrupamentoService().BuscarPorNome("Prestação de Serviços").Id
-
+                                NomeFantasia = job["company"]["#cdata-section"].ToString(),
+                                EmailContato = job["email"]["#cdata-section"].ToString(),
                             };
-                            cargoService.Salvar(cargoVaga);
                         }
+                        string rawVagaTitle = job["title"]["#cdata-section"].ToString();
 
-                    }
-                    string rawVagaDescription = job["description"]["#cdata-section"].ToString().Replace("\r\n", " ");
-
-                    regex = new Regex(@"^.*?Tipo de contratação.*?\s+(?<tipoContratacao>.*?\s+)");
-                    match = regex.Match(rawVagaDescription);
-                    if (match.Success)
-                        enumTipoContratacao = (int)(VagaModalidade)Enum.Parse(typeof(VagaModalidade), match.Groups["tipoContratacao"].Value.RemoveDiacritics());
-
-                    regex = new Regex(@"^.*?Salário.*?\s+(?<salario>.*?\s+)");
-                    match = regex.Match(rawVagaDescription);
-                    if (match.Success)
-                    {
-                        try
+                        //Regex regex = new Regex(@".*?-\s*(?<cargo>.*?)\s*-");
+                        Regex regex = new Regex(@".*?-\s+(?<cargo>.*?(?(?=\s*-)\s*-|((?!\s-).*-|$)))");
+                        Match match = regex.Match(rawVagaTitle);
+                        Cargo cargoVaga = new Cargo();
+                        if (match.Success)
                         {
-                            valueSalario = Convert.ToDecimal(match.Groups["salario"].Value.Replace(".", ""), new NumberFormatInfo() { NumberDecimalSeparator = "," });
+                            string nameCargoVaga = match.Groups["cargo"].Value.Replace("-", "").Trim();
+                            CargoService cargoService = new CargoService();
+                            cargoVaga = cargoService.BuscarCargoPorNome(nameCargoVaga);
+                            if (cargoVaga == null)
+                            {
+                                cargoVaga = new Cargo()
+                                {
+                                    NomeCargo = nameCargoVaga,
+                                    IdEnumAgrupamento = new EnumAgrupamentoService().BuscarPorNome("Prestação de Serviços").Id
+
+                                };
+                                cargoService.Salvar(cargoVaga);
+                            }
 
                         }
-                        catch (Exception e)
+                        string rawVagaDescription = job["description"]["#cdata-section"].ToString().Replace("\r\n", " ");
+
+                        regex = new Regex(@"^.*?Tipo de contratação.*?\s+(?<tipoContratacao>.*?\s+)");
+                        match = regex.Match(rawVagaDescription);
+                        if (match.Success)
+                            enumTipoContratacao = (int)(VagaModalidade)Enum.Parse(typeof(VagaModalidade), match.Groups["tipoContratacao"].Value.RemoveDiacritics());
+
+                        regex = new Regex(@"^.*?Salário.*?\s+(?<salario>.*?\s+)");
+                        match = regex.Match(rawVagaDescription);
+                        if (match.Success)
                         {
-                            valueSalario = 0;
+                            try
+                            {
+                                valueSalario = Convert.ToDecimal(match.Groups["salario"].Value.Replace(".", ""), new NumberFormatInfo() { NumberDecimalSeparator = "," });
+
+                            }
+                            catch (Exception e)
+                            {
+                                valueSalario = 0;
+                            }
+
+
                         }
-
-
-                    }
-                    ProcessoSeletivo processoSeletivo = new ProcessoSeletivo()
-                    {
-                        DataInicioProcesso = Convert.ToDateTime(job["date"]["#cdata-section"].ToString()),
-                        DataTerminoProcesso = Convert.ToDateTime(job["expiration_date"]["#cdata-section"].ToString()),
-                        StatusProcesso = (int)StatusProcesso.EmAndamento,
-                        NomeProcesso = job["title"]["#cdata-section"].ToString(),
-                        IdEmpresaNavigation = empresa,
-                        Vaga = new List<Vaga>()
+                        ProcessoSeletivo processoSeletivo = new ProcessoSeletivo()
+                        {
+                            DataInicioProcesso = Convert.ToDateTime(job["date"]["#cdata-section"].ToString()),
+                            DataTerminoProcesso = Convert.ToDateTime(job["expiration_date"]["#cdata-section"].ToString()),
+                            StatusProcesso = (int)StatusProcesso.EmAndamento,
+                            NomeProcesso = job["title"]["#cdata-section"].ToString(),
+                            IdEmpresaNavigation = empresa,
+                            Vaga = new List<Vaga>()
                         {
                             new Vaga()
                             {
@@ -273,16 +277,36 @@ namespace Global.API.Controllers
 
                             }
                         }
-                    };
+                        };
 
-                    bool success = processoService.Salvar(processoSeletivo);
+                        if (processoSeletivo.DataInicioProcesso.Value.Year <= 1753 || processoSeletivo.DataInicioProcesso.Value.Year >= 9999)
+                        {
+                            rejetctedVagas.Add(job); continue;
+                        }
+                        bool success = processoService.Salvar(processoSeletivo);
+                        if (!success)
+                            rejetctedVagas.Add(job);
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    rejetctedVagas.Add(job);
+
                 }
             }
 
+            string ContentRootPath = _webHostEnvironment.ContentRootPath;
+
+            string templatePath = @"\File\_InvalidVagas.json";
+
+            var completePath = ContentRootPath + templatePath;
+
+            JSONExtensions.Write<JArray>(rejetctedVagas, completePath);
 
 
 
-            return feedArray;
+            return rejetctedVagas;
 
 
             //ver
@@ -416,7 +440,17 @@ namespace Global.API.Controllers
 
 
 
+        [HttpGet("EnviorimentTest")]
+        public object EnviorimentTest()
+        {
+            string ContentRootPath = _webHostEnvironment.ContentRootPath;
 
+            string templatePath = @"\File\_InvalidVagas.json";
+
+            var completePath = ContentRootPath + templatePath;
+
+            return completePath;
+        }
 
 
     }
