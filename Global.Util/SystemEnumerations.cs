@@ -166,26 +166,6 @@ namespace Global.Util.SystemEnumerations
 
     }
 
-    public enum StatusProcesso
-    {
-        [Display(Name = "Em Andamento")]
-        EmAndamento = 1,
-        [Display(Name = "Encerrado")]
-        Encerrado = 2,
-
-    }
-
-
-    public enum StatusVaga
-    {
-        [Display(Name = "Aberta")]
-        Aberta = 1,
-        [Display(Name = "Preenchida")]
-        Preenchida = 2,
-        [Display(Name = "Revogada")]
-        Revogada = 3
-
-    }
 
 
 

@@ -73,13 +73,6 @@ namespace Global.DAO.Service
             return resultado;
         }
 
-        public EnumAgrupamento BuscarPorNome(string nome)
-        {
-
-            return Repository.Get(x => x.NomeAgrupamento == nome).FirstOrDefault();
-
-        }
-
 
         public GlobalContext GetContext()
         {

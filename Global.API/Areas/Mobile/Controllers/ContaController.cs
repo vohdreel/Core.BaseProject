@@ -79,10 +79,10 @@ namespace Global.API.Areas.Mobile.Controllers
                     var roles = await _userManager.GetRolesAsync(user);
                     var token = TokenService.GenerateToken(user, roles.ToList());
 
-                    //HttpContext.Session.SetString("JWToken", token);
+                    HttpContext.Session.SetString("JWToken", token);
 
-                    HttpContext.Response.Cookies
-                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
+                    //HttpContext.Response.Cookies
+                    //    .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
 
                     CandidatoService service = new CandidatoService();
 
