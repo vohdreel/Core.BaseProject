@@ -252,51 +252,51 @@ namespace Global.API.Areas.Mobile.Controllers
         }
 
 
-        [HttpGet("GetVagasPorDistancia")]
-        public object GetVagasPorDistancia(int idCandidato, int distanciaMinima, int distanciaMaxima)
-        {
+        //[HttpGet("GetVagasPorDistancia")]
+        //public object GetVagasPorDistancia(int idCandidato, int distanciaMinima, int distanciaMaxima)
+        //{
 
-            using (var candidatoService = new CandidatoService())
-            using (var service = new VagaService())
-            {
-                Coordinates coordenadasCandidato = candidatoService.BuscarCoordenadasCandidato(idCandidato);
-                if (coordenadasCandidato == null)
+        //    using (var candidatoService = new CandidatoService())
+        //    using (var service = new VagaService())
+        //    {
+        //        Coordinates coordenadasCandidato = candidatoService.BuscarCoordenadasCandidato(idCandidato);
+        //        if (coordenadasCandidato == null)
 
-                    return new
-                    {
-                        ok = false,
-                        message = "Não foi possível determinar sua localização.</br> Verifique suas informações de endereço e tente novamente"
+        //            return new
+        //            {
+        //                ok = false,
+        //                message = "Não foi possível determinar sua localização.</br> Verifique suas informações de endereço e tente novamente"
 
-                    };
+        //            };
 
-                var vagas = service
-                    .BuscarVagasPorDistancia(coordenadasCandidato, distanciaMinima, distanciaMaxima)
-                    .Select(x => new ViewModel.Vaga
-                    {
-                        IdVaga = x.Id,
-                        NomeCargo = x.IdCargoNavigation.NomeCargo,
-                        NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
-                        Salario = x.Salario?.ToString("c"),
-                        Modalidade = ((VagaModalidade)x.Modalidade).ToString(),
-                        Cidade = x.Cidade,
-                        Estado = x.Estado,
-                        Requisitos = x.Requisitos,
-                        Beneficios = x.Beneficios,
-                        Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any(),
-                        Endereco = service.MontarVagaEndereco(x),
-                        EmpresaLogo = service.MontarEmpresLogo(x)
+        //        var vagas = service
+        //            .BuscarVagasPorDistancia(coordenadasCandidato, distanciaMinima, distanciaMaxima)
+        //            .Select(x => new ViewModel.Vaga
+        //            {
+        //                IdVaga = x.Id,
+        //                NomeCargo = x.IdCargoNavigation.NomeCargo,
+        //                NomeEmpresa = x.IdProcessoSeletivoNavigation.IdEmpresaNavigation.NomeFantasia,
+        //                Salario = x.Salario?.ToString("c"),
+        //                Modalidade = ((VagaModalidade)x.Modalidade).ToString(),
+        //                Cidade = x.Cidade,
+        //                Estado = x.Estado,
+        //                Requisitos = x.Requisitos,
+        //                Beneficios = x.Beneficios,
+        //                Favoritado = x.VagaFavorita.Any() && x.VagaFavorita.Where(y => y.IdCandidato == 2).Any(),
+        //                Endereco = service.MontarVagaEndereco(x),
+        //                EmpresaLogo = service.MontarEmpresLogo(x)
 
-                    }).ToArray();
-                return new { 
+        //            }).ToArray();
+        //        return new { 
                  
-                    ok = true,
-                    vagas
+        //            ok = true,
+        //            vagas
                 
-                };
+        //        };
 
-            }
+        //    }
 
-        }
+        //}
 
 
 
