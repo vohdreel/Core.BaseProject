@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Global.DAO.Model;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Global.DAO.Procedure.Models;
 
 namespace Global.DAO.Context
 {
