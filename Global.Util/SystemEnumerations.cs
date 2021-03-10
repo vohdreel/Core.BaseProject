@@ -7,15 +7,17 @@ namespace Global.Util.SystemEnumerations
 {
     public enum VagaModalidade
     {
-        [Display(Name = "CLT")]
+        [Display(Name = "A Combinar", ShortName = "N/A")]
+        NaoDisponivel = 0,
+        [Display(Name = "CLT", ShortName = "CLT")]
         CLT = 1,
-        [Display(Name = "PJ")]
+        [Display(Name = "PJ", ShortName = "PJ")]
         PJ = 2,
-        [Display(Name = "Estário")]
+        [Display(Name = "Estágio", ShortName = "ESTAG")]
         Estagio = 3,
-        [Display(Name = "Temporário")]
+        [Display(Name = "Temporário", ShortName = "TEMP")]
         Temporario = 4,
-        [Display(Name = "Terceirizado")]
+        [Display(Name = "Terceirizado", ShortName = "TERC")]
         Terceirizado = 5
 
 
@@ -161,6 +163,27 @@ namespace Global.Util.SystemEnumerations
         EmAndamento = 1,
         [Display(Name = "Encerrado")]
         Encerrado = 2,
+
+    }
+
+    public enum StatusProcesso
+    {
+        [Display(Name = "Em Andamento")]
+        EmAndamento = 1,
+        [Display(Name = "Encerrado")]
+        Encerrado = 2,
+
+    }
+
+
+    public enum StatusVaga
+    {
+        [Display(Name = "Aberta")]
+        Aberta = 1,
+        [Display(Name = "Preenchida")]
+        Preenchida = 2,
+        [Display(Name = "Revogada")]
+        Revogada = 3
 
     }
 

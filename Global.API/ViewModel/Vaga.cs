@@ -13,6 +13,7 @@ namespace Global.API.ViewModel
         public string NomeEmpresa { get; set; }
         public string Salario { get; set; }
         public string Modalidade { get; set; }
+        public string ModalidadeShortName { get; set; }
         public string Endereco { get; set; }
         public string Cidade { get; set; }
         public string Estado { get; set; }

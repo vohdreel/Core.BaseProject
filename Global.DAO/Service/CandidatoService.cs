@@ -61,7 +61,7 @@ namespace Global.DAO.Service
         public bool ExisteCpfUsuario(string cpf)
         {
 
-            return Repository.Get(x => x.Cpf == cpf).FirstOrDefault() != null;
+            return Repository.Get(x => x.Cpf == cpf.Replace(".", "").Replace("-","")).FirstOrDefault() != null;
 
 
         }
@@ -141,7 +141,11 @@ namespace Global.DAO.Service
 
         }
 
+        public Candidato[] VerificarCandidatoSemUsuario()
+        {
+            return Repository.Get(x => string.IsNullOrEmpty(x.IdAspNetUsers)).ToArray();
 
+        }
         public GlobalContext GetContext()
         {
             return Repository.GetContext();

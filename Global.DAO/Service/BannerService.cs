@@ -10,46 +10,46 @@ using System.Threading.Tasks;
 
 namespace Global.DAO.Service
 {
-    public class EmpresaService : IDisposable
+    public class BannerService : IDisposable
     {
-        private EmpresaRepository Repository { get; set; }
+        private BannerRepository Repository { get; set; }
 
-        public EmpresaService()
+        public BannerService()
         {
 
-            Repository = new EmpresaRepository();
+            Repository = new BannerRepository();
 
         }
 
-        public EmpresaService(GlobalContext context)
+        public BannerService(GlobalContext context)
         {
-            Repository = new EmpresaRepository(context);
+            Repository = new BannerRepository(context);
         }
 
 
-        public Empresa Buscar(int Id) 
+        public Banner Buscar(int Id)
         {
 
             return Repository.Get(x => x.Id == Id).FirstOrDefault();
 
         }
 
-        public Empresa BuscarPorNomeFantasia(string NomeFantasia)
+        public Banner[] BuscarTodos()
         {
 
-            return Repository.Get(x => x.NomeFantasia == NomeFantasia).FirstOrDefault();
+            return Repository.Get().ToArray();
 
         }
 
-        public bool Salvar(Empresa Dados)
+        public bool Salvar(Banner Dados)
         {
-            
+
             bool resultado = Repository.Insert(Dados);
             return resultado;
 
         }
 
-        public bool Editar(Empresa Dados)
+        public bool Editar(Banner Dados)
         {
 
             bool resultado = Repository.Update(Dados);
@@ -64,13 +64,6 @@ namespace Global.DAO.Service
             bool resultado = Repository.Delete(dados);
 
             return resultado;
-        }
-
-        public Empresa BuscarPorNomeFantasia(string NomeFantasia)
-        {
-
-            return Repository.Get(x => x.NomeFantasia == NomeFantasia).FirstOrDefault();
-
         }
 
         public GlobalContext GetContext()

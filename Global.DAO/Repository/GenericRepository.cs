@@ -90,7 +90,7 @@ namespace Global.DAO.Repository
             }
             catch (Exception e)
             {
-                context.Dispose();
+                //context.Dispose();
                 return false;
             }
         }

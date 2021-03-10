@@ -70,7 +70,7 @@ namespace Global.DAO.Service
         public AreaInteresse[] BuscarTodosPorCandidato(int idCandidato)
         {
 
-            return Repository.Get(x => x.IdCandidato == idCandidato).ToArray();
+            return Repository.Get(x => x.IdCandidato == idCandidato, includeProperties: "IdEnumAgrupamentoNavigation").ToArray();
 
         }
 
