@@ -39,7 +39,8 @@ namespace Global.DAO.Model
         public string EstadoNascimento { get; set; }
         [StringLength(50)]
         public string Sexo { get; set; }
-        public int? EstadoCivil { get; set; }
+        [StringLength(50)]
+        public string EstadoCivil { get; set; }
         [StringLength(50)]
         public string Raca { get; set; }
         public bool? PossuiDependentes { get; set; }

@@ -5,18 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="EmailTemplate\EmailConfirm.html" />
-    <None Remove="EmailTemplate\ForgotPassword.html" />
-    <None Remove="EmailTemplate\TestEmail.html" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="EmailTemplate\EmailConfirm.html" />
-    <Content Include="EmailTemplate\ForgotPassword.html" />
-    <Content Include="EmailTemplate\TestEmail.html" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.9" />
