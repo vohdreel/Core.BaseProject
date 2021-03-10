@@ -1,8 +1,6 @@
 ﻿using Global.DAO.Context;
 using Global.DAO.Model;
-using Global.DAO.Procedure.Models;
 using Global.DAO.Repository;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,46 +8,47 @@ using System.Threading.Tasks;
 
 namespace Global.DAO.Service
 {
-    public class EmpresaService : IDisposable
+    public class ExperienciaProfissionalService: IDisposable
     {
-        private EmpresaRepository Repository { get; set; }
+        private ExperienciaProfissionalRepository Repository { get; set; }
 
-        public EmpresaService()
+        public ExperienciaProfissionalService()
         {
 
-            Repository = new EmpresaRepository();
+            Repository = new ExperienciaProfissionalRepository();
 
         }
 
-        public EmpresaService(GlobalContext context)
+        public ExperienciaProfissionalService(GlobalContext context)
         {
-            Repository = new EmpresaRepository(context);
+            Repository = new ExperienciaProfissionalRepository(context);
         }
 
 
-        public Empresa Buscar(int Id) 
+        public ExperienciaProfissional Buscar(int Id)
         {
 
             return Repository.Get(x => x.Id == Id).FirstOrDefault();
 
         }
 
-        public Empresa BuscarPorNomeFantasia(string NomeFantasia)
+        public ExperienciaProfissional[] BuscarPorCandidato(int IdCandidato)
         {
 
-            return Repository.Get(x => x.NomeFantasia == NomeFantasia).FirstOrDefault();
-
+            return Repository.Get(x => x.IdCandidato == IdCandidato).ToArray();
+        
+        
         }
 
-        public bool Salvar(Empresa Dados)
+        public bool Salvar(ExperienciaProfissional Dados)
         {
-            
+
             bool resultado = Repository.Insert(Dados);
             return resultado;
 
         }
 
-        public bool Editar(Empresa Dados)
+        public bool Editar(ExperienciaProfissional Dados)
         {
 
             bool resultado = Repository.Update(Dados);
@@ -64,13 +63,6 @@ namespace Global.DAO.Service
             bool resultado = Repository.Delete(dados);
 
             return resultado;
-        }
-
-        public Empresa BuscarPorNomeFantasia(string NomeFantasia)
-        {
-
-            return Repository.Get(x => x.NomeFantasia == NomeFantasia).FirstOrDefault();
-
         }
 
         public GlobalContext GetContext()

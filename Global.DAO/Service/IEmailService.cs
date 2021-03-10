@@ -13,5 +13,12 @@ namespace Global.DAO.Service
         Task SendEmailForEmailConfirmation(UserEmailOptions userEmailOptions);
 
         Task SendEmailForForgotPassword(UserEmailOptions userEmailOptions);
+
+        UserEmailOptions ReturnConfirmationBody(UserEmailOptions userEmailOptions);
+
+        UserEmailOptions ReturnForgotPasswordBody(UserEmailOptions userEmailOptions);
+
+
+
     }
 }

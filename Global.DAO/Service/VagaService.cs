@@ -1,4 +1,5 @@
-﻿using Global.DAO.Context;
+﻿
+using Global.DAO.Context;
 using Global.DAO.Model;
 using Global.DAO.Procedure.Models;
 using Global.DAO.Repository;
@@ -110,7 +111,7 @@ namespace Global.DAO.Service
 
         }
 
-        public Vaga[] BuscarVagasPorDistancia(Coordinates coordenadasCandidato, int distanciaMinima, int distanciaMaxima)
+        public Vaga[] BuscarVagasPorDistancia(Coordinates coordenadasCandidato, int distanciaMinima, int distanciaMaxima, int salarioMinimo, int salarioMaximo)
         {
             List<Vaga> vagasCompativies = new List<Vaga>();
             List<Vaga> vagas = Repository
@@ -133,7 +134,7 @@ namespace Global.DAO.Service
                 double distancia = GeoCoordinationExtension
                     .GetDistanceBetweenLocations(coordenadasCandidato, coordenadaVaga);
 
-                if (distancia >= distanciaMinima && distancia <= distanciaMaxima)
+                if (distancia >= distanciaMinima && distancia <= distanciaMaxima && _vaga.Salario >= salarioMinimo && _vaga.Salario <= salarioMaximo)
                 {
                     vagasCompativies.Add(_vaga);
                 }
@@ -222,6 +223,7 @@ namespace Global.DAO.Service
                     }
                 }
             }
+            fullAddress += vaga.Cidade + ", " + vaga.Estado;
 
             return fullAddress;
 
@@ -305,6 +307,14 @@ namespace Global.DAO.Service
             bool resultado = Repository.Delete(dados);
 
             return resultado;
+        }
+
+
+        public bool VerificarVagaPorReferenceNumber(int referenceNumber)
+        {
+            return Repository.Get(x => x.ReferenceNumber == referenceNumber).FirstOrDefault() != null;
+
+
         }
 
         public GlobalContext GetContext()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace Global.Util
@@ -24,9 +25,28 @@ namespace Global.Util
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
 
+		private static Random random = new Random();
+		public static string RandomString(int length)
+		{
+			const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+			return "!@" +  new string(Enumerable.Repeat(chars, length)
+			  .Select(s => s[random.Next(s.Length)]).ToArray());
+		}
 
-        public static string ConverterEstados(this string text) 
-        {
+		public static string RandomPassword(int length)
+		{
+			const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+			const string numbers = "0123456789";
+
+			return "!@" + new string(Enumerable.Repeat(chars, length / 2)
+			  .Select(s => s[random.Next(s.Length)]).ToArray())
+				+ new string(Enumerable.Repeat(numbers, length / 2)
+			  .Select(s => s[random.Next(s.Length)]).ToArray())
+				;
+		}
+
+		public static string ConverterEstados(this string text)
+		{
 
 			switch (text.ToUpper())
 			{
@@ -90,6 +110,6 @@ namespace Global.Util
 			}
 
 			return text;
-		}	
-    }
+		}
+	}
 }

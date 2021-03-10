@@ -36,6 +36,7 @@ namespace Global.API.Areas.Mobile.Controllers
                 candidato.Raca = !string.IsNullOrEmpty(informacoesPessoais.Raca) ? informacoesPessoais.Raca : candidato.Raca;
                 candidato.PossuiDependentes = informacoesPessoais.PossuiDependentes != null ? informacoesPessoais.PossuiDependentes : candidato.PossuiDependentes;
                 candidato.QuantidadeDependentes = informacoesPessoais.QuantidadeDependentes != null ? informacoesPessoais.QuantidadeDependentes : candidato.QuantidadeDependentes;
+                candidato.PossuiCnh = informacoesPessoais.PossuiCnh != null ? informacoesPessoais.PossuiCnh : candidato.PossuiCnh;
                 candidato.CategoriaCnh = !string.IsNullOrEmpty(informacoesPessoais.CategoriaCnh) ? informacoesPessoais.CategoriaCnh : candidato.CategoriaCnh;
                 candidato.Cep = !string.IsNullOrEmpty(informacoesPessoais.Cep) ? informacoesPessoais.Cep : candidato.Cep;
                 candidato.Pais = !string.IsNullOrEmpty(informacoesPessoais.Pais) ? informacoesPessoais.Pais : candidato.Pais;
@@ -98,8 +99,6 @@ namespace Global.API.Areas.Mobile.Controllers
             }
         }
 
-
-
         [HttpGet("ObterInformacoesPessoais")]
         public object ObterInformacoesPessoais(int idCandidato, bool isObjetivo = false)
         {
@@ -118,12 +117,12 @@ namespace Global.API.Areas.Mobile.Controllers
 
                 EnumAgrupamento[] areas = new EnumAgrupamentoService().BuscarTodos();
 
-                int[] idsCargosSelecionados = new CargoInteresseService().BuscarTodosPorCandidato(idCandidato)
-                    .Select(x => x.IdCargo)
+                Cargo[] idsCargosSelecionados = new CargoInteresseService().BuscarTodosPorCandidato(idCandidato)
+                    .Select(x => x.IdCargoNavigation)
                     .ToArray();
 
-                int[] idsEnumAgrupamentoSelecionados = new AreaInteresseService().BuscarTodosPorCandidato(idCandidato)
-                    .Select(x => x.IdEnumAgrupamento)
+                EnumAgrupamento[] idsEnumAgrupamentoSelecionados = new AreaInteresseService().BuscarTodosPorCandidato(idCandidato)
+                    .Select(x => x.IdEnumAgrupamentoNavigation)
                     .ToArray();
 
 
@@ -141,6 +140,52 @@ namespace Global.API.Areas.Mobile.Controllers
 
 
             }
+        }
+
+
+        [HttpGet("ObterExperienciasProfissionais")]
+        public object ObterExperienciasProfissionais(int IdCandidato)
+        {
+            using (var service = new ExperienciaProfissionalService())
+            {
+                ViewModel.ExperienciaProfissional[] experienciaProfissional = service
+                    .BuscarPorCandidato(IdCandidato)
+                    .Select(x => new ViewModel.ExperienciaProfissional(x)).ToArray();
+
+                return experienciaProfissional;
+            }
+
+        }
+
+        [HttpPost("SalvarNovaExpericenciaProfissional")]
+        public object SalvarNovaExpericenciaProfissional([FromBody] ExperienciaProfissional experienciaProfissional)
+        {
+            using (var service = new ExperienciaProfissionalService())
+            {
+                bool success = true; string message = "";
+                if (experienciaProfissional.Id == 0)
+                {
+                    success = service.Salvar(experienciaProfissional); message = "Nova experiênica cadastrada com sucesso!";
+                }
+                else
+                {
+                    success = service.Editar(experienciaProfissional); message = "Nova experiênica atualizada com sucesso!";
+                }
+
+                return new { ok = success, message = success ? message : "Ocorreu um erro ao tentar salvar, tente novamente mais tarde!" };
+            }
+
+        }
+
+        [HttpGet("DeletarExperienciaProfissional")]
+        public object DeletarExperienciaProfissional(int IdExperiencia)
+        {
+            using (var service = new ExperienciaProfissionalService())
+            {
+                bool success = service.Excluir(IdExperiencia);
+                return new { ok = success, message = success ? "Nova experiênica excluída com sucesso!" : "Ocorreu um erro ao tentar excluir, tente novamente mais tarde!" };
+            }
+
         }
     }
 }

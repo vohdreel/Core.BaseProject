@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Global.DAO.Model;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Global.DAO.Procedure.Models;
 
 namespace Global.DAO.Context
 {
@@ -19,6 +18,7 @@ namespace Global.DAO.Context
         }
 
         public virtual DbSet<AreaInteresse> AreaInteresse { get; set; }
+        public virtual DbSet<Banner> Banner { get; set; }
         public virtual DbSet<Being> Being { get; set; }
         public virtual DbSet<Candidato> Candidato { get; set; }
         public virtual DbSet<Candidatura> Candidatura { get; set; }
@@ -29,6 +29,7 @@ namespace Global.DAO.Context
         public virtual DbSet<EnumAgrupamento> EnumAgrupamento { get; set; }
         public virtual DbSet<EnumPais> EnumPais { get; set; }
         public virtual DbSet<EnumTipoDocumento> EnumTipoDocumento { get; set; }
+        public virtual DbSet<ExperienciaProfissional> ExperienciaProfissional { get; set; }
         public virtual DbSet<Machine> Machine { get; set; }
         public virtual DbSet<MechaUser> MechaUser { get; set; }
         public virtual DbSet<Notificacao> Notificacao { get; set; }
@@ -67,6 +68,17 @@ namespace Global.DAO.Context
                     .HasConstraintName("FK_EnumAgrupamento_AreaInteresse");
             });
             
+
+            modelBuilder.Entity<Banner>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.Base64Code).IsUnicode(false);
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.UrlRedirect).IsUnicode(false);
+            });
 
             modelBuilder.Entity<Being>(entity =>
             {
@@ -110,8 +122,6 @@ namespace Global.DAO.Context
                 entity.Property(e => e.Endereco).IsUnicode(false);
 
                 entity.Property(e => e.Estado).IsUnicode(false);
-
-                entity.Property(e => e.EstadoCivil).IsUnicode(false);
 
                 entity.Property(e => e.EstadoNascimento).IsUnicode(false);
 
@@ -266,6 +276,22 @@ namespace Global.DAO.Context
             modelBuilder.Entity<EnumTipoDocumento>(entity =>
             {
                 entity.Property(e => e.NomeTipoDocumento).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ExperienciaProfissional>(entity =>
+            {
+                entity.Property(e => e.Cargo)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.Empresa)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.HasOne(d => d.IdCandidatoNavigation)
+                    .WithMany(p => p.ExperienciaProfissional)
+                    .HasForeignKey(d => d.IdCandidato)
+                    .HasConstraintName("FK_Candidato_FormacaoCandidato");
             });
 
             modelBuilder.Entity<Machine>(entity =>

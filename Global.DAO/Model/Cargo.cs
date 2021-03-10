@@ -21,6 +21,7 @@ namespace Global.DAO.Model
         public string NomeCargo { get; set; }
         [StringLength(250)]
         public string DescricaoCargo { get; set; }
+        public int? ReferenceNumber { get; set; }
 
         [ForeignKey(nameof(IdEnumAgrupamento))]
         [InverseProperty(nameof(EnumAgrupamento.Cargo))]

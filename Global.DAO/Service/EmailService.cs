@@ -45,6 +45,27 @@ namespace Global.DAO.Service
             await SendEmail(userEmailOptions);
         }
 
+        public UserEmailOptions ReturnConfirmationBody(UserEmailOptions userEmailOptions)
+        {
+            userEmailOptions.Subject = UpdatePlaceHolders("Olá {{UserName}}, Confirme seu email.", userEmailOptions.PlaceHolders);
+
+            userEmailOptions.Body = UpdatePlaceHolders(GetEmailBody("EmailConfirm"), userEmailOptions.PlaceHolders);
+
+            return userEmailOptions;
+        }
+
+        public UserEmailOptions ReturnForgotPasswordBody(UserEmailOptions userEmailOptions)
+        {
+            userEmailOptions.Subject = UpdatePlaceHolders("Olá {{UserName}}, redefina sua senha.", userEmailOptions.PlaceHolders);
+
+            userEmailOptions.Body = UpdatePlaceHolders(GetEmailBody("ForgotPassword"), userEmailOptions.PlaceHolders);
+
+            return userEmailOptions;
+        }
+
+
+
+
         public async Task SendEmailForForgotPassword(UserEmailOptions userEmailOptions)
         {
             userEmailOptions.Subject = UpdatePlaceHolders("Olá {{UserName}}, redefina sua senha.", userEmailOptions.PlaceHolders);
