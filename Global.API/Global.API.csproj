@@ -13,6 +13,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="EmailTemplate\EmailConfirm.html" />
+    <None Remove="EmailTemplate\ForgotPassword.html" />
+    <None Remove="EmailTemplate\TestEmail.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="EmailTemplate\EmailConfirm.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="EmailTemplate\ForgotPassword.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="EmailTemplate\TestEmail.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Areas\Identity\Pages\_ViewStart.cshtml" />
   </ItemGroup>
 

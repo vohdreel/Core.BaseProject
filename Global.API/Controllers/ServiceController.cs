@@ -453,5 +453,22 @@ namespace Global.API.Controllers
         }
 
 
+
+        [HttpGet("GetInvalidVagasLog")]
+        public object GetInvalidVagasLog()
+        {
+            string ContentRootPath = _webHostEnvironment.ContentRootPath;
+
+            string templatePath = @"\File\_InvalidVagas.json";
+
+            var completePath = ContentRootPath + templatePath;
+
+            JArray log = JSONExtensions.Read<JArray>(completePath);
+
+            return log;
+        }
+
+
+
     }
 }
