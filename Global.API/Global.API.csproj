@@ -16,6 +16,7 @@
     <None Remove="EmailTemplate\EmailConfirm.html" />
     <None Remove="EmailTemplate\ForgotPassword.html" />
     <None Remove="EmailTemplate\TestEmail.html" />
+    <None Remove="FIle\Listagem_Cargos_Select.xls" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +28,9 @@
     </Content>
     <Content Include="EmailTemplate\TestEmail.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FIle\Listagem_Cargos_Select.xls">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
