@@ -41,8 +41,6 @@ namespace Global.API.Controllers
 
         }
 
-
-
         [HttpGet("FeedTest")]
         public dynamic FeedTest()
         {
@@ -175,6 +173,7 @@ namespace Global.API.Controllers
                 "globalempregos/feed/indeed",
                 isXML: true);
 
+            var a = Request.Form.Files.First();
 
             ProcessoSeletivoService processoService = new ProcessoSeletivoService();
             VagaService vagaService = new VagaService();
@@ -262,7 +261,7 @@ namespace Global.API.Controllers
                             new Vaga()
                             {
                                 Cidade = job["city"]["#cdata-section"].ToString(),
-                                Estado = job["state"]["#cdata-section"].ToString().ConverterEstados(),
+                                Estado = job["state"]["#cdata-section"].ToString().Replace("State of ", "").ConverterEstados(),
                                 ReferenceNumber =job["referencenumber"]["#cdata-section"].Value<int>(),
                                 Requisitos= job["description"]["#cdata-section"].ToString(),
                                 UrlVaga = job["url"]["#cdata-section"].ToString(),
@@ -438,8 +437,6 @@ namespace Global.API.Controllers
             return 0;
         }
 
-
-
         [HttpGet("EnviorimentTest")]
         public object EnviorimentTest()
         {
@@ -452,6 +449,48 @@ namespace Global.API.Controllers
             return completePath;
         }
 
+        [HttpGet("GetInvalidVagasLog")]
+        public object GetInvalidVagasLog()
+        {
+            string ContentRootPath = _webHostEnvironment.ContentRootPath;
 
+            string templatePath = @"\File\_InvalidVagas.json";
+
+            var completePath = ContentRootPath + templatePath;
+
+            JArray log = JSONExtensions.Read<JArray>(completePath);
+
+            return log;
+        }
+
+        [HttpGet("GenerateCandidatos")]
+        public async Task<object> GenerateCandidatos()
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            bool first = true;
+            var formFile = Request.Form.Files[0].OpenReadStream();
+            var filePath = Path.GetTempFileName();
+            using (var reader = ExcelReaderFactory.CreateReader(formFile))
+            {
+                do
+                {
+                    while (reader.Read()) //Each ROW
+                    {
+                        if (first) { first = !first; continue; }
+                        Candidato candidato = new Candidato();
+
+
+
+
+                    }
+
+
+                } while (reader.NextResult()); //Move to NEXT SHEET
+
+            }
+
+
+            return 0;
+        }
     }
 }
