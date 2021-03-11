@@ -257,8 +257,7 @@ namespace Global.API.Areas.Mobile.Controllers
         [AllowAnonymous]
         public async Task<object> ForgotPassword(string email)
         {
-            try
-            {
+          
                 var user = await _userManager.FindByEmailAsync(email);
                 //if (user != null && await _userManager.IsEmailConfirmedAsync(user))
                 if (user != null)
