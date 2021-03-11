@@ -21,7 +21,7 @@ namespace Global.API.ViewModel
             Empresa = model.Empresa;
             Cargo = model.Cargo;
             DataAdmissao = model.DataAdmissao.Value.ToString("dd/MM/yyyy") ;
-            DataDesligamento = model.DataDesligamento.Value.ToString("dd/MM/yyyy");
+            DataDesligamento = model.DataDesligamento?.ToString("dd/MM/yyyy");
 
 
         }

@@ -211,8 +211,7 @@ namespace Global.API.Areas.Mobile.Controllers
             {
                 return false;
             }
-        }
-        
+        }        
 
         public async Task<bool> SendEmailForEmailConfirmation(string email, IdentityUser user, string nomeCandidato)
         {
@@ -254,14 +253,15 @@ namespace Global.API.Areas.Mobile.Controllers
 
         }
 
-
-
         [HttpPost("EnviarLinkRedefinirSenha")]
         [AllowAnonymous]
         public async Task<object> ForgotPassword(string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(email);
+                //if (user != null && await _userManager.IsEmailConfirmedAsync(user))
+                if (user != null)
 
             if (user != null && await _userManager.IsEmailConfirmedAsync(user))
             {
@@ -351,8 +351,6 @@ namespace Global.API.Areas.Mobile.Controllers
             }
         }
 
-
-
         [AllowAnonymous]
         [HttpPost("CadastrarUsuario")]
         public async Task<object> SingUp([FromBody] dynamic userInfo)
@@ -433,7 +431,6 @@ namespace Global.API.Areas.Mobile.Controllers
             }
         }
 
-
         [AllowAnonymous]
         [HttpPost("SalvarPreferencias")]
         public object SalvarPreferencias([FromBody] ViewModel.Preferencias preferencias)
@@ -463,7 +460,6 @@ namespace Global.API.Areas.Mobile.Controllers
 
 
         }
-
 
         [Authorize]
         [HttpGet("Logout")]
