@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Global.DAO.Model;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Global.DAO.Procedure.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Global.DAO.Context
 {
@@ -31,6 +31,7 @@ namespace Global.DAO.Context
         public virtual DbSet<EnumPais> EnumPais { get; set; }
         public virtual DbSet<EnumTipoDocumento> EnumTipoDocumento { get; set; }
         public virtual DbSet<ExperienciaProfissional> ExperienciaProfissional { get; set; }
+        public virtual DbSet<FormacaoCandidato> FormacaoCandidato { get; set; }
         public virtual DbSet<Machine> Machine { get; set; }
         public virtual DbSet<MechaUser> MechaUser { get; set; }
         public virtual DbSet<Notificacao> Notificacao { get; set; }
@@ -46,7 +47,7 @@ namespace Global.DAO.Context
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=prolead.database.windows.net;Database=GlobalEmpregos;user id=anima_sa;password=A^BCxSFd#%qHv=W79uda;Trusted_Connection=True;Integrated Security=False;MultipleActiveResultSets=true");
+                optionsBuilder.UseSqlServer("Server=prolead.database.windows.net;Database=GlobalEmpregos_Dev;user id=anima_sa;password=A^BCxSFd#%qHv=W79uda;Trusted_Connection=True;Integrated Security=False;MultipleActiveResultSets=true");
             }
         }
 
@@ -54,7 +55,8 @@ namespace Global.DAO.Context
         {
 
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();
+            modelBuilder.Entity<VagaCompatibilidade>().HasNoKey(); ;
+
 
             modelBuilder.Entity<AreaInteresse>(entity =>
             {
@@ -68,7 +70,6 @@ namespace Global.DAO.Context
                     .HasForeignKey(d => d.IdEnumAgrupamento)
                     .HasConstraintName("FK_EnumAgrupamento_AreaInteresse");
             });
-
 
             modelBuilder.Entity<Banner>(entity =>
             {
@@ -94,7 +95,23 @@ namespace Global.DAO.Context
 
                 entity.Property(e => e.AmputacaoMembrosSuperiores).IsUnicode(false);
 
+                entity.Property(e => e.AreaAtuacao)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
                 entity.Property(e => e.Bairro).IsUnicode(false);
+
+                entity.Property(e => e.CargoAtual)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.CargoInteresse)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.CargoInteresseSecundario)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.CategoriaCnh).IsUnicode(false);
 
@@ -120,6 +137,10 @@ namespace Global.DAO.Context
 
                 entity.Property(e => e.EmailSecundario).IsUnicode(false);
 
+                entity.Property(e => e.EmpresaAtual)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
                 entity.Property(e => e.Endereco).IsUnicode(false);
 
                 entity.Property(e => e.Estado).IsUnicode(false);
@@ -129,6 +150,10 @@ namespace Global.DAO.Context
                 entity.Property(e => e.EstadoNascimento).IsUnicode(false);
 
                 entity.Property(e => e.Fcmtoken).IsUnicode(false);
+
+                entity.Property(e => e.FotoCandidato)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.IdAspNetUsers).IsUnicode(false);
 
@@ -140,6 +165,10 @@ namespace Global.DAO.Context
 
                 entity.Property(e => e.Idlegado).IsUnicode(false);
 
+                entity.Property(e => e.IntervaloData)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
                 entity.Property(e => e.Latitude).IsUnicode(false);
 
                 entity.Property(e => e.LocalPreferencia).IsUnicode(false);
@@ -148,7 +177,15 @@ namespace Global.DAO.Context
 
                 entity.Property(e => e.Longitude).IsUnicode(false);
 
+                entity.Property(e => e.MatematicaFinanceira)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
                 entity.Property(e => e.Nacionalidade).IsUnicode(false);
+
+                entity.Property(e => e.NiveEspanhol).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.NiveIngles).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.NivelProfissionalVagaDesejada).HasDefaultValueSql("((0))");
 
@@ -157,6 +194,10 @@ namespace Global.DAO.Context
                 entity.Property(e => e.NomeMae).IsUnicode(false);
 
                 entity.Property(e => e.NomePai).IsUnicode(false);
+
+                entity.Property(e => e.NomeProcesso)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.Numero).IsUnicode(false);
 
@@ -171,6 +212,14 @@ namespace Global.DAO.Context
                 entity.Property(e => e.Raca).IsUnicode(false);
 
                 entity.Property(e => e.Sexo).IsUnicode(false);
+
+                entity.Property(e => e.SituacaoPlanoSaude)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.TesteOnlineCandidato)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.TipoVaga).IsUnicode(false);
             });
@@ -205,7 +254,7 @@ namespace Global.DAO.Context
             modelBuilder.Entity<CargoInteresse>(entity =>
             {
                 entity.HasOne(d => d.IdCandidatoNavigation)
-                    .WithMany(p => p.CargoInteresse)
+                    .WithMany(p => p.CargoInteresseNavigation)
                     .HasForeignKey(d => d.IdCandidato)
                     .HasConstraintName("FK_Candidato_CargoInteresse");
 
@@ -293,6 +342,38 @@ namespace Global.DAO.Context
 
                 entity.HasOne(d => d.IdCandidatoNavigation)
                     .WithMany(p => p.ExperienciaProfissional)
+                    .HasForeignKey(d => d.IdCandidato)
+                    .HasConstraintName("FK_Candidato_ExperienciaProfissional");
+            });
+
+            modelBuilder.Entity<FormacaoCandidato>(entity =>
+            {
+                entity.Property(e => e.Curso)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.DataConclusao)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.Instituicao)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.Modalidade)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.Situacao)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.TipoFormacao)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.HasOne(d => d.IdCandidatoNavigation)
+                    .WithMany(p => p.FormacaoCandidato)
                     .HasForeignKey(d => d.IdCandidato)
                     .HasConstraintName("FK_Candidato_FormacaoCandidato");
             });

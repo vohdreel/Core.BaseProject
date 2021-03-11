@@ -82,13 +82,11 @@ namespace Global.API
                     .AllowCredentials());
             });
 
-            //services.AddDistributedMemoryCache();
-            //services.ConfigureNonBreakingSameSiteCookies();
-
             //Configuração De Cache (refernete a Sessão)
             services.AddDistributedMemoryCache();
             //Configuração De SameSite Cookies
             services.ConfigureNonBreakingSameSiteCookies();
+
             //Configuração De Sessão 
             services.AddSession(options =>
             {
@@ -333,15 +331,15 @@ namespace Global.API
             app.UseAuthorization();
 
             //Add JWToken to all incoming HTTP Request Header
-            app.Use((context, next) =>
-            {
-                var JWToken = context.Session.GetString("JWToken");
-                if (!string.IsNullOrEmpty(JWToken))
-                {
-                    context.Request.Headers.Add("Authorization", "Bearer " + JWToken);
-                }
-                return next();
-            });
+            //app.Use((context, next) =>
+            //{
+            //    var JWToken = context.Session.GetString("JWToken");
+            //    if (!string.IsNullOrEmpty(JWToken))
+            //    {
+            //        context.Request.Headers.Add("Authorization", "Bearer " + JWToken);
+            //    }
+            //    return next();
+            //});
             //Add JWToken Authentication service
 
 
