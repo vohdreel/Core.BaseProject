@@ -94,6 +94,23 @@ namespace Global.Util.SystemEnumerations
 
     }
 
+    public enum EnumRaca
+    {
+
+        [Display(Name = "Preta")]
+        Preta = 1,
+        [Display(Name = "Amarela")]
+        Amarela = 2,
+        [Display(Name = "Indigena")]
+        Indigena = 3,
+        [Display(Name = "Branca")]
+        Branca = 4,
+        [Display(Name = "Parda")]
+        Parda = 5
+
+
+    }
+
     public enum NivelProfissional
     {
 
@@ -105,7 +122,7 @@ namespace Global.Util.SystemEnumerations
         ProfissionalFundamental = 3,
         [Display(Name = "Profissional (nível médio/técnico)")]
         ProfissionalNvelTecnico = 4,
-        [Display(Name = "Profissional  (nível superior)")]
+        [Display(Name = "Profissional (nível superior)")]
         ProfissionaNivelSuperior = 5
 
 
@@ -123,7 +140,9 @@ namespace Global.Util.SystemEnumerations
         [Display(Name = "Viúvo(a)")]
         Viuvo = 4,
         [Display(Name = "Separado(a)")]
-        Separado = 5
+        Separado = 5,
+        [Display(Name = "União Estável")]
+        UniaoEstavel = 6
 
 
     }
@@ -164,6 +183,103 @@ namespace Global.Util.SystemEnumerations
         [Display(Name = "Revogada")]
         Revogada = 3
 
+    }
+
+    public enum NivelFormacao
+    {
+        [Display(Name = "Ensino Fundamental")]
+        Fundamental = 1,
+        [Display(Name = "Ensino Médio / Técnico")]
+        MedioOuTecnico = 2,
+        [Display(Name = "Graduação")]
+        Graduacao = 3,
+        [Display(Name = "Pós-graduação")]
+        PosGraduacao = 4
+
+    }
+
+
+    public enum SituacaoFormacao
+    {
+        [Display(Name = "Em Curso")]
+        EmCurso = 1,
+        [Display(Name = "Incompleto")]
+        Incompleto = 2,
+        [Display(Name = "Concluído")]
+        Concluido = 3
+
+    }
+
+    public enum ModalidadeFormacao
+    {
+        [Display(Name = "Médio")]
+        Medio = 1,
+        [Display(Name = "Técnico")]
+        Tecnico = 2,
+        [Display(Name = "Licenciatura")]
+        Licenciatura = 3,
+        [Display(Name = "Bacharelado")]
+        Bacharelado = 4,
+
+    }
+
+
+    public enum Estado
+    {
+        [Display(Name = ("Acre"))]
+        AC = 1,
+        [Display(Name = ("Alagoas"))]
+        AL = 2,
+        [Display(Name = ("Amapá"))]
+        AP = 3,
+        [Display(Name = ("Amazonas"))]
+        AM = 4,
+        [Display(Name = ("Bahia"))]
+        BA = 5,
+        [Display(Name = ("Ceará"))]
+        CE = 6,
+        [Display(Name = ("Distrito Federal"))]
+        DF = 7,
+        [Display(Name = ("Espirito Santo"))]
+        ES = 8,
+        [Display(Name = ("Goiás"))]
+        GO = 9,
+        [Display(Name = ("Maranhão"))]
+        MA = 10,
+        [Display(Name = ("Mato Grosso"))]
+        MT = 11,
+        [Display(Name = ("Mato Grosso do Sul"))]
+        MS = 12,
+        [Display(Name = ("Minas Gerais"))]
+        MG = 13,
+        [Display(Name = ("Pará"))]
+        PA = 14,
+        [Display(Name = ("Paraíba"))]
+        PB = 15,
+        [Display(Name = ("Paraná"))]
+        PR = 16,
+        [Display(Name = ("Pernambuco"))]
+        PE = 17,
+        [Display(Name = ("Piauí"))]
+        PI = 18,
+        [Display(Name = ("Rio de Janeiro"))]
+        RJ = 19,
+        [Display(Name = ("Rio Grande do Norte"))]
+        RN = 20,
+        [Display(Name = ("Rio Grande do Sul"))]
+        RS = 21,
+        [Display(Name = ("Rondônia"))]
+        RO = 22,
+        [Display(Name = ("Roraima"))]
+        RR = 23,
+        [Display(Name = ("Santa Catarina"))]
+        SC = 24,
+        [Display(Name = ("São Paulo"))]
+        SP = 25,
+        [Display(Name = ("Sergipe"))]
+        SE = 26,
+        [Display(Name = ("Tocantins"))]
+        TO = 27
     }
 
 

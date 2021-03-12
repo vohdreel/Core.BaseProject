@@ -11,9 +11,10 @@ namespace Global.DAO.Model
         {
             AreaInteresse = new HashSet<AreaInteresse>();
             Candidatura = new HashSet<Candidatura>();
-            CargoInteresse = new HashSet<CargoInteresse>();
+            CargoInteresseNavigation = new HashSet<CargoInteresse>();
             Documento = new HashSet<Documento>();
             ExperienciaProfissional = new HashSet<ExperienciaProfissional>();
+            FormacaoCandidato = new HashSet<FormacaoCandidato>();
             Notificacao = new HashSet<Notificacao>();
             TelefoneCandidato = new HashSet<TelefoneCandidato>();
             VagaFavorita = new HashSet<VagaFavorita>();
@@ -40,8 +41,7 @@ namespace Global.DAO.Model
         [StringLength(50)]
         public string Sexo { get; set; }
         public int? EstadoCivil { get; set; }
-        [StringLength(50)]
-        public string Raca { get; set; }
+        public int? Raca { get; set; }
         public bool? PossuiDependentes { get; set; }
         public int? QuantidadeDependentes { get; set; }
         [Column("PossuiCNH")]
@@ -128,17 +128,46 @@ namespace Global.DAO.Model
         public string Agrupadores { get; set; }
         public int? PerfilProfissional { get; set; }
         public int? NivelProfissionalVagaDesejada { get; set; }
+        public int? Idade { get; set; }
+        public string FotoCandidato { get; set; }
+        [StringLength(150)]
+        public string TesteOnlineCandidato { get; set; }
+        [StringLength(150)]
+        public string IntervaloData { get; set; }
+        [StringLength(150)]
+        public string NomeProcesso { get; set; }
+        [StringLength(150)]
+        public string SituacaoPlanoSaude { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime? DataSituacaoPlanoSaude { get; set; }
+        [StringLength(150)]
+        public string EmpresaAtual { get; set; }
+        [StringLength(150)]
+        public string CargoAtual { get; set; }
+        [StringLength(150)]
+        public string AreaAtuacao { get; set; }
+        public int? NiveIngles { get; set; }
+        public int? NiveEspanhol { get; set; }
+        [StringLength(150)]
+        public string MatematicaFinanceira { get; set; }
+        [StringLength(150)]
+        public string CargoInteresse { get; set; }
+        [StringLength(150)]
+        public string CargoInteresseSecundario { get; set; }
+        public bool? PrimeiroEmprego { get; set; }
 
         [InverseProperty("IdCandidatoNavigation")]
         public virtual ICollection<AreaInteresse> AreaInteresse { get; set; }
         [InverseProperty("IdCandidatoNavigation")]
         public virtual ICollection<Candidatura> Candidatura { get; set; }
         [InverseProperty("IdCandidatoNavigation")]
-        public virtual ICollection<CargoInteresse> CargoInteresse { get; set; }
+        public virtual ICollection<CargoInteresse> CargoInteresseNavigation { get; set; }
         [InverseProperty("IdCandidatoNavigation")]
         public virtual ICollection<Documento> Documento { get; set; }
         [InverseProperty("IdCandidatoNavigation")]
         public virtual ICollection<ExperienciaProfissional> ExperienciaProfissional { get; set; }
+        [InverseProperty("IdCandidatoNavigation")]
+        public virtual ICollection<FormacaoCandidato> FormacaoCandidato { get; set; }
         [InverseProperty("IdCandidatoNavigation")]
         public virtual ICollection<Notificacao> Notificacao { get; set; }
         [InverseProperty("IdCandidatoNavigation")]

@@ -13,7 +13,7 @@ namespace Global.DAO.Model
         public int IdCargo { get; set; }
 
         [ForeignKey(nameof(IdCandidato))]
-        [InverseProperty(nameof(Candidato.CargoInteresse))]
+        [InverseProperty(nameof(Candidato.CargoInteresseNavigation))]
         public virtual Candidato IdCandidatoNavigation { get; set; }
         [ForeignKey(nameof(IdCargo))]
         [InverseProperty(nameof(Cargo.CargoInteresse))]

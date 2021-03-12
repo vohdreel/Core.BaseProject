@@ -18,6 +18,9 @@ namespace Global.DAO.Model
         public DateTime? DataAdmissao { get; set; }
         [Column(TypeName = "date")]
         public DateTime? DataDesligamento { get; set; }
+        [Column(TypeName = "money")]
+        public decimal? Salario { get; set; }
+        public string ResumoAtividades { get; set; }
 
         [ForeignKey(nameof(IdCandidato))]
         [InverseProperty(nameof(Candidato.ExperienciaProfissional))]

@@ -33,7 +33,7 @@ namespace Global.API.Areas.Mobile.Controllers
                 candidato.EstadoNascimento = !string.IsNullOrEmpty(informacoesPessoais.EstadoNascimento) ? informacoesPessoais.EstadoNascimento : candidato.EstadoNascimento;
                 candidato.DataNascimento = informacoesPessoais.DataNascimento != null ? informacoesPessoais.DataNascimento : candidato.DataNascimento;
                 candidato.Sexo = !string.IsNullOrEmpty(informacoesPessoais.Sexo) ? informacoesPessoais.Sexo : candidato.Sexo;
-                candidato.Raca = !string.IsNullOrEmpty(informacoesPessoais.Raca) ? informacoesPessoais.Raca : candidato.Raca;
+                candidato.Raca = informacoesPessoais.Raca != null ? informacoesPessoais.Raca : candidato.Raca;
                 candidato.EstadoCivil = informacoesPessoais.EstadoCivil != null ? informacoesPessoais.EstadoCivil : candidato.EstadoCivil;
                 candidato.PossuiDependentes = informacoesPessoais.PossuiDependentes != null ? informacoesPessoais.PossuiDependentes : candidato.PossuiDependentes;
                 candidato.QuantidadeDependentes = informacoesPessoais.QuantidadeDependentes != null ? informacoesPessoais.QuantidadeDependentes : candidato.QuantidadeDependentes;
