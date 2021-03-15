@@ -613,7 +613,9 @@ namespace Global.API.Controllers
 
                         candidato.NomeProcesso = reader.GetString(65);
                         candidato.SituacaoPlanoSaude = reader.GetString(66);
-                        candidato.DataSituacaoPlanoSaude = DateTime.Parse(reader.GetString(67));
+
+                        if (!string.IsNullOrEmpty(reader.GetString(67)))
+                            candidato.DataSituacaoPlanoSaude = DateTime.Parse(reader.GetString(67));
 
                         string primeiroEmprego = reader.GetString(68);
                         if (!string.IsNullOrEmpty(primeiroEmprego))
@@ -628,8 +630,9 @@ namespace Global.API.Controllers
                             {
                                 Empresa = reader.GetString(69),
                                 Cargo = reader.GetString(70),
-                                DataAdmissao = DateTime.Parse(reader.GetString(72)),
-                                DataDesligamento = DateTime.Parse(reader.GetString(73)),
+                                Salario = decimal.Parse(Regex.Replace(reader.GetString(71), @"[^\d.]", "")),
+                                DataAdmissao = reader.GetDateTime(72),
+                                DataDesligamento = reader.GetDateTime(73),
                                 ResumoAtividades = reader.GetString(74)
                             };
                             candidato.ExperienciaProfissional.Add(experiencia_1);
@@ -642,8 +645,9 @@ namespace Global.API.Controllers
                             {
                                 Empresa = reader.GetString(75),
                                 Cargo = reader.GetString(76),
-                                DataAdmissao = DateTime.Parse(reader.GetString(78)),
-                                DataDesligamento = DateTime.Parse(reader.GetString(79)),
+                                Salario = decimal.Parse(Regex.Replace(reader.GetString(77), @"[^\d.]", "")),
+                                DataAdmissao = reader.GetDateTime(78),
+                                DataDesligamento = reader.GetDateTime(79),
                                 ResumoAtividades = reader.GetString(80)
                             };
                             candidato.ExperienciaProfissional.Add(experiencia_2);
@@ -656,8 +660,9 @@ namespace Global.API.Controllers
                             {
                                 Empresa = reader.GetString(81),
                                 Cargo = reader.GetString(82),
-                                DataAdmissao = DateTime.Parse(reader.GetString(84)),
-                                DataDesligamento = DateTime.Parse(reader.GetString(85)),
+                                Salario = decimal.Parse(Regex.Replace(reader.GetString(93), @"[^\d.]", "")),
+                                DataAdmissao = reader.GetDateTime(84),
+                                DataDesligamento = reader.GetDateTime(85),
                                 ResumoAtividades = reader.GetString(86)
                             };
                             candidato.ExperienciaProfissional.Add(experiencia_3);

@@ -28,7 +28,7 @@ namespace Global.DAO.Service
         }
 
 
-        public Candidato BuscarCandidato(int IdCandidato) 
+        public Candidato BuscarCandidato(int IdCandidato)
         {
 
             return Repository.Get(x => x.Id == IdCandidato).FirstOrDefault();
@@ -39,8 +39,8 @@ namespace Global.DAO.Service
         public bool CadastrarCandidato(Candidato candidato)
         {
             return Repository.Insert(candidato);
-        
-        
+
+
         }
 
         public bool AtualizarCandidato(Candidato candidato)
@@ -61,7 +61,7 @@ namespace Global.DAO.Service
         public bool ExisteCpfUsuario(string cpf)
         {
 
-            return Repository.Get(x => x.Cpf == cpf.Replace(".", "").Replace("-","")).FirstOrDefault() != null;
+            return Repository.Get(x => x.Cpf == cpf.Replace(".", "").Replace("-", "")).FirstOrDefault() != null;
 
 
         }
@@ -70,7 +70,7 @@ namespace Global.DAO.Service
         {
             Candidato candidato = Repository.Get(x => x.IdAspNetUsers == IdAspNetUsers).FirstOrDefault();
             candidato.MaterConectado = value;
-            Repository.Update(candidato); 
+            Repository.Update(candidato);
 
         }
 
@@ -82,7 +82,8 @@ namespace Global.DAO.Service
         }
 
 
-        public Coordinates BuscarCoordenadasCandidato(int idCandidato) {
+        public Coordinates BuscarCoordenadasCandidato(int idCandidato)
+        {
             Candidato candidato = BuscarCandidato(idCandidato);
 
             if (candidato.Latitude == null || candidato.Longitude == null)
@@ -103,13 +104,11 @@ namespace Global.DAO.Service
             {
                 fullAddress += candidato.Endereco.Trim();
                 if (!string.IsNullOrEmpty(candidato.Numero))
-                {
                     fullAddress += (", " + candidato.Numero.Trim());
-                    if (!string.IsNullOrEmpty(candidato.Cep))
-                    {
-                        fullAddress += (" - " + candidato.Cep.Trim());
-                    }
-                }
+                if (!string.IsNullOrEmpty(candidato.Cep))
+                    fullAddress += (" - " + candidato.Cep.Trim());
+
+
             }
 
             return fullAddress;

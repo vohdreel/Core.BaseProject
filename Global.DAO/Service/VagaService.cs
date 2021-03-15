@@ -215,13 +215,10 @@ namespace Global.DAO.Service
             {
                 fullAddress += vaga.Endereco.Trim();
                 if (!string.IsNullOrEmpty(vaga.Numero))
-                {
                     fullAddress += (", " + vaga.Numero.Trim());
-                    if (!string.IsNullOrEmpty(vaga.Cep))
-                    {
-                        fullAddress += (" - " + vaga.Cep.Trim());
-                    }
-                }
+                if (!string.IsNullOrEmpty(vaga.Cep))
+                    fullAddress += (" - " + vaga.Cep.Trim());
+
             }
             fullAddress += vaga.Cidade + ", " + vaga.Estado;
 
