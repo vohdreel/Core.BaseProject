@@ -47,7 +47,7 @@ namespace Global.DAO.Context
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=prolead.database.windows.net;Database=GlobalEmpregos;user id=anima_sa;password=A^BCxSFd#%qHv=W79uda;Trusted_Connection=True;Integrated Security=False;MultipleActiveResultSets=true");
+                optionsBuilder.UseSqlServer("Server=prolead.database.windows.net;Database=GlobalEmpregos_Dev;user id=anima_sa;password=A^BCxSFd#%qHv=W79uda;Trusted_Connection=True;Integrated Security=False;MultipleActiveResultSets=true");
             }
         }
 
@@ -57,6 +57,7 @@ namespace Global.DAO.Context
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();
+
 
             modelBuilder.Entity<AreaInteresse>(entity =>
             {
@@ -70,9 +71,7 @@ namespace Global.DAO.Context
                     .HasForeignKey(d => d.IdEnumAgrupamento)
                     .HasConstraintName("FK_EnumAgrupamento_AreaInteresse");
             });
-
-           
-
+         
             modelBuilder.Entity<Banner>(entity =>
             {
                 entity.HasNoKey();
@@ -352,8 +351,6 @@ namespace Global.DAO.Context
             {
                 entity.Property(e => e.Curso).IsUnicode(false);
 
-                entity.Property(e => e.DataConclusao).IsUnicode(false);
-
                 entity.Property(e => e.Instituicao).IsUnicode(false);
 
                 entity.HasOne(d => d.IdCandidatoNavigation)
@@ -458,6 +455,10 @@ namespace Global.DAO.Context
                 entity.Property(e => e.Numero).IsUnicode(false);
 
                 entity.Property(e => e.Requisitos).IsUnicode(false);
+
+                entity.Property(e => e.ResumoAtividades)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.UrlVaga)
                     .IsUnicode(false)

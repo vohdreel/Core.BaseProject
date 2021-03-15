@@ -96,7 +96,8 @@ namespace Global.Util.SystemEnumerations
 
     public enum EnumRaca
     {
-
+        [Display(Name = "Não desejo informar")]
+        Indisponivel = 0,
         [Display(Name = "Preta")]
         Preta = 1,
         [Display(Name = "Amarela")]
@@ -128,20 +129,21 @@ namespace Global.Util.SystemEnumerations
 
     }
 
-    public enum EnumEstadoCIvil
+    public enum EnumEstadoCivil
     {
-
-        [Display(Name = "Solteiro(a)")]
+        [Display(Name = "Não disponível", ShortName = "Indisponível")]
+        Indisponivel = 0,
+        [Display(Name = "Solteiro(a)", ShortName = "Solteiro")]
         Solteiro = 1,
-        [Display(Name = "Casado(a)")]
+        [Display(Name = "Casado(a)", ShortName = "Casado")]
         Casado = 2,
-        [Display(Name = "Divorciado(a)")]
+        [Display(Name = "Divorciado(a)", ShortName = "Divorciado")]
         Divoricado = 3,
-        [Display(Name = "Viúvo(a)")]
+        [Display(Name = "Viúvo(a)", ShortName = "Viúvo")]
         Viuvo = 4,
-        [Display(Name = "Separado(a)")]
+        [Display(Name = "Separado(a)", ShortName = "Separado")]
         Separado = 5,
-        [Display(Name = "União Estável")]
+        [Display(Name = "União Estável", ShortName = "União Estável")]
         UniaoEstavel = 6
 
 

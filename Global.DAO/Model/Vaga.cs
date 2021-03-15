@@ -20,8 +20,10 @@ namespace Global.DAO.Model
         public int Modalidade { get; set; }
         public string Requisitos { get; set; }
         public string Beneficios { get; set; }
+        [Required]
         [StringLength(200)]
         public string Endereco { get; set; }
+        [Required]
         [Column("CEP")]
         [StringLength(20)]
         public string Cep { get; set; }
@@ -46,6 +48,7 @@ namespace Global.DAO.Model
         public int? ReferenceNumber { get; set; }
         [StringLength(200)]
         public string UrlVaga { get; set; }
+        public string ResumoAtividades { get; set; }
 
         [ForeignKey(nameof(IdCargo))]
         [InverseProperty(nameof(Cargo.Vaga))]

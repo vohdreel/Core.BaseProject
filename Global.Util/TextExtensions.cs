@@ -60,7 +60,7 @@ namespace Global.Util
         public static string GetISOCountryNameByCode(int code) 
         {
 
-            return ISO3166.Country.List.Where(x => Convert.ToInt32(x.NumericCode) == code).FirstOrDefault().TwoLetterCode;        
+            return ISO3166.Country.List.Where(x => Convert.ToInt32(x.NumericCode) == code).FirstOrDefault()?.TwoLetterCode;     
         
         }
         public static string RandomPassword(int length)

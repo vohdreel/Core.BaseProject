@@ -17,8 +17,10 @@ namespace Global.DAO.Model
         [StringLength(250)]
         public string Curso { get; set; }
         public int? Situacao { get; set; }
-        [StringLength(250)]
-        public string DataConclusao { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime? DataConclusao { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime? DataInicio { get; set; }
 
         [ForeignKey(nameof(IdCandidato))]
         [InverseProperty(nameof(Candidato.FormacaoCandidato))]
