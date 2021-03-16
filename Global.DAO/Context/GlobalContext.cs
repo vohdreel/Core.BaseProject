@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Global.DAO.Model;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Global.DAO.Procedure.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Global.DAO.Context
 {
@@ -58,7 +58,6 @@ namespace Global.DAO.Context
 
             modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();
 
-
             modelBuilder.Entity<AreaInteresse>(entity =>
             {
                 entity.HasOne(d => d.IdCandidatoNavigation)
@@ -71,7 +70,7 @@ namespace Global.DAO.Context
                     .HasForeignKey(d => d.IdEnumAgrupamento)
                     .HasConstraintName("FK_EnumAgrupamento_AreaInteresse");
             });
-         
+
             modelBuilder.Entity<Banner>(entity =>
             {
                 entity.HasNoKey();

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using ExcelDataReader;
 using Global.DAO.Model;
@@ -173,7 +174,9 @@ namespace Global.API.Controllers
                 "globalempregos/feed/indeed",
                 isXML: true);
 
-            var a = Request.Form.Files.First();
+            System.Globalization.CultureInfo cultureinfo =
+       new System.Globalization.CultureInfo("pt-BR");
+
 
             ProcessoSeletivoService processoService = new ProcessoSeletivoService();
             VagaService vagaService = new VagaService();
@@ -194,7 +197,8 @@ namespace Global.API.Controllers
                         decimal valueSalario = 0;
                         ///primeiro verificar se a empresa existe
                         Vaga vaga = new Vaga();
-                        Empresa empresa = new EmpresaService().BuscarPorNomeFantasia(job["company"].ToString());
+                        EmpresaService empresaService = new EmpresaService();
+                        Empresa empresa = empresaService.BuscarPorNomeFantasia(job["company"]["#cdata-section"].ToString());
                         if (empresa == null)
                         {
                             empresa = new Empresa()
@@ -202,6 +206,7 @@ namespace Global.API.Controllers
                                 NomeFantasia = job["company"]["#cdata-section"].ToString(),
                                 EmailContato = job["email"]["#cdata-section"].ToString(),
                             };
+                            empresaService.Salvar(empresa);
                         }
                         string rawVagaTitle = job["title"]["#cdata-section"].ToString();
 
@@ -251,11 +256,11 @@ namespace Global.API.Controllers
                         }
                         ProcessoSeletivo processoSeletivo = new ProcessoSeletivo()
                         {
-                            DataInicioProcesso = Convert.ToDateTime(job["date"]["#cdata-section"].ToString()),
-                            DataTerminoProcesso = Convert.ToDateTime(job["expiration_date"]["#cdata-section"].ToString()),
+                            DataInicioProcesso = Convert.ToDateTime(job["date"]["#cdata-section"].ToString(), cultureinfo),
+                            DataTerminoProcesso = Convert.ToDateTime(job["expiration_date"]["#cdata-section"].ToString(), cultureinfo),
                             StatusProcesso = (int)StatusProcesso.EmAndamento,
                             NomeProcesso = job["title"]["#cdata-section"].ToString(),
-                            IdEmpresaNavigation = empresa,
+                            IdEmpresa = empresa.Id,
                             Vaga = new List<Vaga>()
                         {
                             new Vaga()
@@ -290,7 +295,7 @@ namespace Global.API.Controllers
                 }
                 catch (Exception e)
                 {
-                    rejetctedVagas.Add(job);
+                    return e;
 
                 }
             }
@@ -467,6 +472,8 @@ namespace Global.API.Controllers
         public async Task<object> GenerateCandidatos()
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            System.Globalization.CultureInfo cultureinfo =
+        new System.Globalization.CultureInfo("pt-BR");
             bool first = true;
             var formFile = Request.Form.Files[0].OpenReadStream();
             using (var service = new CandidatoService())
@@ -485,7 +492,7 @@ namespace Global.API.Controllers
                         candidato.Nome = reader.GetString(0);
                         candidato.Idlegado = reader.GetValue(1)?.ToString();
 
-                        candidato.DataNascimento = reader.GetValue(2) != null ? (DateTime?)DateTime.Parse(reader.GetValue(2).ToString()) : null;
+                        candidato.DataNascimento = reader.GetValue(2) != null ? (DateTime?)DateTime.ParseExact(reader.GetValue(2).ToString(), "dd/MM/yyyy", cultureinfo) : null;
                         //idade 3
                         candidato.Sexo = reader.GetString(4);
 
@@ -580,9 +587,9 @@ namespace Global.API.Controllers
                                 string[] intervaloConclusao = reader.GetString(52).Split("até");
 
                                 if (!string.IsNullOrEmpty(intervaloConclusao[0]))
-                                    dataInicio = DateTime.Parse(intervaloConclusao[0].Trim());
+                                    dataInicio = DateTime.ParseExact(intervaloConclusao[0].Trim(), "yyyy-MM", cultureinfo);
                                 if (!string.IsNullOrEmpty(intervaloConclusao[1]))
-                                    dataConclusao = DateTime.Parse(intervaloConclusao[1].Trim());
+                                    dataConclusao = DateTime.ParseExact(intervaloConclusao[1].Trim(), "yyyy-MM", cultureinfo);
                             }
 
 
@@ -607,9 +614,9 @@ namespace Global.API.Controllers
                                 string[] intervaloConclusao = reader.GetString(58).Split("até");
 
                                 if (!string.IsNullOrEmpty(intervaloConclusao[0]))
-                                    dataInicio = DateTime.Parse(intervaloConclusao[0].Trim());
+                                    dataInicio = DateTime.ParseExact(intervaloConclusao[0].Trim(), "yyyy-MM", cultureinfo);
                                 if (!string.IsNullOrEmpty(intervaloConclusao[1]))
-                                    dataConclusao = DateTime.Parse(intervaloConclusao[1].Trim());
+                                    dataConclusao = DateTime.ParseExact(intervaloConclusao[1].Trim(), "yyyy-MM", cultureinfo);
                             }
 
                             FormacaoCandidato formacao_2 = new FormacaoCandidato()
@@ -635,9 +642,9 @@ namespace Global.API.Controllers
                                 string[] intervaloConclusao = reader.GetString(64).Split("até");
 
                                 if (!string.IsNullOrEmpty(intervaloConclusao[0]))
-                                    dataInicio = DateTime.Parse(intervaloConclusao[0].Trim());
+                                    dataInicio = DateTime.ParseExact(intervaloConclusao[0].Trim(), "yyyy-MM", cultureinfo);
                                 if (!string.IsNullOrEmpty(intervaloConclusao[1]))
-                                    dataConclusao = DateTime.Parse(intervaloConclusao[1].Trim());
+                                    dataConclusao = DateTime.ParseExact(intervaloConclusao[1].Trim(), "yyyy-MM", cultureinfo);
                             }
 
                             FormacaoCandidato formacao_3 = new FormacaoCandidato()
@@ -660,7 +667,7 @@ namespace Global.API.Controllers
                         candidato.SituacaoPlanoSaude = reader.GetString(66);
 
                         if (reader.GetValue(67) != null)
-                            candidato.DataSituacaoPlanoSaude = DateTime.Parse(reader.GetValue(67).ToString());
+                            candidato.DataSituacaoPlanoSaude = DateTime.ParseExact(reader.GetValue(67).ToString(), "dd/MM/yyyy", cultureinfo);
 
                         string primeiroEmprego = reader.GetString(68);
                         if (!string.IsNullOrEmpty(primeiroEmprego))
@@ -676,8 +683,8 @@ namespace Global.API.Controllers
                                 Empresa = reader.GetString(69),
                                 Cargo = reader.GetString(70),
                                 Salario = !string.IsNullOrEmpty(reader.GetString(71)) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetString(71), @"[^\d.]", "")) : null,
-                                DataAdmissao = reader.GetValue(72) != null ? (DateTime?)reader.GetDateTime(72) : null,
-                                DataDesligamento = reader.GetValue(73) != null && reader.GetValue(73).ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(reader.GetValue(73).ToString()) : null,
+                                DataAdmissao = reader.GetValue(72) != null ? (DateTime?)DateTime.ParseExact(reader.GetValue(72).ToString(), "dd/MM/yyyy", cultureinfo) : null,
+                                DataDesligamento = reader.GetValue(73) != null && reader.GetValue(73).ToString() != "emprego atual" ? (DateTime?)DateTime.ParseExact(reader.GetValue(73).ToString(), "dd/MM/yyyy", cultureinfo) : null,
                                 ResumoAtividades = reader.GetString(74)
                             };
                             candidato.ExperienciaProfissional.Add(experiencia_1);
@@ -691,8 +698,8 @@ namespace Global.API.Controllers
                                 Empresa = reader.GetString(75),
                                 Cargo = reader.GetString(76),
                                 Salario = !string.IsNullOrEmpty(reader.GetString(77)) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetString(77), @"[^\d.]", "")) : null,
-                                DataAdmissao = reader.GetValue(78) != null ? (DateTime?)reader.GetDateTime(78) : null,
-                                DataDesligamento = reader.GetValue(79) != null && reader.GetValue(79).ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(reader.GetValue(79).ToString()) : null,
+                                DataAdmissao = reader.GetValue(78) != null ? (DateTime?)DateTime.ParseExact(reader.GetValue(78).ToString(), "dd/MM/yyyy", cultureinfo) : null,
+                                DataDesligamento = reader.GetValue(79) != null && reader.GetValue(79).ToString() != "emprego atual" ? (DateTime?)DateTime.ParseExact(reader.GetValue(79).ToString(), "dd/MM/yyyy", cultureinfo) : null,
                                 ResumoAtividades = reader.GetString(80)
                             };
                             candidato.ExperienciaProfissional.Add(experiencia_2);
@@ -706,8 +713,8 @@ namespace Global.API.Controllers
                                 Empresa = reader.GetString(81),
                                 Cargo = reader.GetString(82),
                                 Salario = !string.IsNullOrEmpty(reader.GetString(83)) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetString(83), @"[^\d.]", "")) : null,
-                                DataAdmissao = reader.GetValue(84) != null ? (DateTime?)reader.GetDateTime(84) : null,
-                                DataDesligamento = reader.GetValue(85) != null && reader.GetValue(85).ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(reader.GetValue(85).ToString()) : null,
+                                DataAdmissao = reader.GetValue(84) != null ? (DateTime?)DateTime.ParseExact(reader.GetValue(84).ToString(), "dd/MM/yyyy", cultureinfo) : null,
+                                DataDesligamento = reader.GetValue(85) != null && reader.GetValue(85).ToString() != "emprego atual" ? (DateTime?)DateTime.ParseExact(reader.GetValue(85).ToString(), "dd/MM/yyyy", cultureinfo) : null,
                                 ResumoAtividades = reader.GetString(86)
                             };
                             candidato.ExperienciaProfissional.Add(experiencia_3);
