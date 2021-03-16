@@ -676,7 +676,7 @@ namespace Global.API.Controllers
                                 Empresa = reader.GetString(69),
                                 Cargo = reader.GetString(70),
                                 Salario = !string.IsNullOrEmpty(reader.GetString(71)) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetString(71), @"[^\d.]", "")) : null,
-                                DataAdmissao = reader.GetDateTime(72),
+                                DataAdmissao = reader.GetValue(72) != null ? (DateTime?)reader.GetDateTime(72) : null,
                                 DataDesligamento = reader.GetValue(73) != null && reader.GetValue(73).ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(reader.GetValue(73).ToString()) : null,
                                 ResumoAtividades = reader.GetString(74)
                             };
@@ -691,7 +691,7 @@ namespace Global.API.Controllers
                                 Empresa = reader.GetString(75),
                                 Cargo = reader.GetString(76),
                                 Salario = !string.IsNullOrEmpty(reader.GetString(77)) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetString(77), @"[^\d.]", "")) : null,
-                                DataAdmissao = reader.GetDateTime(78),
+                                DataAdmissao = reader.GetValue(78) != null ? (DateTime?)reader.GetDateTime(78) : null,
                                 DataDesligamento = reader.GetValue(79) != null && reader.GetValue(79).ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(reader.GetValue(79).ToString()) : null,
                                 ResumoAtividades = reader.GetString(80)
                             };
@@ -706,7 +706,7 @@ namespace Global.API.Controllers
                                 Empresa = reader.GetString(81),
                                 Cargo = reader.GetString(82),
                                 Salario = !string.IsNullOrEmpty(reader.GetString(83)) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetString(83), @"[^\d.]", "")) : null,
-                                DataAdmissao = reader.GetDateTime(84),
+                                DataAdmissao = reader.GetValue(84) != null ? (DateTime?)reader.GetDateTime(84) : null,
                                 DataDesligamento = reader.GetValue(85) != null && reader.GetValue(85).ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(reader.GetValue(85).ToString()) : null,
                                 ResumoAtividades = reader.GetString(86)
                             };
