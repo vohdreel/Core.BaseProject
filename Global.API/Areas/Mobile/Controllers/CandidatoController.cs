@@ -143,6 +143,7 @@ namespace Global.API.Areas.Mobile.Controllers
             }
         }
 
+        #region Experiencias Profissionais
 
         [HttpGet("ObterExperienciasProfissionais")]
         public object ObterExperienciasProfissionais(int IdCandidato)
@@ -185,6 +186,22 @@ namespace Global.API.Areas.Mobile.Controllers
             {
                 bool success = service.Excluir(IdExperiencia);
                 return new { ok = success, message = success ? "Nova experiênica excluída com sucesso!" : "Ocorreu um erro ao tentar excluir, tente novamente mais tarde!" };
+            }
+
+        }
+
+        #endregion
+
+        [HttpGet("ObterFormacoesCandidato")]
+        public object ObterFormacoesCandidato(int IdCandidato)
+        {
+            using (var service = new FormacaoCandidatoService())
+            {
+                ViewModel.FormacaoCandidato[] formacaoCandidatos = service
+                    .BuscarPorCandidato(IdCandidato)
+                    .Select(x => new ViewModel.FormacaoCandidato(x)).ToArray();
+
+                return formacaoCandidatos;
             }
 
         }

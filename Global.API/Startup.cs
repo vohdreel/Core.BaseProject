@@ -74,7 +74,7 @@ namespace Global.API {
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                    builder => builder.WithOrigins("http://localhost:8100", "https://globalempregosapi.azurewebsites.net/")
+                    builder => builder.WithOrigins("http://localhost:8100", "https://globalempregosapi.azurewebsites.net/", "https://globalempregosapi-dev.azurewebsites.net/")
                     .SetIsOriginAllowed(origin => true)
                     .AllowAnyMethod()
                     .AllowAnyHeader()

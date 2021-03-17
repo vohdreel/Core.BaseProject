@@ -56,12 +56,14 @@ namespace Global.Util.SystemEnumerations
         Entre2001a3000 = 3,
         [Display(Name = "R$3001 a R$4500 mês")]
         Entre3001a4500 = 4,
+        [Display(Name = "R$4500 a R$4500 mês")]
+        Entre4500a6000 = 5,
         [Display(Name = "R$6001 a R$8000 mês")]
-        Entre6001a8000 = 5,
+        Entre6001a8000 = 6,
         [Display(Name = "Acima R$8000 mês")]
-        Acima8000 = 6,
+        Acima8000 = 7,
         [Display(Name = "A combinar")]
-        ACombinar = 7
+        ACombinar = 8
 
 
     }
@@ -115,13 +117,13 @@ namespace Global.Util.SystemEnumerations
     public enum NivelProfissional
     {
 
-        [Display(Name = "Estagio (nível médio/técnico)")]
+        [Display(Name = "Estagio (nível médio / técnico)")]
         Estagio = 1,
         [Display(Name = "Estagio (nível superior)")]
         EstagioNivelSuperior = 2,
         [Display(Name = "Profissional (nível fundamental)")]
         ProfissionalFundamental = 3,
-        [Display(Name = "Profissional (nível médio/técnico)")]
+        [Display(Name = "Profissional (nível médio / técnico)")]
         ProfissionalNvelTecnico = 4,
         [Display(Name = "Profissional (nível superior)")]
         ProfissionaNivelSuperior = 5

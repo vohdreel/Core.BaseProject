@@ -20,7 +20,7 @@ namespace Global.API.ViewModel
             IdCandidato = model.IdCandidato;
             Empresa = model.Empresa;
             Cargo = model.Cargo;
-            //DataAdmissao = model.DataAdmissao.Value.ToString("dd/MM/yyyy") ;
+            DataAdmissao = model.DataAdmissao?.ToString("dd/MM/yyyy");
             DataDesligamento = model.DataDesligamento?.ToString("dd/MM/yyyy");
 
 

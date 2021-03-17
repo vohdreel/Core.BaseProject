@@ -52,17 +52,17 @@ namespace Global.DAO.Model
         [Column("CEP")]
         [StringLength(50)]
         public string Cep { get; set; }
-        [StringLength(50)]
+        [StringLength(300)]
         public string Pais { get; set; }
         [StringLength(50)]
         public string Estado { get; set; }
-        [StringLength(50)]
+        [StringLength(300)]
         public string Cidade { get; set; }
         [StringLength(250)]
         public string Endereco { get; set; }
         [StringLength(250)]
         public string NumeroEcomplemetno { get; set; }
-        [StringLength(50)]
+        [StringLength(300)]
         public string Bairro { get; set; }
         [Required]
         [StringLength(100)]
@@ -122,7 +122,7 @@ namespace Global.DAO.Model
         public string Longitude { get; set; }
         [StringLength(20)]
         public string Numero { get; set; }
-        [StringLength(40)]
+        [StringLength(300)]
         public string Complemento { get; set; }
         [StringLength(200)]
         public string Agrupadores { get; set; }
@@ -155,6 +155,8 @@ namespace Global.DAO.Model
         [StringLength(150)]
         public string CargoInteresseSecundario { get; set; }
         public bool? PrimeiroEmprego { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? DataInscricao { get; set; }
 
         [InverseProperty("IdCandidatoNavigation")]
         public virtual ICollection<AreaInteresse> AreaInteresse { get; set; }
