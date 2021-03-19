@@ -5,11 +5,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Global.DAO.Model
 {
-    public partial class Banner
+    public partial class LogCandidato
     {
         [Key]
         public int Id { get; set; }
-        public string Base64Code { get; set; }
-        public string UrlRedirect { get; set; }
+        public string IdLegado { get; set; }
+        public string StackTrace { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime? DataLog { get; set; }
     }
 }

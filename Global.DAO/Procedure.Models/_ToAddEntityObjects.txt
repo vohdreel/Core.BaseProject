@@ -1,3 +1,6 @@
 ﻿modelBuilder.Entity<MachineUser>().HasNoKey();
 modelBuilder.Entity<EgressUnit>().HasNoKey();
+
+base.OnModelCreating(modelBuilder);
+
 modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();

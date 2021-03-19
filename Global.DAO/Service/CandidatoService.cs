@@ -35,10 +35,16 @@ namespace Global.DAO.Service
 
 
         }
-
         public bool CadastrarCandidato(Candidato candidato)
         {
             return Repository.Insert(candidato);
+
+
+        }
+
+        public bool CadastrarCandidato(Candidato candidato, out string exception)
+        {
+            return Repository.InsertWithException(candidato, out exception);
 
 
         }

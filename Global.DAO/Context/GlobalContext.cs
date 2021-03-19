@@ -32,6 +32,7 @@ namespace Global.DAO.Context
         public virtual DbSet<EnumTipoDocumento> EnumTipoDocumento { get; set; }
         public virtual DbSet<ExperienciaProfissional> ExperienciaProfissional { get; set; }
         public virtual DbSet<FormacaoCandidato> FormacaoCandidato { get; set; }
+        public virtual DbSet<LogCandidato> LogCandidato { get; set; }
         public virtual DbSet<Machine> Machine { get; set; }
         public virtual DbSet<MechaUser> MechaUser { get; set; }
         public virtual DbSet<Notificacao> Notificacao { get; set; }
@@ -47,13 +48,12 @@ namespace Global.DAO.Context
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=prolead.database.windows.net;Database=GlobalEmpregos_Dev;user id=anima_sa;password=A^BCxSFd#%qHv=W79uda;Trusted_Connection=True;Integrated Security=False;MultipleActiveResultSets=true");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-C344KI6;Database=GlobalEmpregos;Trusted_Connection=True;MultipleActiveResultSets=true");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();
@@ -73,11 +73,7 @@ namespace Global.DAO.Context
 
             modelBuilder.Entity<Banner>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.Property(e => e.Base64Code).IsUnicode(false);
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.UrlRedirect).IsUnicode(false);
             });
@@ -356,6 +352,13 @@ namespace Global.DAO.Context
                     .WithMany(p => p.FormacaoCandidato)
                     .HasForeignKey(d => d.IdCandidato)
                     .HasConstraintName("FK_Candidato_FormacaoCandidato");
+            });
+
+            modelBuilder.Entity<LogCandidato>(entity =>
+            {
+                entity.Property(e => e.IdLegado).IsUnicode(false);
+
+                entity.Property(e => e.StackTrace).IsUnicode(false);
             });
 
             modelBuilder.Entity<Machine>(entity =>
