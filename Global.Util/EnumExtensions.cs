@@ -22,7 +22,6 @@ namespace Global.Util
         public static string GetEnumDisplayName(this Enum value)
         {
             var fi = value.GetType().GetField(value.ToString());
-
             var attributes =
                 (DisplayAttribute[])fi.GetCustomAttributes(
                 typeof(DisplayAttribute), false);

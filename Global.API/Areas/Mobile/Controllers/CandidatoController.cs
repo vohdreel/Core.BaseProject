@@ -171,7 +171,7 @@ namespace Global.API.Areas.Mobile.Controllers
                 }
                 else
                 {
-                    success = service.Editar(experienciaProfissional); message = "Nova experiênica atualizada com sucesso!";
+                    success = service.Editar(experienciaProfissional); message = "Experiênica atualizada com sucesso!";
                 }
 
                 return new { ok = success, message = success ? message : "Ocorreu um erro ao tentar salvar, tente novamente mais tarde!" };
@@ -185,7 +185,7 @@ namespace Global.API.Areas.Mobile.Controllers
             using (var service = new ExperienciaProfissionalService())
             {
                 bool success = service.Excluir(IdExperiencia);
-                return new { ok = success, message = success ? "Nova experiênica excluída com sucesso!" : "Ocorreu um erro ao tentar excluir, tente novamente mais tarde!" };
+                return new { ok = success, message = success ? "Experiênica excluída com sucesso!" : "Ocorreu um erro ao tentar excluir, tente novamente mais tarde!" };
             }
 
         }
@@ -202,6 +202,37 @@ namespace Global.API.Areas.Mobile.Controllers
                     .Select(x => new ViewModel.FormacaoCandidato(x)).ToArray();
 
                 return formacaoCandidatos;
+            }
+
+        }
+
+        [HttpPost("SalvarNovaFormacaoCandidato")]
+        public object SalvarNovaFormacaoCandidato([FromBody] FormacaoCandidato formacaoCandidato)
+        {
+            using (var service = new FormacaoCandidatoService())
+            {
+                bool success = true; string message = "";
+                if (formacaoCandidato.Id == 0)
+                {
+                    success = service.Salvar(formacaoCandidato); message = "Nova formação cadastrada com sucesso!";
+                }
+                else
+                {
+                    success = service.Editar(formacaoCandidato); message = "Nova formação atualizada com sucesso!";
+                }
+
+                return new { ok = success, message = success ? message : "Ocorreu um erro ao tentar salvar, tente novamente mais tarde!" };
+            }
+
+        }
+
+        [HttpGet("DeletarFormacaoCandidato")]
+        public object DeletarFormacaoCandidato(int IdExperiencia)
+        {
+            using (var service = new ExperienciaProfissionalService())
+            {
+                bool success = service.Excluir(IdExperiencia);
+                return new { ok = success, message = success ? "Formação excluída com sucesso!" : "Ocorreu um erro ao tentar excluir, tente novamente mais tarde!" };
             }
 
         }

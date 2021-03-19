@@ -137,6 +137,7 @@ namespace Global.Util
                 case "SERGIPE": text = "SE"; break;
                 case "SÃO PAULO": text = "SP"; break;
                 case "TOCANTÍNS": text = "TO"; break;
+                default: text = "N/A";  break;
             }
 
             return text;

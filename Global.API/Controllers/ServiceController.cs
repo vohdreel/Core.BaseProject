@@ -480,25 +480,26 @@ namespace Global.API.Controllers
         [HttpPost("GenerateCandidatos")]
         public async Task<object> GenerateCandidatos()
         {
-            try
+
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            System.Globalization.CultureInfo cultureinfo =
+        new System.Globalization.CultureInfo("pt-BR");
+
+            System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-BR");
+            bool first = true;
+            var formFile = Request.Form.Files[0].OpenReadStream();
+            using (var reader = ExcelReaderFactory.CreateReader(formFile))
             {
-                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-                System.Globalization.CultureInfo cultureinfo =
-            new System.Globalization.CultureInfo("pt-BR");
 
-                System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-BR");
-                bool first = true;
-                var formFile = Request.Form.Files[0].OpenReadStream();
-                using (var service = new CandidatoService())
-                using (var reader = ExcelReaderFactory.CreateReader(formFile))
+                do
                 {
-
-                    do
+                    while (reader.Read()) //Each ROW
                     {
-                        while (reader.Read()) //Each ROW
+                        try
                         {
+                            CandidatoService service = new CandidatoService();
                             if (first) { first = !first; continue; }
-                            if (service.ExisteCpfUsuario(reader.GetDouble(21).ToString())) { continue; }
+                            if (service.ExisteCpfUsuario(reader.GetValue(21).ToString())) { continue; }
 
                             Candidato candidato = new Candidato();
 
@@ -513,13 +514,13 @@ namespace Global.API.Controllers
 
                             #region Informações Pessoais
 
-                            candidato.Nome = reader.GetString(0) ?? "N/A";
+                            candidato.Nome = reader.GetValue(0).ToString() ?? "N/A";
                             candidato.Idlegado = reader.GetValue(1)?.ToString();
                             candidato.DataNascimento = reader.GetValue(2) != null ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 2, cultureinfo), cultureinfo) : null;
                             //idade 3
-                            candidato.Sexo = reader.GetString(4);
+                            candidato.Sexo = reader.GetValue(4).ToString();
 
-                            string raca = reader.GetString(5);
+                            string raca = reader.GetValue(5)?.ToString();
                             if (string.IsNullOrEmpty(raca))
                             {
                                 candidato.Raca = (int)EnumRaca.Indisponivel;
@@ -535,7 +536,7 @@ namespace Global.API.Controllers
                             //candidato.EstadoCivil = (int)(Enum.Parse(typeof(EnumEstadoCIvil), reader.GetString(6)));
                             candidato.EstadoCivil = string.IsNullOrEmpty(reader.GetString(6)) ? 0 : (int)EnumExtensions.GetValueFromShortName<EnumEstadoCivil>(reader.GetString(6));
 
-                            string deficiente = reader.GetString(7);
+                            string deficiente = reader.GetValue(7).ToString();
                             if (!string.IsNullOrEmpty(deficiente))
                             {
                                 candidato.Deficiente = deficiente == "Sim" ? true : false;
@@ -556,18 +557,13 @@ namespace Global.API.Controllers
                                     {
                                         IdTelefoneNavigation = new Telefone { Numero = tel }
                                     });
-                                
-                                
                                 }
-
-                            
-                            
                             }
 
                             candidato.TelefoneCandidato = telefones;
 
-                            candidato.Email = reader.GetString(9) ?? "N/A";
-                            candidato.EmailSecundario = reader.GetString(10);
+                            candidato.Email = reader.GetValue(9)?.ToString() ?? "N/A";
+                            candidato.EmailSecundario = reader.GetValue(10)?.ToString();
 
                             //Validar a partir do nome, por conta dos acentos
                             candidato.PerfilProfissional = string.IsNullOrEmpty(reader.GetString(11)) ? 0 : (int)EnumExtensions.GetValueFromName<NivelProfissional>(reader.GetString(11));
@@ -577,89 +573,103 @@ namespace Global.API.Controllers
 
                             //datainsricao (13)
 
-                            candidato.NomePai = reader.GetString(14);
-                            candidato.NomeMae = reader.GetString(15);
+                            candidato.NomePai = reader.GetValue(14)?.ToString();
+                            candidato.NomeMae = reader.GetValue(15)?.ToString();
 
 
-                            candidato.Nacionalidade = reader.GetString(16);
-                            candidato.EstadoNascimento = reader.GetString(17)?.ConverterEstados();
-                            candidato.Agrupadores = reader.GetString(18);
+                            candidato.Nacionalidade = reader.GetValue(16)?.ToString();
+                            candidato.EstadoNascimento = reader.GetValue(17)?.ToString()?.ConverterEstados();
+                            candidato.Agrupadores = reader.GetValue(18)?.ToString();
 
                             //candidato com foto (19)
                             //candidato com teste (20)
+                            string cpf = reader.GetValue(21)?.ToString();
 
-                            candidato.Cpf = ((double?)reader.GetDouble(21))?.ToString();
-                            string possuiCnh = reader.GetString(22);
+                            if (cpf.Length > 11)
+                                continue;
+
+                            candidato.Cpf = reader.GetValue(21)?.ToString();
+                            string possuiCnh = reader.GetValue(22).ToString();
                             if (!string.IsNullOrEmpty(possuiCnh))
                                 candidato.PossuiCnh = possuiCnh == "Sim" ? true : false;
                             if (candidato.PossuiCnh.Value)
-                                candidato.CategoriaCnh = reader.GetString(23);
+                                candidato.CategoriaCnh = reader.GetValue(23).ToString();
                             candidato.Identidade = reader.GetValue(24)?.ToString();
                             candidato.OrgaoEmissor = reader.GetValue(25)?.ToString();
 
                             //deficiencia 26
                             candidato.Cid = reader.GetValue(27)?.ToString();
-                            candidato.Observacoes = reader.GetString(28);
+                            candidato.Observacoes = reader.GetValue(28).ToString();
 
                             candidato.Cep = reader.GetValue(29)?.ToString();
                             candidato.Pais = reader.GetValue(30) != null ?
                                              (string?)(new RegionInfo(TextExtensions.GetISOCountryNameByCode(Convert.ToInt32(reader.GetValue(30)))).NativeName) :
                                              null;
-                            candidato.Estado = reader.GetValue(31) != null ? (string?)((Estado)Convert.ToInt32(reader.GetValue(31))).GetEnumDisplayName().ConverterEstados() : null;
-                            candidato.Cidade = reader.GetString(32);
+                            try
+                            {
+                                candidato.Estado = reader.GetValue(31) != null ? (string?)((Estado)Convert.ToInt32(reader.GetValue(31))).GetEnumDisplayName().ConverterEstados() : null;
+                            }
+                            catch (Exception e)
+                            {
+                                candidato.Estado = null;
+                            }
+
+                            candidato.Cidade = reader.GetValue(32)?.ToString();
                             candidato.Bairro = reader.GetValue(33)?.ToString();
                             candidato.Endereco = reader.GetValue(34)?.ToString();
                             candidato.Complemento = reader.GetValue(35)?.ToString();
                             //data 36
                             //coordenda 37
-                            candidato.NivelProfissionalVagaDesejada = string.IsNullOrEmpty(reader.GetString(38)) ? 0 : (int)EnumExtensions.GetValueFromName<NivelProfissional>(reader.GetString(38));
-                            candidato.DisponibilidadeHorario = string.IsNullOrEmpty(reader.GetString(39)) ? 0 : (int)EnumExtensions.GetValueFromName<DisponibilidadeHorario>(reader.GetString(39));
-                            candidato.DisponibilidadeViagem = string.IsNullOrEmpty(reader.GetString(40)) ? 0 : (int)EnumExtensions.GetValueFromName<Disponibilidade>(reader.GetString(40));
-                            candidato.DisponibilidadeTransferencia = string.IsNullOrEmpty(reader.GetString(41)) ? 0 : (int)EnumExtensions.GetValueFromName<Disponibilidade>(reader.GetString(41));
+                            candidato.NivelProfissionalVagaDesejada = string.IsNullOrEmpty(reader.GetValue(38)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<NivelProfissional>(reader.GetValue(38)?.ToString());
+                            candidato.DisponibilidadeHorario = string.IsNullOrEmpty(reader.GetValue(39)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<DisponibilidadeHorario>(reader.GetValue(39)?.ToString());
+                            candidato.DisponibilidadeViagem = string.IsNullOrEmpty(reader.GetValue(40)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<Disponibilidade>(reader.GetValue(40)?.ToString());
+                            candidato.DisponibilidadeTransferencia = string.IsNullOrEmpty(reader.GetValue(41)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<Disponibilidade>(reader.GetValue(41)?.ToString());
 
-                            candidato.PretensaoSalarial = string.IsNullOrEmpty(reader.GetString(42)) ? 0 : (int)EnumExtensions.GetValueFromName<PretensaoSalarial>(reader.GetString(42));
-                            candidato.LocalPreferencia = reader.GetString(43);
-                            candidato.LocalPreferenciaSecundario = reader.GetString(44);
+                            candidato.PretensaoSalarial = string.IsNullOrEmpty(reader.GetValue(42)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<PretensaoSalarial>(reader.GetValue(42)?.ToString());
+                            candidato.LocalPreferencia = reader.GetValue(43)?.ToString();
+                            candidato.LocalPreferenciaSecundario = reader.GetValue(44)?.ToString();
 
-                            candidato.CargoInteresse = reader.GetString(45);
-                            candidato.CargoInteresseSecundario = reader.GetString(46);
+                            candidato.CargoInteresse = reader.GetValue(45)?.ToString();
+                            candidato.CargoInteresseSecundario = reader.GetValue(46)?.ToString();
 
                             #region Formaçaõ do Candidato
 
-                            if (!string.IsNullOrEmpty(reader.GetString(47)))
+                            if (!string.IsNullOrEmpty(reader.GetValue(47)?.ToString()))
                             {
-                                DateTime? dataInicio = null;
-                                DateTime? dataConclusao = null;
-                                if (!string.IsNullOrEmpty(reader.GetString(52)))
+                                DateTime dataInicio = new DateTime();
+                                DateTime dataConclusao = new DateTime();
+                                if (!string.IsNullOrEmpty(reader.GetValue(52)?.ToString()))
                                 {
-                                    string[] intervaloConclusao = reader.GetString(52).Split("até");
+                                    string[] intervaloConclusao = reader.GetValue(52)?.ToString().Split("até");
 
                                     if (!string.IsNullOrEmpty(intervaloConclusao[0]))
-                                        dataInicio = DateTime.Parse(intervaloConclusao[0].Trim(), cultureinfo);
+                                        DateTime.TryParse(intervaloConclusao[0].Trim(), cultureinfo, DateTimeStyles.None, out dataInicio);
                                     if (!string.IsNullOrEmpty(intervaloConclusao[1]))
-                                        dataConclusao = DateTime.Parse(intervaloConclusao[1].Trim(), cultureinfo);
+                                        DateTime.TryParse(intervaloConclusao[0].Trim(), cultureinfo, DateTimeStyles.None, out dataInicio);
+
+                                    //dataConclusao = DateTime.Parse(intervaloConclusao[1].Trim(), cultureinfo);
                                 }
 
 
                                 FormacaoCandidato formacao_1 = new FormacaoCandidato()
                                 {
-                                    TipoFormacao = string.IsNullOrEmpty(reader.GetString(47)) ? 0 : (int)EnumExtensions.GetValueFromName<NivelFormacao>(reader.GetString(47)),
-                                    Modalidade = string.IsNullOrEmpty(reader.GetString(48)) ? 0 : (int)EnumExtensions.GetValueFromName<ModalidadeFormacao>(reader.GetString(48)),
-                                    Instituicao = reader.GetString(49),
-                                    Curso = reader.GetString(50),
-                                    Situacao = string.IsNullOrEmpty(reader.GetString(51)) ? 0 : (int)EnumExtensions.GetValueFromName<SituacaoFormacao>(reader.GetString(51)),
+                                    TipoFormacao = string.IsNullOrEmpty(reader.GetValue(47)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<NivelFormacao>(reader.GetValue(47)?.ToString()),
+                                    Modalidade = string.IsNullOrEmpty(reader.GetValue(48)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<ModalidadeFormacao>(reader.GetValue(48)?.ToString()),
+                                    Instituicao = reader.GetValue(49)?.ToString(),
+                                    Curso = reader.GetValue(50)?.ToString(),
+                                    Situacao = string.IsNullOrEmpty(reader.GetValue(51)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<SituacaoFormacao>(reader.GetValue(51)?.ToString()),
                                     DataInicio = dataInicio,
                                     DataConclusao = dataConclusao
                                 };
                                 candidato.FormacaoCandidato.Add(formacao_1);
                             }
-                            if (!string.IsNullOrEmpty(reader.GetString(53)))
+                            if (!string.IsNullOrEmpty(reader.GetValue(53)?.ToString()))
                             {
                                 DateTime? dataInicio = null;
                                 DateTime? dataConclusao = null;
-                                if (!string.IsNullOrEmpty(reader.GetString(58)))
+                                if (!string.IsNullOrEmpty(reader.GetValue(58)?.ToString()))
                                 {
-                                    string[] intervaloConclusao = reader.GetString(58).Split("até");
+                                    string[] intervaloConclusao = reader.GetValue(58)?.ToString().Split("até");
 
                                     if (!string.IsNullOrEmpty(intervaloConclusao[0]))
                                         dataInicio = DateTime.Parse(intervaloConclusao[0].Trim(), cultureinfo);
@@ -669,11 +679,11 @@ namespace Global.API.Controllers
 
                                 FormacaoCandidato formacao_2 = new FormacaoCandidato()
                                 {
-                                    TipoFormacao = string.IsNullOrEmpty(reader.GetString(53)) ? 0 : (int)EnumExtensions.GetValueFromName<NivelFormacao>(reader.GetString(53)),
-                                    Modalidade = string.IsNullOrEmpty(reader.GetString(54)) ? 0 : (int)EnumExtensions.GetValueFromName<ModalidadeFormacao>(reader.GetString(54)),
-                                    Instituicao = reader.GetString(55),
-                                    Curso = reader.GetString(56),
-                                    Situacao = string.IsNullOrEmpty(reader.GetString(57)) ? 0 : (int)EnumExtensions.GetValueFromName<SituacaoFormacao>(reader.GetString(57)),
+                                    TipoFormacao = string.IsNullOrEmpty(reader.GetValue(53)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<NivelFormacao>(reader.GetValue(53)?.ToString()),
+                                    Modalidade = string.IsNullOrEmpty(reader.GetValue(54)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<ModalidadeFormacao>(reader.GetValue(54)?.ToString()),
+                                    Instituicao = reader.GetValue(55)?.ToString(),
+                                    Curso = reader.GetValue(56)?.ToString(),
+                                    Situacao = string.IsNullOrEmpty(reader.GetValue(57)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<SituacaoFormacao>(reader.GetValue(57)?.ToString()),
                                     DataInicio = dataInicio,
                                     DataConclusao = dataConclusao
 
@@ -681,13 +691,13 @@ namespace Global.API.Controllers
                                 candidato.FormacaoCandidato.Add(formacao_2);
                             }
 
-                            if (!string.IsNullOrEmpty(reader.GetString(59)))
+                            if (!string.IsNullOrEmpty(reader.GetValue(59)?.ToString()))
                             {
                                 DateTime? dataInicio = null;
                                 DateTime? dataConclusao = null;
-                                if (!string.IsNullOrEmpty(reader.GetString(64)))
+                                if (!string.IsNullOrEmpty(reader.GetValue(64)?.ToString()))
                                 {
-                                    string[] intervaloConclusao = reader.GetString(64).Split("até");
+                                    string[] intervaloConclusao = reader.GetValue(64)?.ToString().Split("até");
 
                                     if (!string.IsNullOrEmpty(intervaloConclusao[0]))
                                         dataInicio = DateTime.Parse(intervaloConclusao[0].Trim(), cultureinfo);
@@ -697,11 +707,11 @@ namespace Global.API.Controllers
 
                                 FormacaoCandidato formacao_3 = new FormacaoCandidato()
                                 {
-                                    TipoFormacao = string.IsNullOrEmpty(reader.GetString(59)) ? 0 : (int)EnumExtensions.GetValueFromName<NivelFormacao>(reader.GetString(59)),
-                                    Modalidade = string.IsNullOrEmpty(reader.GetString(60)) ? 0 : (int)EnumExtensions.GetValueFromName<ModalidadeFormacao>(reader.GetString(60)),
-                                    Instituicao = reader.GetString(61),
-                                    Curso = reader.GetString(62),
-                                    Situacao = string.IsNullOrEmpty(reader.GetString(63)) ? 0 : (int)EnumExtensions.GetValueFromName<SituacaoFormacao>(reader.GetString(63)),
+                                    TipoFormacao = string.IsNullOrEmpty(reader.GetValue(59)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<NivelFormacao>(reader.GetValue(59)?.ToString()),
+                                    Modalidade = string.IsNullOrEmpty(reader.GetValue(60)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<ModalidadeFormacao>(reader.GetValue(60)?.ToString()),
+                                    Instituicao = reader.GetValue(61)?.ToString(),
+                                    Curso = reader.GetValue(62)?.ToString(),
+                                    Situacao = string.IsNullOrEmpty(reader.GetValue(63)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<SituacaoFormacao>(reader.GetValue(63)?.ToString()),
                                     DataInicio = dataInicio,
                                     DataConclusao = dataConclusao
 
@@ -728,12 +738,12 @@ namespace Global.API.Controllers
 
                                 ExperienciaProfissional experiencia_1 = new ExperienciaProfissional()
                                 {
-                                    Empresa = reader.GetString(69),
-                                    Cargo = reader.GetString(70),
+                                    Empresa = reader.GetValue(69)?.ToString(),
+                                    Cargo = reader.GetValue(70)?.ToString(),
                                     Salario = !string.IsNullOrEmpty(reader.GetString(71)) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetString(71), @"[^\d,]", "")) : null,
                                     DataAdmissao = reader.GetValue(72) != null ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 72, cultureinfo), cultureinfo) : null,
                                     DataDesligamento = reader.GetValue(73) != null && reader.GetValue(73).ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 73, cultureinfo), cultureinfo) : null,
-                                    ResumoAtividades = reader.GetString(74)
+                                    ResumoAtividades = reader.GetValue(74)?.ToString()
                                 };
                                 candidato.ExperienciaProfissional.Add(experiencia_1);
                             }
@@ -743,12 +753,12 @@ namespace Global.API.Controllers
 
                                 ExperienciaProfissional experiencia_2 = new ExperienciaProfissional()
                                 {
-                                    Empresa = reader.GetString(75),
-                                    Cargo = reader.GetString(76),
+                                    Empresa = reader.GetValue(75)?.ToString(),
+                                    Cargo = reader.GetValue(76)?.ToString(),
                                     Salario = !string.IsNullOrEmpty(reader.GetString(77)) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetString(77), @"[^\d,]", "")) : null,
                                     DataAdmissao = reader.GetValue(78) != null ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 78, cultureinfo), cultureinfo) : null,
                                     DataDesligamento = reader.GetValue(79) != null && reader.GetValue(79).ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 79, cultureinfo), cultureinfo) : null,
-                                    ResumoAtividades = reader.GetString(80)
+                                    ResumoAtividades = reader.GetValue(80)?.ToString()
                                 };
                                 candidato.ExperienciaProfissional.Add(experiencia_2);
                             }
@@ -758,12 +768,12 @@ namespace Global.API.Controllers
 
                                 ExperienciaProfissional experiencia_3 = new ExperienciaProfissional()
                                 {
-                                    Empresa = reader.GetString(81),
-                                    Cargo = reader.GetString(82),
+                                    Empresa = reader.GetValue(81)?.ToString(),
+                                    Cargo = reader.GetValue(82)?.ToString(),
                                     Salario = !string.IsNullOrEmpty(reader.GetString(83)) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetString(83), @"[^\d,]", "")) : null,
                                     DataAdmissao = reader.GetValue(84) != null ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 84, cultureinfo), cultureinfo) : null,
                                     DataDesligamento = reader.GetValue(85) != null && reader.GetValue(85).ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 85, cultureinfo), cultureinfo) : null,
-                                    ResumoAtividades = reader.GetString(86)
+                                    ResumoAtividades = reader.GetValue(86)?.ToString()
                                 };
                                 candidato.ExperienciaProfissional.Add(experiencia_3);
                             }
@@ -777,24 +787,25 @@ namespace Global.API.Controllers
 
                             //CandidatoService service = new CandidatoService();
                             bool sucesso = service.CadastrarCandidato(candidato);
+                        }
+                        catch (Exception e)
+                        {
 
-
-
+                            return e.Message;
                         }
 
 
-                    } while (reader.NextResult()); //Move to NEXT SHEET
 
-                }
+                    }
 
 
-                return "Concluído com sucesso";
+                } while (reader.NextResult()); //Move to NEXT SHEET
+
             }
-            catch (Exception e)
-            {
 
-                return e.Message;
-            }
+
+            return "Concluído com sucesso";
+
         }
 
         string GetFormattedValue(IExcelDataReader reader, int columnIndex, CultureInfo culture)
