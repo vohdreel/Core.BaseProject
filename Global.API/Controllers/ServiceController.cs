@@ -810,6 +810,18 @@ namespace Global.API.Controllers
                                     candidato.SenhaCriptografada = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(userPWD));
                                     service.AtualizarCandidato(candidato);
                                 }
+                                else
+                                {
+                                    log.Salvar(new LogCandidato
+                                    {
+
+                                        IdLegado = idLegado,
+                                        DataLog = DateTime.Now,
+                                        StackTrace = string.Join(",", chkUser.Errors.Select(x => x.Description).ToArray()),
+
+                                    });
+
+                                }
                             }
 
                             if (!sucesso)
@@ -832,8 +844,6 @@ namespace Global.API.Controllers
                                 IdLegado = idLegado,
                                 DataLog = DateTime.Now,
                                 StackTrace = e.Message + " --------- " + e.StackTrace
-
-
 
                             });
                         }
