@@ -218,7 +218,7 @@ namespace Global.API.Areas.Mobile.Controllers
                 }
                 else
                 {
-                    success = service.Editar(formacaoCandidato); message = "Nova formação atualizada com sucesso!";
+                    success = service.Editar(formacaoCandidato); message = "Formação atualizada com sucesso!";
                 }
 
                 return new { ok = success, message = success ? message : "Ocorreu um erro ao tentar salvar, tente novamente mais tarde!" };
@@ -227,11 +227,11 @@ namespace Global.API.Areas.Mobile.Controllers
         }
 
         [HttpGet("DeletarFormacaoCandidato")]
-        public object DeletarFormacaoCandidato(int IdExperiencia)
+        public object DeletarFormacaoCandidato(int IdFormacao)
         {
-            using (var service = new ExperienciaProfissionalService())
+            using (var service = new FormacaoCandidatoService())
             {
-                bool success = service.Excluir(IdExperiencia);
+                bool success = service.Excluir(IdFormacao);
                 return new { ok = success, message = success ? "Formação excluída com sucesso!" : "Ocorreu um erro ao tentar excluir, tente novamente mais tarde!" };
             }
 
