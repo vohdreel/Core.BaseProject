@@ -16,9 +16,9 @@ using Global.Util;
 using Global.DAO.Model;
 using Global.DAO.Service;
 using Newtonsoft.Json.Linq;
-using System.Text.RegularExpressions;
 using Global.Util.SystemEnumerations;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Globalization;
 
 namespace Global.API.Controllers
@@ -32,12 +32,15 @@ namespace Global.API.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private SignInManager<IdentityUser> _signInManager;
         private readonly IConfiguration _config;
+        private IHttpContextAccessor _httpContextAccessor;
+
 
         public HomeController(ILogger<HomeController> logger,
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
             SignInManager<IdentityUser> signInManager,
-            IConfiguration config
+            IConfiguration config,
+            IHttpContextAccessor httpContextAccessor
             )
         {
             _logger = logger;
@@ -45,6 +48,7 @@ namespace Global.API.Controllers
             _roleManager = roleManager;
             _signInManager = signInManager;
             _config = config;
+
 
         }
         [HttpGet]
@@ -142,36 +146,6 @@ namespace Global.API.Controllers
         }
 
 
-
-        [AllowAnonymous]
-        [HttpGet("appLogin")]
-        public async Task<JsonResult> appLogin(string email, string password)
-        {
-            IdentityUser user = new IdentityUser();
-            user = await _userManager.FindByNameAsync(email);
-
-            if (user != null && await _userManager.CheckPasswordAsync(user, password))
-            {
-                // user is valid do whatever you want
-
-                var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
-
-                if (result.Succeeded)
-                {
-                    // adicionar token 
-                    var roles = await _userManager.GetRolesAsync(user);
-                    var token = TokenService.GenerateToken(user, roles.ToList());
-
-                    HttpContext.Response.Cookies
-                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("APIConfig", "Environment")));
-
-                    return Json("Logged");
-                }
-
-            }
-            return Json("Failed!");
-
-        }
 
         [AllowAnonymous]
         [HttpGet("FeedTest")]
@@ -297,6 +271,37 @@ namespace Global.API.Controllers
 
         }
 
+
+        [AllowAnonymous]
+        [HttpGet("appLogin")]
+        public async Task<JsonResult> appLogin(string email, string password)
+        {
+            IdentityUser user = new IdentityUser();
+            user = await _userManager.FindByNameAsync(email);
+
+            if (user != null && await _userManager.CheckPasswordAsync(user, password))
+            {
+                // user is valid do whatever you want
+
+                var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
+
+                if (result.Succeeded)
+                {
+                    // adicionar token 
+                    var roles = await _userManager.GetRolesAsync(user);
+                    var token = TokenService.GenerateToken(user, roles.ToList());
+
+                    HttpContext.Response.Cookies
+                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("APIConfig", "Environment")));
+
+                    return Json("Logged");
+                }
+
+            }
+            return Json("Failed!");
+
+        }
+
         [AllowAnonymous]
         [HttpGet("token")]
         public async Task<JsonResult> GenerateToken()
@@ -347,16 +352,16 @@ namespace Global.API.Controllers
             IdentityUser user = new IdentityUser();
             try
             {
-                user = await _userManager.FindByNameAsync("default");
+                user = await _userManager.FindByNameAsync("44649563860");
             }
             catch (Exception e)
             {
 
 
             }
-            if (user != null && await _userManager.CheckPasswordAsync(user, "Somepassword19+96+96"))
+            if (user != null && await _userManager.CheckPasswordAsync(user, "globalSomepassword20+20"))
             {
-                var result = await _signInManager.PasswordSignInAsync(user, "Somepassword19+96+96", false, false);
+                var result = await _signInManager.PasswordSignInAsync(user, "globalSomepassword20+20", false, false);
 
                 if (result.Succeeded)
                 {
@@ -373,10 +378,10 @@ namespace Global.API.Controllers
                     var roles = await _userManager.GetRolesAsync(user);
                     var token = TokenService.GenerateToken(user, roles.ToList());
                     //O User estará vazio até que um JWT gerado pelo sistema seja encontrado na requisição
-                    //HttpContext.Session.SetString("JWToken", token);
+                    HttpContext.Session.SetString("JWToken", token);
 
-                    HttpContext.Response.Cookies
-                       .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
+                    //HttpContext.Response.Cookies
+                    //   .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
 
 
                     return Json("Logged");
@@ -397,6 +402,8 @@ namespace Global.API.Controllers
                 HttpContext.Response.Cookies.Append(cookie.Key, "", TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment")));
                 //HttpContext.Response.Cookies.Delete(cookie.Key);
             }
+
+            HttpContext.Session.Remove("JWToken");
             return Json("Logged Out");
         }
 

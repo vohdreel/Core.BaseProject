@@ -20,6 +20,7 @@ namespace Global.Util.SystemEnumerations
         [Display(Name = "Terceirizado", ShortName = "TERC")]
         Terceirizado = 5
 
+
     }
 
     public enum Disponibilidade
@@ -76,6 +77,17 @@ namespace Global.Util.SystemEnumerations
         DocumentoComFoto = 2,
         [Display(Name = "Comprovante de Residência")]
         ComprovanteDeResidencia = 3
+
+    }
+
+    public enum StatusVaga
+    {
+        [Display(Name = "Aberta")]
+        Aberta = 1,
+        [Display(Name = "Preenchida")]
+        Preenchida = 2,
+        [Display(Name = "Revogada")]
+        Revogada = 3
 
     }
 
@@ -178,16 +190,6 @@ namespace Global.Util.SystemEnumerations
     }
 
 
-    public enum StatusVaga
-    {
-        [Display(Name = "Aberta")]
-        Aberta = 1,
-        [Display(Name = "Preenchida")]
-        Preenchida = 2,
-        [Display(Name = "Revogada")]
-        Revogada = 3
-
-    }
 
     public enum NivelFormacao
     {

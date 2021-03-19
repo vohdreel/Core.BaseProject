@@ -239,6 +239,15 @@ namespace Global.DAO.Service
 
         }
 
+        public bool VerificarVagaPorReferenceNumber(int referenceNumber) 
+        {
+            return Repository.Get(x => x.ReferenceNumber == referenceNumber).FirstOrDefault() != null;
+        
+        
+        
+        }
+
+
 
         public bool Salvar(Vaga Dados)
         {
@@ -297,13 +306,6 @@ namespace Global.DAO.Service
             return resultado;
         }
 
-
-        public bool VerificarVagaPorReferenceNumber(int referenceNumber)
-        {
-            return Repository.Get(x => x.ReferenceNumber == referenceNumber).FirstOrDefault() != null;
-
-
-        }
 
         public GlobalContext GetContext()
         {
