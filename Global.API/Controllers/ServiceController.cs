@@ -795,6 +795,22 @@ namespace Global.API.Controllers
                             string exception;
                             //CandidatoService service = new CandidatoService();
                             bool sucesso = service.CadastrarCandidato(candidato, out exception);
+                            if (sucesso)
+                            {
+                                var user = new IdentityUser();
+                                user.UserName = candidato.Cpf;
+                                user.Email = candidato.Email;
+
+                                string userPWD = TextExtensions.RandomPassword(6);
+
+                                IdentityResult chkUser = await _userManager.CreateAsync(user, userPWD);
+                                if (chkUser.Succeeded)
+                                {
+                                    candidato.IdAspNetUsers = user.Id;
+                                    candidato.SenhaCriptografada = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(userPWD));
+                                    service.AtualizarCandidato(candidato);
+                                }
+                            }
 
                             if (!sucesso)
                             {
@@ -805,7 +821,7 @@ namespace Global.API.Controllers
                                     DataLog = DateTime.Now,
                                     StackTrace = exception,
 
-                                }); ;
+                                });
                             }
                         }
                         catch (Exception e)
@@ -819,28 +835,28 @@ namespace Global.API.Controllers
 
 
 
-                        });
+                            });
+                        }
                     }
-                }
-                } while (reader.NextResult()) ; //Move to NEXT SHEET
+                } while (reader.NextResult()); //Move to NEXT SHEET
 
-        }
+            }
 
 
             return "Concluído com sucesso";
 
         }
 
-    string GetFormattedValue(IExcelDataReader reader, int columnIndex, CultureInfo culture)
-    {
-        var value = reader.GetValue(columnIndex);
-        var formatString = reader.GetNumberFormatString(columnIndex);
-        if (formatString != null)
+        string GetFormattedValue(IExcelDataReader reader, int columnIndex, CultureInfo culture)
         {
-            var format = new NumberFormat(formatString);
-            return format.Format(value, culture);
+            var value = reader.GetValue(columnIndex);
+            var formatString = reader.GetNumberFormatString(columnIndex);
+            if (formatString != null)
+            {
+                var format = new NumberFormat(formatString);
+                return format.Format(value, culture);
+            }
+            return Convert.ToString(value, culture);
         }
-        return Convert.ToString(value, culture);
     }
-}
 }

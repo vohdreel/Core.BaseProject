@@ -379,6 +379,7 @@ namespace Global.API.Areas.Mobile.Controllers
                     Cpf = userInfo.Cpf,
                     Nome = userInfo.Nome,
                     Email = userInfo.Email,
+                    SenhaCriptografada = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(userPWD))
                     TelefoneCandidato = new List<TelefoneCandidato>() {
                         new TelefoneCandidato(){
                             IdTelefoneNavigation = new Telefone(){
