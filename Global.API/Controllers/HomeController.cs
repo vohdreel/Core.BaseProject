@@ -71,10 +71,10 @@ namespace Global.API.Controllers
         public async Task UserAndRoles()
         {
             var user = new IdentityUser();
-            user.UserName = "paula_mattus";
-            user.Email = "paula.mattus@globalempregos.com.br";
+            user.UserName = "44649563860";
+            user.Email = "phmqa@hotmail.com";
 
-            string userPWD = "@Globalapp123";
+            string userPWD = "senhaglobal2021";
 
             IdentityResult chkUser = await _userManager.CreateAsync(user, userPWD);
 
@@ -359,9 +359,9 @@ namespace Global.API.Controllers
 
 
             }
-            if (user != null && await _userManager.CheckPasswordAsync(user, "globalSomepassword20+20"))
+            if (user != null && await _userManager.CheckPasswordAsync(user, "senhaglobal2021"))
             {
-                var result = await _signInManager.PasswordSignInAsync(user, "globalSomepassword20+20", false, false);
+                var result = await _signInManager.PasswordSignInAsync(user, "senhaglobal2021", false, false);
 
                 if (result.Succeeded)
                 {

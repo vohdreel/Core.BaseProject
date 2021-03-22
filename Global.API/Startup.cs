@@ -95,7 +95,8 @@ namespace Global.API
                 options.Cookie.HttpOnly = true;
                 //// Make the session cookie essential
                 options.Cookie.IsEssential = true;
-                //options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.None;
+
             });
 
           
