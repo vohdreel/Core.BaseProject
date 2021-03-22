@@ -80,6 +80,16 @@ namespace Global.DAO.Service
 
         }
 
+        public void DeleteCandidatosDuplicados()
+        {
+
+            Candidato[] candidatosDuplicados = Repository.Get(x => !string.IsNullOrEmpty(x.Idlegado) && string.IsNullOrEmpty(x.IdAspNetUsers));
+
+            var x = 0;
+            //Repository.DeleteAll(candidatosDuplicados);
+        
+        
+        }
         public void AlternarMaterConectado(string IdAspNetUsers, bool value)
         {
             Candidato candidato = Repository.Get(x => x.IdAspNetUsers == IdAspNetUsers).FirstOrDefault();

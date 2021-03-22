@@ -321,6 +321,9 @@ namespace Global.API.Controllers
         [HttpPost("PostTest")]
         public object PostTest()
         {
+            CandidatoService service = new CandidatoService();
+            service.DeleteCandidatosDuplicados();
+
             return "Post Test Ok!";
 
         }
@@ -505,9 +508,10 @@ namespace Global.API.Controllers
                             {
 
                                 CandidatoService service = new CandidatoService();
+                                
                                 if (first) { first = !first; continue; }
-                                if ((reader.GetValue(21) != null && service.ExisteCpfUsuario(reader.GetValue(21)?.ToString())) || (idLegado != null && service.ExisteIdlegadoUsuario(idLegado))
-                                    )
+                                if ((reader.GetValue(21) != null && service.ExisteCpfUsuario(reader.GetValue(21)?.ToString())) || 
+                                    (idLegado != null && service.ExisteIdlegadoUsuario(idLegado)))
                                 { continue; }
 
                                 Candidato candidato = new Candidato();
