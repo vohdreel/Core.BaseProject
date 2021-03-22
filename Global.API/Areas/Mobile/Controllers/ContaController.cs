@@ -81,8 +81,8 @@ namespace Global.API.Areas.Mobile.Controllers
 
                     HttpContext.Session.SetString("JWToken", token);
 
-                    //HttpContext.Response.Cookies
-                    //    .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
+                    HttpContext.Response.Cookies
+                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
 
                     CandidatoService service = new CandidatoService();
 

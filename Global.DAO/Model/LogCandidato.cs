@@ -11,7 +11,7 @@ namespace Global.DAO.Model
         public int Id { get; set; }
         public string IdLegado { get; set; }
         public string StackTrace { get; set; }
-        [Column(TypeName = "date")]
+        [Column(TypeName = "datetime")]
         public DateTime? DataLog { get; set; }
     }
 }
