@@ -72,6 +72,14 @@ namespace Global.DAO.Service
 
         }
 
+        public bool ExisteIdlegadoUsuario(string idlegado)
+        {
+
+            return Repository.Get(x => x.Idlegado == idlegado).FirstOrDefault() != null;
+
+
+        }
+
         public void AlternarMaterConectado(string IdAspNetUsers, bool value)
         {
             Candidato candidato = Repository.Get(x => x.IdAspNetUsers == IdAspNetUsers).FirstOrDefault();

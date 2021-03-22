@@ -506,7 +506,9 @@ namespace Global.API.Controllers
 
                                 CandidatoService service = new CandidatoService();
                                 if (first) { first = !first; continue; }
-                                if (service.ExisteCpfUsuario(reader.GetValue(21).ToString())) { continue; }
+                                if ((reader.GetValue(21) != null && service.ExisteCpfUsuario(reader.GetValue(21)?.ToString())) || (idLegado != null && service.ExisteIdlegadoUsuario(idLegado))
+                                    )
+                                { continue; }
 
                                 Candidato candidato = new Candidato();
 
@@ -804,7 +806,7 @@ namespace Global.API.Controllers
                                     user.UserName = candidato.Cpf;
                                     user.Email = candidato.Email;
 
-                                    string userPWD = TextExtensions.RandomPassword(6);
+                                    string userPWD = TextExtensions.RandomPassword(10);
 
                                     IdentityResult chkUser = await _userManager.CreateAsync(user, userPWD);
                                     if (chkUser.Succeeded)
