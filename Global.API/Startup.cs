@@ -93,13 +93,25 @@ namespace Global.API
                 //options.Cookie.SameSite = SameSiteMode.None;
                 options.IdleTimeout = TimeSpan.FromMinutes(120);
                 options.Cookie.HttpOnly = true;
+                
                 //// Make the session cookie essential
                 options.Cookie.IsEssential = true;
-                options.Cookie.SameSite = SameSiteMode.None;
+                //options.Cookie.SameSite = SameSiteMode.None;
 
             });
 
-          
+            services.ConfigureExternalCookie(options =>
+            {
+                // Other options
+                options.Cookie.SameSite = SameSiteMode.None;
+            });
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Other options
+                options.Cookie.SameSite = SameSiteMode.None;
+            });
+
+
 
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
@@ -173,7 +185,7 @@ namespace Global.API
                           options.AccessDeniedPath = "/Account/AccessDenied";
 
                           //Configuração geral dos cookies para validar no Azure Dev Ops
-                          options.Cookie.SameSite = SameSiteMode.None;
+                          options.Cookie.SameSite = SameSiteMode.Unspecified;
 
                           if (Configuration.GetProperty<bool>("ApiConfig", "useEntityCore"))
                           {
