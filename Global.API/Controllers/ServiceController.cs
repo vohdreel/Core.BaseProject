@@ -503,14 +503,15 @@ namespace Global.API.Controllers
                     {
                         while (reader.Read()) //Each ROW
                         {
+                            CandidatoService service = new CandidatoService();
+
                             idLegado = reader.GetValue(1)?.ToString();
                             try
                             {
 
-                                CandidatoService service = new CandidatoService();
-                                
+
                                 if (first) { first = !first; continue; }
-                                if ((reader.GetValue(21) != null && service.ExisteCpfUsuario(reader.GetValue(21)?.ToString())) || 
+                                if ((reader.GetValue(21) != null && service.ExisteCpfUsuario(reader.GetValue(21)?.ToString())) ||
                                     (idLegado != null && service.ExisteIdlegadoUsuario(idLegado)))
                                 { continue; }
 
@@ -538,14 +539,14 @@ namespace Global.API.Controllers
                                 string raca = reader.GetValue(5)?.ToString();
                                 if (string.IsNullOrEmpty(raca))
                                 {
-                                    //candidato.Raca = (int)EnumRaca.Indisponivel;
+                                    candidato.Raca = (int)EnumRaca.Indisponivel;
                                 }
                                 else
                                 {
                                     if (raca.Contains("Preto"))
                                         raca = "Preto";
 
-                                    //candidato.Raca = (int)(Enum.Parse(typeof(EnumRaca), TextExtensions.GetRacaValue(raca)));
+                                    candidato.Raca = (int)(Enum.Parse(typeof(EnumRaca), TextExtensions.GetRacaValue(raca)));
                                 }
 
                                 //candidato.EstadoCivil = (int)(Enum.Parse(typeof(EnumEstadoCIvil), reader.GetString(6)));
@@ -856,6 +857,7 @@ namespace Global.API.Controllers
 
                                 });
                             }
+                            service.DeleteCandidatosDuplicados();
                         }
                     } while (reader.NextResult()); //Move to NEXT SHEET
 

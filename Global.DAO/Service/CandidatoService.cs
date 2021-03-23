@@ -85,8 +85,7 @@ namespace Global.DAO.Service
 
             Candidato[] candidatosDuplicados = Repository.Get(x => !string.IsNullOrEmpty(x.Idlegado) && string.IsNullOrEmpty(x.IdAspNetUsers));
 
-            var x = 0;
-            //Repository.DeleteAll(candidatosDuplicados);
+            Repository.DeleteAll(candidatosDuplicados);
         
         
         }
