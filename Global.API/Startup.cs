@@ -103,12 +103,20 @@ namespace Global.API
             services.ConfigureExternalCookie(options =>
             {
                 // Other options
-                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.HttpOnly = true;
+                
+                //// Make the session cookie essential
+                options.Cookie.IsEssential = true;
+                options.Cookie.SameSite = SameSiteMode.Unspecified;
             });
             services.ConfigureApplicationCookie(options =>
             {
                 // Other options
-                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.HttpOnly = true;
+
+                //// Make the session cookie essential
+                options.Cookie.IsEssential = true;
+                options.Cookie.SameSite = SameSiteMode.Unspecified;
             });
 
 
