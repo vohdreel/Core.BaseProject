@@ -860,10 +860,10 @@ namespace Global.API.Controllers
                             service.DeleteCandidatosDuplicados();
                         }
                     } while (reader.NextResult()); //Move to NEXT SHEET
-
+                    
                 }
 
-
+                new CandidatoService().DeleteCandidatosDuplicados();
                 return "Concluído com sucesso";
             }
             catch (Exception e)
