@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Global.DAO.Model;
@@ -79,10 +80,20 @@ namespace Global.API.Areas.Mobile.Controllers
                     var roles = await _userManager.GetRolesAsync(user);
                     var token = TokenService.GenerateToken(user, roles.ToList());
 
-                    HttpContext.Session.SetString("JWToken", token);
+                    HttpContext.Session.Set("JWToken", JsonSerializer.SerializeToUtf8Bytes(token));
 
                     HttpContext.Response.Cookies
-                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
+                        .Append("access_token", token, new CookieOptions() { 
+                        
+                            Secure = true,
+                            HttpOnly = true,
+                            SameSite = SameSiteMode.None
+
+                        
+                        });
+
+                    //HttpContext.Response.Cookies
+                    //    .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
 
                     CandidatoService service = new CandidatoService();
 
@@ -167,8 +178,25 @@ namespace Global.API.Areas.Mobile.Controllers
 
         }
 
+        [AllowAnonymous]
+        [HttpGet("getJWT")]
+        public object getJwt()
+        {
+            return HttpContext.Session;
+
+        }
+
+        [AllowAnonymous]
+        [HttpGet("getUserAgent")]
+        public object getUserAgent()
+        {
+            return HttpContext.Request.Cookies;
+
+        }
+
         [HttpGet("FakeEmail")]
-        public async Task<bool> FakeEmail() {
+        public async Task<bool> FakeEmail()
+        {
 
             try
             {
@@ -211,7 +239,7 @@ namespace Global.API.Areas.Mobile.Controllers
             {
                 return false;
             }
-        }        
+        }
 
         public async Task<bool> SendEmailForEmailConfirmation(string email, IdentityUser user, string nomeCandidato)
         {
@@ -257,51 +285,51 @@ namespace Global.API.Areas.Mobile.Controllers
         [AllowAnonymous]
         public async Task<object> ForgotPassword(string email)
         {
-          
-                var user = await _userManager.FindByEmailAsync(email);
-                //if (user != null && await _userManager.IsEmailConfirmedAsync(user))
-                if (user != null)
 
-            if (user != null && await _userManager.IsEmailConfirmedAsync(user))
-            {
-                string nomeCandidato = new CandidatoService()
-                    .BuscarCandidato(user.Id)
-                    .Nome;
+            var user = await _userManager.FindByEmailAsync(email);
+            //if (user != null && await _userManager.IsEmailConfirmedAsync(user))
+            if (user != null)
 
-                await _userManager.RemoveAuthenticationTokenAsync(user, TokenOptions.DefaultProvider, "ResetPassword");
-
-                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-                var passwordResetLink = Url.Action("ResetPassword", "Account",
-                        new { email = email, token = token }, Request.Scheme);
-
-                UserEmailOptions options = new UserEmailOptions
+                if (user != null && await _userManager.IsEmailConfirmedAsync(user))
                 {
-                    ToEmails = new List<string>() { user.Email },
-                    PlaceHolders = new List<KeyValuePair<string, string>>()
+                    string nomeCandidato = new CandidatoService()
+                        .BuscarCandidato(user.Id)
+                        .Nome;
+
+                    await _userManager.RemoveAuthenticationTokenAsync(user, TokenOptions.DefaultProvider, "ResetPassword");
+
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                    var passwordResetLink = Url.Action("ResetPassword", "Account",
+                            new { email = email, token = token }, Request.Scheme);
+
+                    UserEmailOptions options = new UserEmailOptions
+                    {
+                        ToEmails = new List<string>() { user.Email },
+                        PlaceHolders = new List<KeyValuePair<string, string>>()
                         {
                             new KeyValuePair<string, string>("{{UserName}}", nomeCandidato),
                             new KeyValuePair<string, string>("{{Link}}", passwordResetLink)
                         }
-                };
+                    };
 
-                options = _emailService.ReturnForgotPasswordBody(options);
-                var client = new SendGridClient("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");
-                var from = new EmailAddress("management.globalempregos@gmail.com", "Global Empregos");
-                var subject = options.Subject;
-                var to = new EmailAddress(user.Email);
-                var htmlContent = options.Body;
-                var msg = MailHelper.CreateSingleEmail(from, to, subject, htmlContent, htmlContent);
-                var response = await client.SendEmailAsync(msg);
+                    options = _emailService.ReturnForgotPasswordBody(options);
+                    var client = new SendGridClient("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");
+                    var from = new EmailAddress("management.globalempregos@gmail.com", "Global Empregos");
+                    var subject = options.Subject;
+                    var to = new EmailAddress(user.Email);
+                    var htmlContent = options.Body;
+                    var msg = MailHelper.CreateSingleEmail(from, to, subject, htmlContent, htmlContent);
+                    var response = await client.SendEmailAsync(msg);
 
-                return new
-                {
-                    ok = true,
-                    message = "Enviamos pare esse endereço de email as instruções para redefinir sua senha.<br /><br />" +
-                        "Por favor, verifique sua caixa de mensagens (Em alguns casos, a mensagem pode ser marcado como spam)!"
+                    return new
+                    {
+                        ok = true,
+                        message = "Enviamos pare esse endereço de email as instruções para redefinir sua senha.<br /><br />" +
+                            "Por favor, verifique sua caixa de mensagens (Em alguns casos, a mensagem pode ser marcado como spam)!"
 
-                };
-            }
+                    };
+                }
 
             return new
             {

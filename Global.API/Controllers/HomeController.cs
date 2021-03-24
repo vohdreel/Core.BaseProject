@@ -391,13 +391,9 @@ namespace Global.API.Controllers
             return Json("Failed!");
         }
 
-        [AllowAnonymous]
-        [HttpGet("getJWT")]
-        public object getJwt()
-        {
-            return HttpContext.Session;
 
-        }
+
+
         [AllowAnonymous]
         [HttpGet("FakeUserLogout")]
         public async Task<JsonResult> FakeUserLogout()

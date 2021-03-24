@@ -88,35 +88,14 @@ namespace Global.API
             services.ConfigureNonBreakingSameSiteCookies();
 
             //Configuração De Sessão 
-            services.AddSession(options =>
-            {
-                //options.Cookie.SameSite = SameSiteMode.None;
-                options.IdleTimeout = TimeSpan.FromMinutes(120);
-                options.Cookie.HttpOnly = true;
-                
-                //// Make the session cookie essential
-                options.Cookie.IsEssential = true;
-                //options.Cookie.SameSite = SameSiteMode.None;
-
-            });
+            services.AddSession();
 
             services.ConfigureExternalCookie(options =>
             {
-                // Other options
                 options.Cookie.HttpOnly = true;
-                
-                //// Make the session cookie essential
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.Cookie.IsEssential = true;
-                options.Cookie.SameSite = SameSiteMode.Unspecified;
-            });
-            services.ConfigureApplicationCookie(options =>
-            {
-                // Other options
-                options.Cookie.HttpOnly = true;
-
-                //// Make the session cookie essential
-                options.Cookie.IsEssential = true;
-                options.Cookie.SameSite = SameSiteMode.Unspecified;
+                options.Cookie.SameSite = SameSiteMode.None;
             });
 
 
@@ -191,9 +170,10 @@ namespace Global.API
                           options.LoginPath = "/Account/Login";
                           options.LogoutPath = "/Account/Logout";
                           options.AccessDeniedPath = "/Account/AccessDenied";
+                          options.Cookie.Domain = "https://globalempregosapi-dev.azurewebsites.net/";
 
                           //Configuração geral dos cookies para validar no Azure Dev Ops
-                          options.Cookie.SameSite = SameSiteMode.Unspecified;
+                          options.Cookie.HttpOnly = true;
 
                           if (Configuration.GetProperty<bool>("ApiConfig", "useEntityCore"))
                           {
@@ -341,56 +321,68 @@ namespace Global.API
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseRouting();
-            app.UseCors("CorsPolicy");
-            app.UseCookiePolicy();
+            app.UseRouting(); 
             ////Add User session
             app.UseSession();
+            app.UseCors("CorsPolicy");
+            app.UseCookiePolicy();
+           
 
-
-            app.UseAuthentication();
             app.UseAuthorization();
+            app.UseAuthentication();
 
             //Add JWToken to all incoming HTTP Request Header
-            //app.Use((context, next) =>
-            //{
-            //    var JWToken = context.Session.GetString("JWToken");
-            //    if (!string.IsNullOrEmpty(JWToken))
-            //    {
-            //        context.Request.Headers.Add("Authorization", "Bearer " + JWToken);
-            //    }
-            //    return next();
-            //});
+            app.Use((context, next) =>
+            {
+                var JWToken = context.Session.GetString("JWToken");
+                if (!string.IsNullOrEmpty(JWToken))
+                {
+                    context.Request.Headers.Add("Authorization", "Bearer " + JWToken);
+                }
+                return next();
+            });
             //Add JWToken Authentication service
 
-
-            if (Configuration.GetProperty<bool>("ApiConfig", "useMVC"))
+            app.UseEndpoints(endpoints =>
             {
-                app.UseMvc(routes =>
-                {
-                    routes.MapRoute(
-                        name: "areaRoute",
-                        template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                    routes.MapRoute(
-                        name: "default",
-                        template: "{controller=Home}/{action=Index}/{id?}");
-                });
-            }
-            else
-            {
-                app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapControllers();
-                    endpoints.MapControllerRoute(
-                       name: "areaRoute",
-                       pattern: "{area:exists}/{controller}/{action}/{id?}");
-                    //defaults: new { action = "Index" });
-                    endpoints.MapControllerRoute(
-                        name: "default",
-                        pattern: "{controller}/{action=swagger}/{id?}");
+                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                   name: "areaRoute",
+                   pattern: "{area:exists}/{controller}/{action}/{id?}");
+                //defaults: new { action = "Index" });
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller}/{action=swagger}/{id?}");
 
-                });
-            }
+            });
+
+            //if (Configuration.GetProperty<bool>("ApiConfig", "useMVC"))
+            //{
+            //    app.UseMvc(routes =>
+            //    {
+            //        routes.MapRoute(
+            //            name: "areaRoute",
+            //            template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+            //        routes.MapRoute(
+            //            name: "default",
+            //            template: "{controller=Home}/{action=Index}/{id?}");
+            //    });
+            //}
+            //else
+            //{
+            //    app.UseEndpoints(endpoints =>
+            //    {
+            //        endpoints.MapControllers();
+            //        endpoints.MapControllerRoute(
+            //           name: "areaRoute",
+            //           pattern: "{area:exists}/{controller}/{action}/{id?}");
+            //        //defaults: new { action = "Index" });
+            //        endpoints.MapControllerRoute(
+            //            name: "default",
+            //            pattern: "{controller}/{action=swagger}/{id?}");
+
+            //    });
+            //}
         }
     }
 }

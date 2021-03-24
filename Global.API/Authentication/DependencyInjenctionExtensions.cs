@@ -52,7 +52,7 @@ namespace Global.API.Authentication
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => false;
-                options.MinimumSameSitePolicy = SameSiteMode.Unspecified;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
                 options.OnAppendCookie = cookieContext =>
                    CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
                 options.OnDeleteCookie = cookieContext =>
