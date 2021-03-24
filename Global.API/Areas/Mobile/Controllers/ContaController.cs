@@ -83,17 +83,7 @@ namespace Global.API.Areas.Mobile.Controllers
                     HttpContext.Session.Set("JWToken", JsonSerializer.SerializeToUtf8Bytes(token));
 
                     HttpContext.Response.Cookies
-                        .Append("access_token", token, new CookieOptions() { 
-                        
-                            Secure = true,
-                            HttpOnly = true,
-                            SameSite = SameSiteMode.None
-
-                        
-                        });
-
-                    //HttpContext.Response.Cookies
-                    //    .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
+                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
 
                     CandidatoService service = new CandidatoService();
 
@@ -111,7 +101,8 @@ namespace Global.API.Areas.Mobile.Controllers
 
                         IdCandidato = candidato.Id,
                         Ok = true,
-                        Message = "Logged in"
+                        Message = "Logged in",
+                        token = token
                     };
                 }
 
