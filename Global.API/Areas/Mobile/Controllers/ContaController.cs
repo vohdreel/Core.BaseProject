@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
+using DeviceDetectorNET;
 using Global.DAO.Model;
 using Global.DAO.Service;
 using Global.Util;
@@ -93,7 +95,14 @@ namespace Global.API.Areas.Mobile.Controllers
                     }
                     Candidato candidato = service.BuscarCandidato(user.Id);
 
+                    dynamic resultData = new ExpandoObject();
 
+                    resultData.idCandidato = candidato.Id;
+                    resultData.ok = true;
+                    resultData.message = "Logged in";
+
+
+                   
 
                     return new
                     {
