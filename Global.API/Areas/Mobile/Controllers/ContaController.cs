@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web.Http;
+using DeviceDetectorNET;
 using Global.DAO.Model;
 using Global.DAO.Service;
 using Global.Util;
@@ -178,8 +179,19 @@ namespace Global.API.Areas.Mobile.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("getUserAgent")]
-        public object getUserAgent()
+        [HttpGet("getDevice")]
+        public object getDevice()
+        {
+            var dd = new DeviceDetector(HttpContext.Request.Headers["User-Agent"].ToString());
+            dd.Parse();
+
+            return dd.GetOs();
+
+        }
+
+        [AllowAnonymous]
+        [HttpGet("getCookies")]
+        public object getCookies()
         {
             return HttpContext.Request.Cookies;
 
