@@ -101,16 +101,13 @@ namespace Global.API.Areas.Mobile.Controllers
                     resultData.ok = true;
                     resultData.message = "Logged in";
 
+                    DeviceDetector detector = new DeviceDetector(HttpContext.Request.Headers["User-Agent"].ToString());
+                    detector.Parse();
 
-                   
+                    if (detector.GetOs().Match.Name == "iOS")
+                        resultData.token = token;
 
-                    return new
-                    {
-
-                        IdCandidato = candidato.Id,
-                        Ok = true,
-                        Message = "Logged in"
-                    };
+                    return resultData;
                 }
 
             }
