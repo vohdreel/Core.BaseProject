@@ -19,7 +19,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-//using System.Web.Http;
 using System.Net.Http;
 using System.Net;
 using Global.API.Data;

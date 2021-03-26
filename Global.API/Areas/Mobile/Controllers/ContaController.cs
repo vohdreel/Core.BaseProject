@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
@@ -95,7 +96,17 @@ namespace Global.API.Areas.Mobile.Controllers
                     }
                     Candidato candidato = service.BuscarCandidato(user.Id);
 
+                    dynamic resultData = new ExpandoObject();
 
+                    resultData.idCandidato = candidato.Id;
+                    resultData.ok = true;
+                    resultData.message = "Logged in";
+
+                    DeviceDetector detector = new DeviceDetector(HttpContext.Request.Headers["User-Agent"].ToString());
+                    detector.Parse();
+
+                    if (detector.GetOs().Match.Name == "iOS")
+                        resultData.token = token;
 
                     return new
                     {
@@ -171,7 +182,7 @@ namespace Global.API.Areas.Mobile.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("getJWT")]
+        [HttpGet("getSession")]
         public object getJwt()
         {
             return HttpContext.Session;
