@@ -35,6 +35,7 @@ using Global.DAO.Service;
 using Global.API.Authentication;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace Global.API {
     public class Startup
@@ -60,6 +61,15 @@ namespace Global.API {
                       .AddEntityFrameworkStores<GlobalContext>()
                       .AddDefaultTokenProviders();
             }
+
+            services.Configure<FormOptions>(options =>
+            {
+                options.ValueLengthLimit = int.MaxValue;
+                options.MultipartBodyLengthLimit = long.MaxValue; // <-- ! long.MaxValue
+                options.MultipartBoundaryLengthLimit = int.MaxValue;
+                options.MultipartHeadersCountLimit = int.MaxValue;
+                options.MultipartHeadersLengthLimit = int.MaxValue;
+            });
 
             // Set token life span to 5 hours
             services.Configure<DataProtectionTokenProviderOptions>(o =>
@@ -301,11 +311,9 @@ namespace Global.API {
 
             app.UseRouting();
 
-            app.UseCookiePolicy();
-
             app.UseCors("CorsPolicy");
-            app.UseAuthentication();
             app.UseAuthorization();
+            app.UseAuthentication();
 
             if (Configuration.GetProperty<bool>("ApiConfig", "useMVC"))
             {

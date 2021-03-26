@@ -136,10 +136,17 @@ namespace Global.API.Areas.Mobile.Controllers
                         HttpContext.Response.Cookies
                             .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment")));
 
-                        return new
-                        {
-                            ok = true
-                        };
+                        dynamic resultData = new ExpandoObject();
+
+                        resultData.ok = true;
+
+                        DeviceDetector detector = new DeviceDetector(HttpContext.Request.Headers["User-Agent"].ToString());
+                        detector.Parse();
+
+                        if (detector.GetOs().Match.Name == "iOS")
+                            resultData.token = token;
+
+                        return resultData;
                     }
                 }
             }
