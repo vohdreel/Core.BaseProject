@@ -71,17 +71,13 @@ namespace Global.API.Areas.Mobile.Controllers
                 //        Message = "Essa conta ainda não foi confirmada. Por favor verifique sua caixa de mensagens. (Em alguns casos, a mensagem pode ser marcado como spam)!"
                 //    };
 
-
                 var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
 
                 if (result.Succeeded)
                 {
-                    //await _signInManager.SignInAsync(user, true);
                     // adicionar token 
                     var roles = await _userManager.GetRolesAsync(user);
                     var token = TokenService.GenerateToken(user, roles.ToList());
-
-                    //HttpContext.Session.SetString("JWToken", token);
 
                     HttpContext.Response.Cookies
                         .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
@@ -91,7 +87,6 @@ namespace Global.API.Areas.Mobile.Controllers
                     if (ManterConectado)
                     {
                         service.AlternarMaterConectado(user.Id, true);
-
                     }
                     Candidato candidato = service.BuscarCandidato(user.Id);
 
@@ -181,7 +176,8 @@ namespace Global.API.Areas.Mobile.Controllers
         }
 
         [HttpGet("FakeEmail")]
-        public async Task<bool> FakeEmail() {
+        public async Task<bool> FakeEmail()
+        {
 
             try
             {
@@ -224,7 +220,7 @@ namespace Global.API.Areas.Mobile.Controllers
             {
                 return false;
             }
-        }        
+        }
 
         public async Task<bool> SendEmailForEmailConfirmation(string email, IdentityUser user, string nomeCandidato)
         {
@@ -267,7 +263,7 @@ namespace Global.API.Areas.Mobile.Controllers
         }
 
         [HttpPost("EnviarLinkRedefinirSenha")]
-        public async Task<object> ForgotPassword([FromBody]string email)
+        public async Task<object> ForgotPassword([FromBody] string email)
         {
             try
             {
@@ -323,12 +319,12 @@ namespace Global.API.Areas.Mobile.Controllers
 
                 };
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
 
                 return e;
-            
-            
+
+
             }
 
         }

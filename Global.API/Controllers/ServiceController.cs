@@ -13,6 +13,7 @@ using Global.DAO.Service;
 using Global.Util;
 using Global.Util.SystemEnumerations;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -487,384 +488,368 @@ namespace Global.API.Controllers
             try
             {
 
-                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-                System.Globalization.CultureInfo cultureinfo =
-            new System.Globalization.CultureInfo("pt-BR");
+                CultureInfo cultureinfo = new CultureInfo("pt-BR");
 
-                System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-BR");
-                bool first = true;
-                string idLegado = "";
-                var formFile = Request.Form.Files[0].OpenReadStream();
-                LogCandidatoService log = new LogCandidatoService();
-                using (var reader = ExcelReaderFactory.CreateReader(formFile))
+                var forms = Request.Form.Files.ToArray();
+
+                foreach (IFormFile form in forms)
                 {
+                    bool first = true;
+                    string idLegado = "";
 
-                    do
+                    var formFile = form.OpenReadStream();
+                    LogCandidatoService log = new LogCandidatoService();
+                    using (var reader = ExcelReaderFactory.CreateReader(formFile))
                     {
-                        while (reader.Read()) //Each ROW
+                        do
                         {
-                            CandidatoService service = new CandidatoService();
-
-                            idLegado = reader.GetValue(1)?.ToString();
-                            try
+                            while (reader.Read()) //Each ROW
                             {
+                                CandidatoService service = new CandidatoService();
 
-
-                                if (first) { first = !first; continue; }
-                                if ((reader.GetValue(21) != null && service.ExisteCpfUsuario(reader.GetValue(21)?.ToString())) ||
-                                    (idLegado != null && service.ExisteIdlegadoUsuario(idLegado)))
-                                { continue; }
-
-                                Candidato candidato = new Candidato();
-
-                                //return new
-                                //{
-                                //    format = GetFormattedValue(reader, 13, cultureinfo),
-                                //    raw = reader.GetValue(13).ToString(),
-                                //    dataConvertida = (DateTime?)DateTime.Parse(GetFormattedValue(reader, 13, cultureinfo), cultureinfo),
-
-                                //};
-
-
-                                #region Informações Pessoais
-
-                                candidato.Nome = reader.GetValue(0)?.ToString() ?? "N/A";
-                                candidato.Idlegado = reader.GetValue(1)?.ToString();
-
-
-                                candidato.DataNascimento = reader.GetValue(2) != null ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 2, cultureinfo), cultureinfo) : null;
-                                //idade 3
-                                candidato.Sexo = reader.GetValue(4)?.ToString();
-
-                                string raca = reader.GetValue(5)?.ToString();
-                                if (string.IsNullOrEmpty(raca))
-                                {
-                                    candidato.Raca = (int)EnumRaca.Indisponivel;
-                                }
-                                else
-                                {
-                                    if (raca.Contains("Preto"))
-                                        raca = "Preto";
-
-                                    candidato.Raca = (int)(Enum.Parse(typeof(EnumRaca), TextExtensions.GetRacaValue(raca)));
-                                }
-
-                                //candidato.EstadoCivil = (int)(Enum.Parse(typeof(EnumEstadoCIvil), reader.GetString(6)));
-                                candidato.EstadoCivil = string.IsNullOrEmpty(reader.GetValue(6)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromShortName<EnumEstadoCivil>(reader.GetValue(6)?.ToString());
-
-                                string deficiente = reader.GetValue(7)?.ToString();
-                                if (!string.IsNullOrEmpty(deficiente))
-                                {
-                                    candidato.Deficiente = deficiente == "Sim" ? true : false;
-
-                                }
-
-                                //telefones 8
-
-                                string telefone = reader.GetString(8);
-
-                                List<TelefoneCandidato> telefones = new List<TelefoneCandidato>();
-                                if (!string.IsNullOrEmpty(telefone))
-                                {
-                                    var arrayTelefones = telefone.Split(";");
-                                    foreach (var tel in arrayTelefones)
-                                    {
-                                        telefones.Add(new TelefoneCandidato
-                                        {
-                                            IdTelefoneNavigation = new Telefone { Numero = tel }
-                                        });
-                                    }
-                                }
-
-                                candidato.TelefoneCandidato = telefones;
-
-                                candidato.Email = reader.GetValue(9)?.ToString() ?? "N/A";
-                                candidato.EmailSecundario = reader.GetValue(10)?.ToString();
-
-                                //Validar a partir do nome, por conta dos acentos
-                                candidato.PerfilProfissional = string.IsNullOrEmpty(reader.GetValue(11)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<NivelProfissional>(reader.GetValue(11)?.ToString());
-
-                                //datainsricao (12)
-                                candidato.DataInscricao = reader.GetValue(12) != null ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 12, cultureinfo), cultureinfo) : null;
-
-                                //datainsricao (13)
-
-                                candidato.NomePai = reader.GetValue(14)?.ToString();
-                                candidato.NomeMae = reader.GetValue(15)?.ToString();
-
-
-                                candidato.Nacionalidade = reader.GetValue(16)?.ToString();
-                                candidato.EstadoNascimento = reader.GetValue(17)?.ToString()?.ConverterEstados();
-                                candidato.Agrupadores = reader.GetValue(18)?.ToString();
-
-                                //candidato com foto (19)
-                                //candidato com teste (20)
-                                string cpf = reader.GetValue(21)?.ToString();
-
-                                //if (cpf.Length > 11)
-                                //    continue;
-
-                                candidato.Cpf = reader.GetValue(21)?.ToString();
-                                string possuiCnh = reader.GetValue(22)?.ToString();
-                                if (!string.IsNullOrEmpty(possuiCnh))
-                                    candidato.PossuiCnh = possuiCnh == "Sim" ? true : false;
-                                if (candidato.PossuiCnh.Value)
-                                    candidato.CategoriaCnh = reader.GetValue(23)?.ToString();
-                                candidato.Identidade = reader.GetValue(24)?.ToString();
-                                candidato.OrgaoEmissor = reader.GetValue(25)?.ToString();
-
-                                //deficiencia 26
-                                candidato.Cid = reader.GetValue(27)?.ToString();
-                                candidato.Observacoes = reader.GetValue(28)?.ToString();
-
-                                candidato.Cep = reader.GetValue(29)?.ToString();
-                                candidato.Pais = reader.GetValue(30) != null ?
-                                                 (string?)(new RegionInfo(TextExtensions.GetISOCountryNameByCode(Convert.ToInt32(reader.GetValue(30)))).NativeName) :
-                                                 null;
+                                idLegado = reader.GetValue(1)?.ToString();
                                 try
                                 {
-                                    candidato.Estado = reader.GetValue(31) != null ? (string?)((Estado)Convert.ToInt32(reader.GetValue(31))).GetEnumDisplayName().ConverterEstados() : null;
-                                }
-                                catch (Exception e)
-                                {
-                                    candidato.Estado = null;
-                                }
+                                    if (first) { first = !first; continue; }
+                                    if ((reader.GetValue(21) != null && service.ExisteCpfUsuario(reader.GetValue(21)?.ToString())) ||
+                                        (idLegado != null && service.ExisteIdlegadoUsuario(idLegado)))
+                                    { continue; }
 
-                                candidato.Cidade = reader.GetValue(32)?.ToString();
-                                candidato.Bairro = reader.GetValue(33)?.ToString();
-                                candidato.Endereco = reader.GetValue(34)?.ToString();
-                                candidato.Complemento = reader.GetValue(35)?.ToString();
-                                //data 36
-                                //coordenda 37
-                                candidato.NivelProfissionalVagaDesejada = string.IsNullOrEmpty(reader.GetValue(38)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<NivelProfissional>(reader.GetValue(38)?.ToString());
-                                candidato.DisponibilidadeHorario = string.IsNullOrEmpty(reader.GetValue(39)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<DisponibilidadeHorario>(reader.GetValue(39)?.ToString());
-                                candidato.DisponibilidadeViagem = string.IsNullOrEmpty(reader.GetValue(40)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<Disponibilidade>(reader.GetValue(40)?.ToString());
-                                candidato.DisponibilidadeTransferencia = string.IsNullOrEmpty(reader.GetValue(41)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<Disponibilidade>(reader.GetValue(41)?.ToString());
+                                    Candidato candidato = new Candidato();
 
-                                candidato.PretensaoSalarial = string.IsNullOrEmpty(reader.GetValue(42)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<PretensaoSalarial>(reader.GetValue(42)?.ToString());
-                                candidato.LocalPreferencia = reader.GetValue(43)?.ToString();
-                                candidato.LocalPreferenciaSecundario = reader.GetValue(44)?.ToString();
+                                    #region Informações Pessoais
 
-                                candidato.CargoInteresse = reader.GetValue(45)?.ToString();
-                                candidato.CargoInteresseSecundario = reader.GetValue(46)?.ToString();
+                                    candidato.Nome = reader.GetValue(0)?.ToString() ?? "N/A";
+                                    candidato.Idlegado = reader.GetValue(1)?.ToString();
+                                    candidato.DataNascimento = reader.GetValue(2) != null ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 2, cultureinfo), cultureinfo) : null;
+                                    //idade 3
+                                    candidato.Sexo = reader.GetValue(4)?.ToString();
 
-                                #region Formaçaõ do Candidato
-
-                                if (!string.IsNullOrEmpty(reader.GetValue(47)?.ToString()))
-                                {
-                                    DateTime dataInicio = new DateTime();
-                                    DateTime dataConclusao = new DateTime();
-                                    if (!string.IsNullOrEmpty(reader.GetValue(52)?.ToString()))
+                                    string raca = reader.GetValue(5)?.ToString();
+                                    if (string.IsNullOrEmpty(raca))
                                     {
-                                        string[] intervaloConclusao = reader.GetValue(52)?.ToString().Split("até");
-
-                                        if (!string.IsNullOrEmpty(intervaloConclusao[0]))
-                                            DateTime.TryParse(intervaloConclusao[0].Trim(), cultureinfo, DateTimeStyles.None, out dataInicio);
-                                        if (!string.IsNullOrEmpty(intervaloConclusao[1]))
-                                            DateTime.TryParse(intervaloConclusao[0].Trim(), cultureinfo, DateTimeStyles.None, out dataInicio);
-
-                                        //dataConclusao = DateTime.Parse(intervaloConclusao[1].Trim(), cultureinfo);
-                                    }
-
-
-                                    FormacaoCandidato formacao_1 = new FormacaoCandidato()
-                                    {
-                                        TipoFormacao = string.IsNullOrEmpty(reader.GetValue(47)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<NivelFormacao>(reader.GetValue(47)?.ToString()),
-                                        Modalidade = string.IsNullOrEmpty(reader.GetValue(48)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<ModalidadeFormacao>(reader.GetValue(48)?.ToString()),
-                                        Instituicao = reader.GetValue(49)?.ToString(),
-                                        Curso = reader.GetValue(50)?.ToString(),
-                                        Situacao = string.IsNullOrEmpty(reader.GetValue(51)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<SituacaoFormacao>(reader.GetValue(51)?.ToString()),
-                                        DataInicio = dataInicio,
-                                        DataConclusao = dataConclusao
-                                    };
-                                    candidato.FormacaoCandidato.Add(formacao_1);
-                                }
-
-                                if (!string.IsNullOrEmpty(reader.GetValue(53)?.ToString()))
-                                {
-                                    DateTime? dataInicio = null;
-                                    DateTime? dataConclusao = null;
-                                    if (!string.IsNullOrEmpty(reader.GetValue(58)?.ToString()))
-                                    {
-                                        string[] intervaloConclusao = reader.GetValue(58)?.ToString().Split("até");
-
-                                        if (!string.IsNullOrEmpty(intervaloConclusao[0]))
-                                            dataInicio = DateTime.Parse(intervaloConclusao[0].Trim(), cultureinfo);
-                                        if (!string.IsNullOrEmpty(intervaloConclusao[1]))
-                                            dataConclusao = DateTime.Parse(intervaloConclusao[1].Trim(), cultureinfo);
-                                    }
-
-                                    FormacaoCandidato formacao_2 = new FormacaoCandidato()
-                                    {
-                                        TipoFormacao = string.IsNullOrEmpty(reader.GetValue(53)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<NivelFormacao>(reader.GetValue(53)?.ToString()),
-                                        Modalidade = string.IsNullOrEmpty(reader.GetValue(54)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<ModalidadeFormacao>(reader.GetValue(54)?.ToString()),
-                                        Instituicao = reader.GetValue(55)?.ToString(),
-                                        Curso = reader.GetValue(56)?.ToString(),
-                                        Situacao = string.IsNullOrEmpty(reader.GetValue(57)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<SituacaoFormacao>(reader.GetValue(57)?.ToString()),
-                                        DataInicio = dataInicio,
-                                        DataConclusao = dataConclusao
-
-                                    };
-                                    candidato.FormacaoCandidato.Add(formacao_2);
-                                }
-
-                                if (!string.IsNullOrEmpty(reader.GetValue(59)?.ToString()))
-                                {
-                                    DateTime? dataInicio = null;
-                                    DateTime? dataConclusao = null;
-                                    if (!string.IsNullOrEmpty(reader.GetValue(64)?.ToString()))
-                                    {
-                                        string[] intervaloConclusao = reader.GetValue(64)?.ToString().Split("até");
-
-                                        if (!string.IsNullOrEmpty(intervaloConclusao[0]))
-                                            dataInicio = DateTime.Parse(intervaloConclusao[0].Trim(), cultureinfo);
-                                        if (!string.IsNullOrEmpty(intervaloConclusao[1]))
-                                            dataConclusao = DateTime.Parse(intervaloConclusao[1].Trim(), cultureinfo);
-                                    }
-
-                                    FormacaoCandidato formacao_3 = new FormacaoCandidato()
-                                    {
-                                        TipoFormacao = string.IsNullOrEmpty(reader.GetValue(59)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<NivelFormacao>(reader.GetValue(59)?.ToString()),
-                                        Modalidade = string.IsNullOrEmpty(reader.GetValue(60)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<ModalidadeFormacao>(reader.GetValue(60)?.ToString()),
-                                        Instituicao = reader.GetValue(61)?.ToString(),
-                                        Curso = reader.GetValue(62)?.ToString(),
-                                        Situacao = string.IsNullOrEmpty(reader.GetValue(63)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<SituacaoFormacao>(reader.GetValue(63)?.ToString()),
-                                        DataInicio = dataInicio,
-                                        DataConclusao = dataConclusao
-
-                                    };
-                                    candidato.FormacaoCandidato.Add(formacao_3);
-                                }
-
-                                #endregion
-
-                                candidato.NomeProcesso = reader.GetValue(65)?.ToString();
-                                candidato.SituacaoPlanoSaude = reader.GetValue(66)?.ToString();
-
-                                if (reader.GetValue(67) != null)
-                                    candidato.DataSituacaoPlanoSaude = DateTime.Parse(GetFormattedValue(reader, 67, cultureinfo), cultureinfo);
-
-                                string primeiroEmprego = reader.GetValue(68)?.ToString();
-                                if (!string.IsNullOrEmpty(primeiroEmprego))
-                                    candidato.PrimeiroEmprego = primeiroEmprego == "Sim" ? true : false;
-
-
-                                #region Experiecia Profissional
-                                if (!string.IsNullOrEmpty(reader.GetValue(69)?.ToString()))
-                                {
-
-                                    ExperienciaProfissional experiencia_1 = new ExperienciaProfissional()
-                                    {
-                                        Empresa = reader.GetValue(69)?.ToString(),
-                                        Cargo = reader.GetValue(70)?.ToString(),
-                                        Salario = !string.IsNullOrEmpty(reader.GetValue(71)?.ToString()) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetValue(71)?.ToString(), @"[^\d,]", "")) : null,
-                                        DataAdmissao = reader.GetValue(72) != null ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 72, cultureinfo), cultureinfo) : null,
-                                        DataDesligamento = reader.GetValue(73) != null && reader.GetValue(73).ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 73, cultureinfo), cultureinfo) : null,
-                                        ResumoAtividades = reader.GetValue(74)?.ToString()
-                                    };
-                                    candidato.ExperienciaProfissional.Add(experiencia_1);
-                                }
-
-                                if (!string.IsNullOrEmpty(reader.GetValue(75)?.ToString()))
-                                {
-
-                                    ExperienciaProfissional experiencia_2 = new ExperienciaProfissional()
-                                    {
-                                        Empresa = reader.GetValue(75)?.ToString(),
-                                        Cargo = reader.GetValue(76)?.ToString(),
-                                        Salario = !string.IsNullOrEmpty(reader.GetValue(77)?.ToString()) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetValue(77)?.ToString(), @"[^\d,]", "")) : null,
-                                        DataAdmissao = reader.GetValue(78) != null ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 78, cultureinfo), cultureinfo) : null,
-                                        DataDesligamento = reader.GetValue(79) != null && reader.GetValue(79)?.ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 79, cultureinfo), cultureinfo) : null,
-                                        ResumoAtividades = reader.GetValue(80)?.ToString()
-                                    };
-                                    candidato.ExperienciaProfissional.Add(experiencia_2);
-                                }
-
-                                if (!string.IsNullOrEmpty(reader.GetValue(81)?.ToString()))
-                                {
-
-                                    ExperienciaProfissional experiencia_3 = new ExperienciaProfissional()
-                                    {
-                                        Empresa = reader.GetValue(81)?.ToString(),
-                                        Cargo = reader.GetValue(82)?.ToString(),
-                                        Salario = !string.IsNullOrEmpty(reader.GetString(83)) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetString(83), @"[^\d,]", "")) : null,
-                                        DataAdmissao = reader.GetValue(84) != null ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 84, cultureinfo), cultureinfo) : null,
-                                        DataDesligamento = reader.GetValue(85) != null && reader.GetValue(85).ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 85, cultureinfo), cultureinfo) : null,
-                                        ResumoAtividades = reader.GetValue(86)?.ToString()
-                                    };
-                                    candidato.ExperienciaProfissional.Add(experiencia_3);
-                                }
-
-
-
-                                #endregion
-
-
-                                #endregion
-
-                                string exception;
-                                //CandidatoService service = new CandidatoService();
-                                bool sucesso = service.CadastrarCandidato(candidato, out exception);
-                                if (sucesso)
-                                {
-                                    var user = new IdentityUser();
-                                    user.UserName = candidato.Cpf;
-                                    user.Email = candidato.Email;
-
-                                    string userPWD = TextExtensions.RandomPassword(10);
-
-                                    IdentityResult chkUser = await _userManager.CreateAsync(user, userPWD);
-                                    if (chkUser.Succeeded)
-                                    {
-                                        candidato.IdAspNetUsers = user.Id;
-                                        candidato.SenhaCriptografada = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(userPWD));
-                                        service.AtualizarCandidato(candidato);
+                                        candidato.Raca = (int)EnumRaca.Indisponivel;
                                     }
                                     else
+                                    {
+                                        if (raca.Contains("Preto"))
+                                            raca = "Preto";
+
+                                        candidato.Raca = (int)(Enum.Parse(typeof(EnumRaca), TextExtensions.GetRacaValue(raca)));
+                                    }
+
+                                    //candidato.EstadoCivil = (int)(Enum.Parse(typeof(EnumEstadoCIvil), reader.GetString(6)));
+                                    candidato.EstadoCivil = string.IsNullOrEmpty(reader.GetValue(6)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromShortName<EnumEstadoCivil>(reader.GetValue(6)?.ToString());
+
+                                    string deficiente = reader.GetValue(7)?.ToString();
+                                    if (!string.IsNullOrEmpty(deficiente))
+                                    {
+                                        candidato.Deficiente = deficiente == "Sim" ? true : false;
+                                    }
+
+                                    //telefones 8
+
+                                    string telefone = reader.GetString(8);
+
+                                    List<TelefoneCandidato> telefones = new List<TelefoneCandidato>();
+                                    if (!string.IsNullOrEmpty(telefone))
+                                    {
+                                        var arrayTelefones = telefone.Split(";");
+                                        foreach (var tel in arrayTelefones)
+                                        {
+                                            telefones.Add(new TelefoneCandidato
+                                            {
+                                                IdTelefoneNavigation = new Telefone { Numero = tel }
+                                            });
+                                        }
+                                    }
+
+                                    candidato.TelefoneCandidato = telefones;
+
+                                    candidato.Email = reader.GetValue(9)?.ToString() ?? "N/A";
+                                    candidato.EmailSecundario = reader.GetValue(10)?.ToString();
+
+                                    //Validar a partir do nome, por conta dos acentos
+                                    candidato.PerfilProfissional = string.IsNullOrEmpty(reader.GetValue(11)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<NivelProfissional>(reader.GetValue(11)?.ToString());
+
+                                    //datainsricao (12)
+                                    candidato.DataInscricao = reader.GetValue(12) != null ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 12, cultureinfo), cultureinfo) : null;
+
+                                    //datainsricao (13)
+
+                                    candidato.NomePai = reader.GetValue(14)?.ToString();
+                                    candidato.NomeMae = reader.GetValue(15)?.ToString();
+                                    candidato.Nacionalidade = reader.GetValue(16)?.ToString();
+                                    candidato.EstadoNascimento = reader.GetValue(17)?.ToString()?.ConverterEstados();
+                                    candidato.Agrupadores = reader.GetValue(18)?.ToString();
+                                    //candidato com foto (19)
+                                    //candidato com teste (20)
+                                    string cpf = reader.GetValue(21)?.ToString();
+                                    //if (cpf.Length > 11)
+                                    //    continue;
+                                    candidato.Cpf = reader.GetValue(21)?.ToString();
+                                    string possuiCnh = reader.GetValue(22)?.ToString();
+                                    if (!string.IsNullOrEmpty(possuiCnh))
+                                        candidato.PossuiCnh = possuiCnh == "Sim" ? true : false;
+                                    if (candidato.PossuiCnh.Value)
+                                        candidato.CategoriaCnh = reader.GetValue(23)?.ToString();
+                                    candidato.Identidade = reader.GetValue(24)?.ToString();
+                                    candidato.OrgaoEmissor = reader.GetValue(25)?.ToString();
+
+                                    //deficiencia 26
+                                    candidato.Cid = reader.GetValue(27)?.ToString();
+                                    candidato.Observacoes = reader.GetValue(28)?.ToString();
+
+                                    candidato.Cep = reader.GetValue(29)?.ToString();
+                                    candidato.Pais = reader.GetValue(30) != null ?
+                                                     (string?)(new RegionInfo(TextExtensions.GetISOCountryNameByCode(Convert.ToInt32(reader.GetValue(30)))).NativeName) :
+                                                     null;
+                                    try
+                                    {
+                                        candidato.Estado = reader.GetValue(31) != null ? (string?)((Estado)Convert.ToInt32(reader.GetValue(31))).GetEnumDisplayName().ConverterEstados() : null;
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        candidato.Estado = null;
+                                    }
+
+                                    candidato.Cidade = reader.GetValue(32)?.ToString();
+                                    candidato.Bairro = reader.GetValue(33)?.ToString();
+                                    candidato.Endereco = reader.GetValue(34)?.ToString();
+                                    candidato.Complemento = reader.GetValue(35)?.ToString();
+                                    //data 36
+                                    //coordenda 37
+                                    candidato.NivelProfissionalVagaDesejada = string.IsNullOrEmpty(reader.GetValue(38)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<NivelProfissional>(reader.GetValue(38)?.ToString());
+                                    candidato.DisponibilidadeHorario = string.IsNullOrEmpty(reader.GetValue(39)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<DisponibilidadeHorario>(reader.GetValue(39)?.ToString());
+                                    candidato.DisponibilidadeViagem = string.IsNullOrEmpty(reader.GetValue(40)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<Disponibilidade>(reader.GetValue(40)?.ToString());
+                                    candidato.DisponibilidadeTransferencia = string.IsNullOrEmpty(reader.GetValue(41)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<Disponibilidade>(reader.GetValue(41)?.ToString());
+
+                                    candidato.PretensaoSalarial = string.IsNullOrEmpty(reader.GetValue(42)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<PretensaoSalarial>(reader.GetValue(42)?.ToString());
+                                    candidato.LocalPreferencia = reader.GetValue(43)?.ToString();
+                                    candidato.LocalPreferenciaSecundario = reader.GetValue(44)?.ToString();
+
+                                    candidato.CargoInteresse = reader.GetValue(45)?.ToString();
+                                    candidato.CargoInteresseSecundario = reader.GetValue(46)?.ToString();
+
+                                    #region Formaçaõ do Candidato
+
+                                    if (!string.IsNullOrEmpty(reader.GetValue(47)?.ToString()))
+                                    {
+                                        DateTime dataInicio = new DateTime();
+                                        DateTime dataConclusao = new DateTime();
+                                        if (!string.IsNullOrEmpty(reader.GetValue(52)?.ToString()))
+                                        {
+                                            string[] intervaloConclusao = reader.GetValue(52)?.ToString().Split("até");
+
+                                            if (!string.IsNullOrEmpty(intervaloConclusao[0]))
+                                                DateTime.TryParse(intervaloConclusao[0].Trim(), cultureinfo, DateTimeStyles.None, out dataInicio);
+                                            if (!string.IsNullOrEmpty(intervaloConclusao[1]))
+                                                DateTime.TryParse(intervaloConclusao[0].Trim(), cultureinfo, DateTimeStyles.None, out dataInicio);
+
+                                            //dataConclusao = DateTime.Parse(intervaloConclusao[1].Trim(), cultureinfo);
+                                        }
+
+
+                                        FormacaoCandidato formacao_1 = new FormacaoCandidato()
+                                        {
+                                            TipoFormacao = string.IsNullOrEmpty(reader.GetValue(47)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<NivelFormacao>(reader.GetValue(47)?.ToString()),
+                                            Modalidade = string.IsNullOrEmpty(reader.GetValue(48)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<ModalidadeFormacao>(reader.GetValue(48)?.ToString()),
+                                            Instituicao = reader.GetValue(49)?.ToString(),
+                                            Curso = reader.GetValue(50)?.ToString(),
+                                            Situacao = string.IsNullOrEmpty(reader.GetValue(51)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<SituacaoFormacao>(reader.GetValue(51)?.ToString()),
+                                            DataInicio = dataInicio,
+                                            DataConclusao = dataConclusao
+                                        };
+                                        candidato.FormacaoCandidato.Add(formacao_1);
+                                    }
+
+                                    if (!string.IsNullOrEmpty(reader.GetValue(53)?.ToString()))
+                                    {
+                                        DateTime? dataInicio = null;
+                                        DateTime? dataConclusao = null;
+                                        if (!string.IsNullOrEmpty(reader.GetValue(58)?.ToString()))
+                                        {
+                                            string[] intervaloConclusao = reader.GetValue(58)?.ToString().Split("até");
+
+                                            if (!string.IsNullOrEmpty(intervaloConclusao[0]))
+                                                dataInicio = DateTime.Parse(intervaloConclusao[0].Trim(), cultureinfo);
+                                            if (!string.IsNullOrEmpty(intervaloConclusao[1]))
+                                                dataConclusao = DateTime.Parse(intervaloConclusao[1].Trim(), cultureinfo);
+                                        }
+
+                                        FormacaoCandidato formacao_2 = new FormacaoCandidato()
+                                        {
+                                            TipoFormacao = string.IsNullOrEmpty(reader.GetValue(53)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<NivelFormacao>(reader.GetValue(53)?.ToString()),
+                                            Modalidade = string.IsNullOrEmpty(reader.GetValue(54)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<ModalidadeFormacao>(reader.GetValue(54)?.ToString()),
+                                            Instituicao = reader.GetValue(55)?.ToString(),
+                                            Curso = reader.GetValue(56)?.ToString(),
+                                            Situacao = string.IsNullOrEmpty(reader.GetValue(57)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<SituacaoFormacao>(reader.GetValue(57)?.ToString()),
+                                            DataInicio = dataInicio,
+                                            DataConclusao = dataConclusao
+
+                                        };
+                                        candidato.FormacaoCandidato.Add(formacao_2);
+                                    }
+
+                                    if (!string.IsNullOrEmpty(reader.GetValue(59)?.ToString()))
+                                    {
+                                        DateTime? dataInicio = null;
+                                        DateTime? dataConclusao = null;
+                                        if (!string.IsNullOrEmpty(reader.GetValue(64)?.ToString()))
+                                        {
+                                            string[] intervaloConclusao = reader.GetValue(64)?.ToString().Split("até");
+
+                                            if (!string.IsNullOrEmpty(intervaloConclusao[0]))
+                                                dataInicio = DateTime.Parse(intervaloConclusao[0].Trim(), cultureinfo);
+                                            if (!string.IsNullOrEmpty(intervaloConclusao[1]))
+                                                dataConclusao = DateTime.Parse(intervaloConclusao[1].Trim(), cultureinfo);
+                                        }
+
+                                        FormacaoCandidato formacao_3 = new FormacaoCandidato()
+                                        {
+                                            TipoFormacao = string.IsNullOrEmpty(reader.GetValue(59)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<NivelFormacao>(reader.GetValue(59)?.ToString()),
+                                            Modalidade = string.IsNullOrEmpty(reader.GetValue(60)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<ModalidadeFormacao>(reader.GetValue(60)?.ToString()),
+                                            Instituicao = reader.GetValue(61)?.ToString(),
+                                            Curso = reader.GetValue(62)?.ToString(),
+                                            Situacao = string.IsNullOrEmpty(reader.GetValue(63)?.ToString()) ? 0 : (int)EnumExtensions.GetValueFromName<SituacaoFormacao>(reader.GetValue(63)?.ToString()),
+                                            DataInicio = dataInicio,
+                                            DataConclusao = dataConclusao
+
+                                        };
+                                        candidato.FormacaoCandidato.Add(formacao_3);
+                                    }
+
+                                    #endregion
+
+                                    candidato.NomeProcesso = reader.GetValue(65)?.ToString();
+                                    candidato.SituacaoPlanoSaude = reader.GetValue(66)?.ToString();
+
+                                    if (reader.GetValue(67) != null)
+                                        candidato.DataSituacaoPlanoSaude = DateTime.Parse(GetFormattedValue(reader, 67, cultureinfo), cultureinfo);
+
+                                    string primeiroEmprego = reader.GetValue(68)?.ToString();
+                                    if (!string.IsNullOrEmpty(primeiroEmprego))
+                                        candidato.PrimeiroEmprego = primeiroEmprego == "Sim" ? true : false;
+
+
+                                    #region Experiecia Profissional
+                                    if (!string.IsNullOrEmpty(reader.GetValue(69)?.ToString()))
+                                    {
+
+                                        ExperienciaProfissional experiencia_1 = new ExperienciaProfissional()
+                                        {
+                                            Empresa = reader.GetValue(69)?.ToString(),
+                                            Cargo = reader.GetValue(70)?.ToString(),
+                                            Salario = !string.IsNullOrEmpty(reader.GetValue(71)?.ToString()) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetValue(71)?.ToString(), @"[^\d,]", "")) : null,
+                                            DataAdmissao = reader.GetValue(72) != null ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 72, cultureinfo), cultureinfo) : null,
+                                            DataDesligamento = reader.GetValue(73) != null && reader.GetValue(73).ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 73, cultureinfo), cultureinfo) : null,
+                                            ResumoAtividades = reader.GetValue(74)?.ToString()
+                                        };
+                                        candidato.ExperienciaProfissional.Add(experiencia_1);
+                                    }
+
+                                    if (!string.IsNullOrEmpty(reader.GetValue(75)?.ToString()))
+                                    {
+
+                                        ExperienciaProfissional experiencia_2 = new ExperienciaProfissional()
+                                        {
+                                            Empresa = reader.GetValue(75)?.ToString(),
+                                            Cargo = reader.GetValue(76)?.ToString(),
+                                            Salario = !string.IsNullOrEmpty(reader.GetValue(77)?.ToString()) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetValue(77)?.ToString(), @"[^\d,]", "")) : null,
+                                            DataAdmissao = reader.GetValue(78) != null ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 78, cultureinfo), cultureinfo) : null,
+                                            DataDesligamento = reader.GetValue(79) != null && reader.GetValue(79)?.ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 79, cultureinfo), cultureinfo) : null,
+                                            ResumoAtividades = reader.GetValue(80)?.ToString()
+                                        };
+                                        candidato.ExperienciaProfissional.Add(experiencia_2);
+                                    }
+
+                                    if (!string.IsNullOrEmpty(reader.GetValue(81)?.ToString()))
+                                    {
+
+                                        ExperienciaProfissional experiencia_3 = new ExperienciaProfissional()
+                                        {
+                                            Empresa = reader.GetValue(81)?.ToString(),
+                                            Cargo = reader.GetValue(82)?.ToString(),
+                                            Salario = !string.IsNullOrEmpty(reader.GetString(83)) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetString(83), @"[^\d,]", "")) : null,
+                                            DataAdmissao = reader.GetValue(84) != null ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 84, cultureinfo), cultureinfo) : null,
+                                            DataDesligamento = reader.GetValue(85) != null && reader.GetValue(85).ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 85, cultureinfo), cultureinfo) : null,
+                                            ResumoAtividades = reader.GetValue(86)?.ToString()
+                                        };
+                                        candidato.ExperienciaProfissional.Add(experiencia_3);
+                                    }
+
+
+
+                                    #endregion
+
+
+                                    #endregion
+
+                                    string exception;
+                                    //CandidatoService service = new CandidatoService();
+                                    bool sucesso = service.CadastrarCandidato(candidato, out exception);
+                                    if (sucesso)
+                                    {
+                                        var user = new IdentityUser();
+                                        user.UserName = candidato.Cpf;
+                                        user.Email = candidato.Email;
+
+                                        string userPWD = TextExtensions.RandomPassword(10);
+
+                                        IdentityResult chkUser = await _userManager.CreateAsync(user, userPWD);
+                                        if (chkUser.Succeeded)
+                                        {
+                                            candidato.IdAspNetUsers = user.Id;
+                                            candidato.SenhaCriptografada = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(userPWD));
+                                            service.AtualizarCandidato(candidato);
+                                        }
+                                        else
+                                        {
+                                            log.Salvar(new LogCandidato
+                                            {
+
+                                                IdLegado = idLegado,
+                                                DataLog = DateTime.Now,
+                                                StackTrace = string.Join(",", chkUser.Errors.Select(x => x.Description).ToArray()),
+
+                                            });
+
+                                        }
+                                    }
+
+                                    if (!sucesso)
                                     {
                                         log.Salvar(new LogCandidato
                                         {
 
                                             IdLegado = idLegado,
                                             DataLog = DateTime.Now,
-                                            StackTrace = string.Join(",", chkUser.Errors.Select(x => x.Description).ToArray()),
+                                            StackTrace = exception,
 
                                         });
-
                                     }
                                 }
-
-                                if (!sucesso)
+                                catch (Exception e)
                                 {
                                     log.Salvar(new LogCandidato
                                     {
 
                                         IdLegado = idLegado,
                                         DataLog = DateTime.Now,
-                                        StackTrace = exception,
+                                        StackTrace = e.Message + " --------- " + e.StackTrace
 
                                     });
                                 }
+                                service.DeleteCandidatosDuplicados();
                             }
-                            catch (Exception e)
-                            {
-                                log.Salvar(new LogCandidato
-                                {
+                        } while (reader.NextResult()); //Move to NEXT SHEET
 
-                                    IdLegado = idLegado,
-                                    DataLog = DateTime.Now,
-                                    StackTrace = e.Message + " --------- " + e.StackTrace
+                    }
 
-                                });
-                            }
-                            service.DeleteCandidatosDuplicados();
-                        }
-                    } while (reader.NextResult()); //Move to NEXT SHEET
-                    
+                    new CandidatoService().DeleteCandidatosDuplicados();
                 }
-
-                new CandidatoService().DeleteCandidatosDuplicados();
                 return "Concluído com sucesso";
+
             }
             catch (Exception e)
             {
