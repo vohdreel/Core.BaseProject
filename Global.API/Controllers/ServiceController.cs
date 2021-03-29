@@ -482,14 +482,14 @@ namespace Global.API.Controllers
         }
 
         [HttpPost("GenerateCandidatos")]
-        public async Task<object> GenerateCandidatos()
+        public async Task<object> GenerateCandidatos([FromForm] IEnumerable<IFormFile> files)
         {
 
             try
             {
 
                 CultureInfo cultureinfo = new CultureInfo("pt-BR");
-
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
                 var forms = Request.Form.Files.ToArray();
 
                 foreach (IFormFile form in forms)
@@ -840,13 +840,13 @@ namespace Global.API.Controllers
 
                                     });
                                 }
-                                service.DeleteCandidatosDuplicados();
+                               //service.DeleteCandidatosDuplicados();
                             }
                         } while (reader.NextResult()); //Move to NEXT SHEET
 
                     }
 
-                    new CandidatoService().DeleteCandidatosDuplicados();
+                    //new CandidatoService().DeleteCandidatosDuplicados();
                 }
                 return "Concluído com sucesso";
 
