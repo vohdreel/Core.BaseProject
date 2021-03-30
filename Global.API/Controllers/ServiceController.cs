@@ -556,8 +556,7 @@ namespace Global.API.Controllers
                                 try
                                 {
                                     if (first) { first = !first; continue; }
-                                    if ((reader.GetValue(21) != null && service.ExisteCpfUsuario(reader.GetValue(21)?.ToString())) ||
-                                        (idLegado != null && service.ExisteIdlegadoUsuario(idLegado)))
+                                    if (idLegado != null && service.ExisteIdlegadoUsuario(idLegado))
                                     { continue; }
 
                                     Candidato candidato = new Candidato();
