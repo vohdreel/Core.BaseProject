@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Global.DAO.Model;
-using Global.DAO.Procedure.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Global.DAO.Procedure.Models;
 
 namespace Global.DAO.Context
 {
@@ -71,9 +71,7 @@ namespace Global.DAO.Context
                     .HasForeignKey(d => d.IdEnumAgrupamento)
                     .HasConstraintName("FK_EnumAgrupamento_AreaInteresse");
             });
-
-       
-
+          
             modelBuilder.Entity<Banner>(entity =>
             {
                 entity.Property(e => e.Base64Code).IsUnicode(false);

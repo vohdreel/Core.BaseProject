@@ -619,8 +619,8 @@ namespace Global.API.Controllers
                                     //candidato com foto (19)
                                     //candidato com teste (20)
                                     string cpf = reader.GetValue(21)?.ToString();
-                                    //if (cpf.Length > 11)
-                                    //    continue;
+                                    if (string.IsNullOrEmpty(cpf) ||cpf.Length > 11)
+                                        continue;
                                     candidato.Cpf = reader.GetValue(21)?.ToString();
                                     string possuiCnh = reader.GetValue(22)?.ToString();
                                     if (!string.IsNullOrEmpty(possuiCnh))
@@ -776,7 +776,7 @@ namespace Global.API.Controllers
                                             Cargo = reader.GetValue(70)?.ToString(),
                                             Salario = !string.IsNullOrEmpty(reader.GetValue(71)?.ToString()) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetValue(71)?.ToString(), @"[^\d,]", "")) : null,
                                             DataAdmissao = reader.GetValue(72) != null ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 72, cultureinfo), cultureinfo) : null,
-                                            DataDesligamento = reader.GetValue(73) != null && reader.GetValue(73).ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 73, cultureinfo), cultureinfo) : null,
+                                            DataDesligamento = reader.GetValue(73) != null && reader.GetValue(73)?.ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 73, cultureinfo), cultureinfo) : null,
                                             ResumoAtividades = reader.GetValue(74)?.ToString()
                                         };
                                         candidato.ExperienciaProfissional.Add(experiencia_1);
@@ -806,7 +806,7 @@ namespace Global.API.Controllers
                                             Cargo = reader.GetValue(82)?.ToString(),
                                             Salario = !string.IsNullOrEmpty(reader.GetString(83)) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetString(83), @"[^\d,]", "")) : null,
                                             DataAdmissao = reader.GetValue(84) != null ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 84, cultureinfo), cultureinfo) : null,
-                                            DataDesligamento = reader.GetValue(85) != null && reader.GetValue(85).ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 85, cultureinfo), cultureinfo) : null,
+                                            DataDesligamento = reader.GetValue(85) != null && reader.GetValue(85)?.ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 85, cultureinfo), cultureinfo) : null,
                                             ResumoAtividades = reader.GetValue(86)?.ToString()
                                         };
                                         candidato.ExperienciaProfissional.Add(experiencia_3);
@@ -822,7 +822,7 @@ namespace Global.API.Controllers
                                     string exception;
                                     //CandidatoService service = new CandidatoService();
                                     bool sucesso = service.CadastrarCandidato(candidato, out exception);
-                                    if (sucesso)
+                                    if (sucesso && candidato.Email != "N/A")
                                     {
                                         var user = new IdentityUser();
                                         user.UserName = candidato.Cpf;
