@@ -324,8 +324,6 @@ namespace Global.API.Controllers
         public object PostTest()
         {
             CandidatoService service = new CandidatoService();
-            service.DeleteCandidatosDuplicados();
-
             return "Post Test Ok!";
 
         }

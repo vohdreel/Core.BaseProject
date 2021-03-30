@@ -342,7 +342,6 @@ namespace Global.API.Areas.Mobile.Controllers
             };
         }
 
-
         [AllowAnonymous]
         [HttpGet("VerificarEmail")]
         public async Task<object> VerifyEmailAdress(string emailAdress)
