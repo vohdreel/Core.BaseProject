@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 
 namespace Global.API.Controllers
@@ -29,19 +30,23 @@ namespace Global.API.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ILogger<ServiceController> _logger;
+
 
 
         public ServiceController(
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
             SignInManager<IdentityUser> signInManager,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment,
+            ILogger<ServiceController> logger)
 
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _webHostEnvironment = webHostEnvironment;
+            _logger = logger;
 
         }
 
@@ -525,7 +530,7 @@ namespace Global.API.Controllers
                 CultureInfo cultureinfo = new CultureInfo("pt-BR");
                 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
                 var forms = Request.Form.Files.ToArray();
-
+                LoggerService logger = new LoggerService();
                 foreach (IFormFile form in forms)
                 {
                     bool first = true;
@@ -535,6 +540,12 @@ namespace Global.API.Controllers
                     LogCandidatoService log = new LogCandidatoService();
                     using (var reader = ExcelReaderFactory.CreateReader(formFile))
                     {
+                        logger.Salvar(new Logger()
+                        {
+                            DataLog = DateTime.Now,
+                            TextoLog = form.FileName + " ---> processamendo iniciado;"
+
+                        });
                         do
                         {
                             while (reader.Read()) //Each ROW
