@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -329,6 +330,41 @@ namespace Global.API.Controllers
 
         }
 
+        [HttpGet("BuscarCandidatosDeTeste")]
+        public void BuscarCandidatosDeTeste()
+        {
+
+
+            CandidatoService service = new CandidatoService();
+            Candidato[] candidatos = service.BuscarMassaDeCandidatos();
+
+            var csv = new StringBuilder();
+
+            var obj = candidatos.Select(x => new
+            {
+
+                cpf = x.Cpf,
+                email = x.Email,
+                senha = x.SenhaCriptografada
+
+
+            }).ToArray();
+
+            foreach (var cand in candidatos)
+            {
+                var first = cand.Cpf;
+                var second = cand.Email;
+                var third = Encoding.UTF8.GetString(Convert.FromBase64String(cand.SenhaCriptografada));
+                //Suggestion made by KyleMit
+                var newLine = $"{first},{second},{third}";
+                csv.AppendLine(newLine);
+
+            }
+
+            System.IO.File.WriteAllText("C:/arquivo.csv", csv.ToString());
+
+
+        }
 
         [HttpGet("GenerateAspNetUsers")]
         public async Task<object> GenerateAspNetUsers()

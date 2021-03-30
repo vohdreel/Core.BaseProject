@@ -27,6 +27,13 @@ namespace Global.DAO.Service
             Repository = new CandidatoRepository(context);
         }
 
+        public Candidato[] BuscarMassaDeCandidatos()
+        {
+
+            return Repository.Get(x => !string.IsNullOrEmpty(x.IdAspNetUsers) && !string.IsNullOrEmpty(x.SenhaCriptografada)).OrderByDescending(x=> x.Id).Take(100).ToArray();
+
+
+        }
 
         public Candidato BuscarCandidato(int IdCandidato)
         {
