@@ -318,7 +318,7 @@ namespace Global.API.Controllers
 
         }
 
-        [HttpPost("PostTest")]
+        [HttpPost("PostTest"), DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = Int32.MaxValue, ValueLengthLimit = Int32.MaxValue)]
         public object PostTest()
         {
             return "Post Test Ok!";

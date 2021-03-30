@@ -35,6 +35,7 @@ using Global.API.Authentication;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace Global.API
 {
@@ -61,6 +62,15 @@ namespace Global.API
                       .AddEntityFrameworkStores<GlobalContext>()
                       .AddDefaultTokenProviders();
             }
+
+            services.Configure<FormOptions>(o =>  // currently all set to max, configure it to your needs!
+            {
+                o.ValueLengthLimit = int.MaxValue;
+                o.MultipartBodyLengthLimit = long.MaxValue; // <-- !!! long.MaxValue
+                o.MultipartBoundaryLengthLimit = int.MaxValue;
+                o.MultipartHeadersCountLimit = int.MaxValue;
+                o.MultipartHeadersLengthLimit = int.MaxValue;
+            });
 
             // Set token life span to 5 hours
             services.Configure<DataProtectionTokenProviderOptions>(o =>
@@ -329,6 +339,12 @@ namespace Global.API
                     context.Request.Headers.Add("Authorization", "Bearer " + JWToken);
                 }
                 return next();
+            });
+
+            app.Use(async (context, next) =>
+            {
+                context.Features.Get<IHttpMaxRequestBodySizeFeature>().MaxRequestBodySize = 100_000_000; // unlimited I guess
+                await next.Invoke();
             });
 
             app.Use(async (ctx, next) =>
