@@ -629,9 +629,6 @@ namespace Global.API.Controllers
                                     candidato.Agrupadores = reader.GetValue(18)?.ToString();
                                     //candidato com foto (19)
                                     //candidato com teste (20)
-                                    string cpf = reader.GetValue(21)?.ToString();
-                                    if (string.IsNullOrEmpty(cpf) ||cpf.Length > 11)
-                                        continue;
                                     candidato.Cpf = reader.GetValue(21)?.ToString();
                                     string possuiCnh = reader.GetValue(22)?.ToString();
                                     if (!string.IsNullOrEmpty(possuiCnh))
