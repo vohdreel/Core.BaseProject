@@ -25,7 +25,6 @@ namespace Global.DAO.Model
         public int Id { get; set; }
         [Column("IDLegado")]
         public string Idlegado { get; set; }
-        [Required]
         [Column("CPF")]
         [StringLength(11)]
         public string Cpf { get; set; }

@@ -33,6 +33,7 @@ namespace Global.DAO.Context
         public virtual DbSet<ExperienciaProfissional> ExperienciaProfissional { get; set; }
         public virtual DbSet<FormacaoCandidato> FormacaoCandidato { get; set; }
         public virtual DbSet<LogCandidato> LogCandidato { get; set; }
+        public virtual DbSet<Logger> Logger { get; set; }
         public virtual DbSet<Machine> Machine { get; set; }
         public virtual DbSet<MechaUser> MechaUser { get; set; }
         public virtual DbSet<Notificacao> Notificacao { get; set; }
@@ -56,6 +57,7 @@ namespace Global.DAO.Context
         {
 
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();
 
             modelBuilder.Entity<AreaInteresse>(entity =>
@@ -69,8 +71,8 @@ namespace Global.DAO.Context
                     .WithMany(p => p.AreaInteresse)
                     .HasForeignKey(d => d.IdEnumAgrupamento)
                     .HasConstraintName("FK_EnumAgrupamento_AreaInteresse");
-            });          
-
+            });
+         
             modelBuilder.Entity<Banner>(entity =>
             {
                 entity.HasNoKey();
@@ -365,6 +367,11 @@ namespace Global.DAO.Context
                 entity.Property(e => e.IdLegado).IsUnicode(false);
 
                 entity.Property(e => e.StackTrace).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Logger>(entity =>
+            {
+                entity.Property(e => e.TextoLog).IsUnicode(false);
             });
 
             modelBuilder.Entity<Machine>(entity =>
