@@ -388,6 +388,7 @@ namespace Global.API.Areas.Mobile.Controllers
                     Nome = userInfo.Nome,
                     Email = userInfo.Email,
                     SenhaCriptografada = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(userPWD)),
+                    DataInscricao = DateTime.Now,
                     TelefoneCandidato = new List<TelefoneCandidato>() {
                         new TelefoneCandidato(){
                             IdTelefoneNavigation = new Telefone(){
