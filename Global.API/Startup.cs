@@ -137,8 +137,6 @@ namespace Global.API
                     OnMessageReceived = context =>
                     {
                         context.Token = context.Request.Cookies["access_token"];
-                        if (string.IsNullOrEmpty(context.Token))
-                            context.Token = context.Request.HttpContext.Session.GetString("JWToken");
 
                         return Task.CompletedTask;
                     },
