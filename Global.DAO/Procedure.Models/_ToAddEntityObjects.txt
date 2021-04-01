@@ -4,3 +4,4 @@ modelBuilder.Entity<EgressUnit>().HasNoKey();
 base.OnModelCreating(modelBuilder);
 
 modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();
+

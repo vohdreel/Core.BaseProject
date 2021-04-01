@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web.Http;
 using DeviceDetectorNET;
@@ -80,7 +81,7 @@ namespace Global.API.Areas.Mobile.Controllers
                     var token = TokenService.GenerateToken(user, roles.ToList());
 
                     HttpContext.Response.Cookies
-                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
+                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment")));
 
                     CandidatoService service = new CandidatoService();
 
@@ -175,6 +176,33 @@ namespace Global.API.Areas.Mobile.Controllers
 
         }
 
+        [AllowAnonymous]
+        [HttpGet("getSession")]
+        public object getJwt()
+        {
+            return HttpContext.Session;
+
+        }
+
+        [AllowAnonymous]
+        [HttpGet("getDevice")]
+        public object getDevice()
+        {
+            var dd = new DeviceDetector(HttpContext.Request.Headers["User-Agent"].ToString());
+            dd.Parse();
+
+            return dd.GetOs();
+
+        }
+
+        [AllowAnonymous]
+        [HttpGet("getCookies")]
+        public object getCookies()
+        {
+            return HttpContext.Request.Cookies;
+
+        }
+
         [HttpGet("FakeEmail")]
         public async Task<bool> FakeEmail()
         {
@@ -263,71 +291,129 @@ namespace Global.API.Areas.Mobile.Controllers
         }
 
         [HttpPost("EnviarLinkRedefinirSenha")]
-        public async Task<object> ForgotPassword([FromBody] string email)
+        [AllowAnonymous]
+        public async Task<object> ForgotPassword(string email)
         {
-            try
+
+            var user = await _userManager.FindByEmailAsync(email);
+            //if (user != null && await _userManager.IsEmailConfirmedAsync(user))
+            if (user != null)
             {
-                var user = await _userManager.FindByEmailAsync(email);
                 //if (user != null && await _userManager.IsEmailConfirmedAsync(user))
-                if (user != null)
+                //{
+                string nomeCandidato = new CandidatoService()
+                    .BuscarCandidato(user.Id)
+                    .Nome;
 
+                await _userManager.RemoveAuthenticationTokenAsync(user, TokenOptions.DefaultProvider, "ResetPassword");
+
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                var passwordResetLink = Url.Action("ResetPassword", "Account",
+                        new { email = email, token = token }, Request.Scheme);
+
+                UserEmailOptions options = new UserEmailOptions
                 {
-                    string nomeCandidato = new CandidatoService()
-                        .BuscarCandidato(user.Id)
-                        .Nome;
-
-                    await _userManager.RemoveAuthenticationTokenAsync(user, TokenOptions.DefaultProvider, "ResetPassword");
-
-                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-                    var passwordResetLink = Url.Action("ResetPassword", "Account",
-                            new { email = email, token = token }, Request.Scheme);
-
-                    UserEmailOptions options = new UserEmailOptions
-                    {
-                        ToEmails = new List<string>() { user.Email },
-                        PlaceHolders = new List<KeyValuePair<string, string>>()
+                    ToEmails = new List<string>() { user.Email },
+                    PlaceHolders = new List<KeyValuePair<string, string>>()
                         {
                             new KeyValuePair<string, string>("{{UserName}}", nomeCandidato),
                             new KeyValuePair<string, string>("{{Link}}", passwordResetLink)
                         }
-                    };
+                };
 
-                    options = _emailService.ReturnForgotPasswordBody(options);
-                    var client = new SendGridClient("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");
-                    var from = new EmailAddress("management.globalempregos@gmail.com", "Global Empregos");
-                    var subject = options.Subject;
-                    var to = new EmailAddress(user.Email);
-                    var htmlContent = options.Body;
-                    var msg = MailHelper.CreateSingleEmail(from, to, subject, htmlContent, htmlContent);
-                    var response = await client.SendEmailAsync(msg);
-
-                    return new
-                    {
-                        ok = true,
-                        message = "Enviamos pare esse endereço de email as instruções para redefinir sua senha.<br /><br />" +
-                            "Por favor, verifique sua caixa de mensagens (Em alguns casos, a mensagem pode ser marcado como spam)!"
-
-                    };
-                }
+                options = _emailService.ReturnForgotPasswordBody(options);
+                var client = new SendGridClient("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");
+                var from = new EmailAddress("management.globalempregos@gmail.com", "Global Empregos");
+                var subject = options.Subject;
+                var to = new EmailAddress(user.Email);
+                var htmlContent = options.Body;
+                var msg = MailHelper.CreateSingleEmail(from, to, subject, htmlContent, htmlContent);
+                var response = await client.SendEmailAsync(msg);
 
                 return new
                 {
-                    ok = false,
-                    message = "Não existe nenhuma conta registrada usando este email.<br /><br />" +
-                            "Verifique se digitou o endereço de email corretamente e tente novamente!"
+                    ok = true,
+                    message = "Enviamos pare esse endereço de email as instruções para redefinir sua senha.<br /><br />" +
+                        "Por favor, verifique sua caixa de mensagens (Em alguns casos, a mensagem pode ser marcado como spam)!"
 
                 };
+                //}
             }
-            catch (Exception e)
+
+            return new
             {
+                ok = false,
+                message = "Não existe nenhuma conta registrada usando este email.<br /><br />" +
+                        "Verifique se digitou o endereço de email corretamente e tente novamente!"
 
-                return e;
-
-
-            }
+            };
 
         }
+
+
+        [Authorize]
+        [HttpGet("InAppRedefinirSenha")]
+        public async Task<object> ForgotPassword()
+        {
+
+            var user = await _userManager.FindByIdAsync(User.FindFirstValue("IdAspNetUser"));
+            if (user != null)
+            {
+
+                //if (user != null && await _userManager.IsEmailConfirmedAsync(user))
+                //{
+                string nomeCandidato = new CandidatoService()
+                    .BuscarCandidato(user.Id)
+                    .Nome;
+
+                await _userManager.RemoveAuthenticationTokenAsync(user, TokenOptions.DefaultProvider, "ResetPassword");
+
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                var passwordResetLink = Url.Action("ResetPassword", "Account",
+                        new { email = user.Email, token = token }, Request.Scheme);
+
+                UserEmailOptions options = new UserEmailOptions
+                {
+                    ToEmails = new List<string>() { user.Email },
+                    PlaceHolders = new List<KeyValuePair<string, string>>()
+                        {
+                            new KeyValuePair<string, string>("{{UserName}}", nomeCandidato),
+                            new KeyValuePair<string, string>("{{Link}}", passwordResetLink)
+                        }
+                };
+
+                options = _emailService.ReturnForgotPasswordBody(options);
+                var client = new SendGridClient("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");
+                var from = new EmailAddress("management.globalempregos@gmail.com", "Global Empregos");
+                var subject = options.Subject;
+                var to = new EmailAddress(user.Email);
+                var htmlContent = options.Body;
+                var msg = MailHelper.CreateSingleEmail(from, to, subject, htmlContent, htmlContent);
+                var response = await client.SendEmailAsync(msg);
+
+                return new
+                {
+                    ok = true,
+                    message = "Enviamos pare esse endereço de email as instruções para redefinir sua senha.<br /><br />" +
+                        "Por favor, verifique sua caixa de mensagens (Em alguns casos, a mensagem pode ser marcado como spam)!"
+
+                };
+                //}
+            }
+            return new
+            {
+                ok = false,
+                message = "Não existe nenhuma conta registrada usando este email.<br /><br />" +
+                        "Verifique se digitou o endereço de email corretamente e tente novamente!"
+
+            };
+
+        }
+
+
+
 
         [Authorize]
         [HttpGet("GetClaims")]

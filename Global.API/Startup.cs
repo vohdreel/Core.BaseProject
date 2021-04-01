@@ -19,7 +19,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-//using System.Web.Http;
 using System.Net.Http;
 using System.Net;
 using Global.API.Data;
@@ -35,9 +34,11 @@ using Global.DAO.Service;
 using Global.API.Authentication;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Features;
 
-namespace Global.API {
+namespace Global.API
+{
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -128,7 +129,7 @@ namespace Global.API {
                     ValidateAudience = false,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero,
-                    
+
                 };
                 x.Events = new JwtBearerEvents
 
@@ -136,10 +137,12 @@ namespace Global.API {
                     OnMessageReceived = context =>
                     {
                         context.Token = context.Request.Cookies["access_token"];
+                        if (string.IsNullOrEmpty(context.Token))
+                            context.Token = context.Request.HttpContext.Session.GetString("JWToken");
 
                         return Task.CompletedTask;
                     },
-                    OnAuthenticationFailed = context => 
+                    OnAuthenticationFailed = context =>
                     {
                         var response = context.HttpContext.Response;
                         return Task.CompletedTask;
@@ -148,7 +151,7 @@ namespace Global.API {
             });
 
 
-            
+
             //Configuração do Cookie Authentication
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                       .AddCookie(options =>
@@ -161,7 +164,7 @@ namespace Global.API {
                           options.AccessDeniedPath = "/Account/AccessDenied";
 
                           //Configuração geral dos cookies para validar no Azure Dev Ops
-                          options.Cookie.SameSite = SameSiteMode.None;
+                          options.Cookie.HttpOnly = true;
 
                           if (Configuration.GetProperty<bool>("ApiConfig", "useEntityCore"))
                           {
@@ -217,7 +220,7 @@ namespace Global.API {
                 // User settings  
                 options.User.RequireUniqueEmail = true;
 
-                
+
             });
 
             //Configuração SWAGGER UI
@@ -243,7 +246,7 @@ namespace Global.API {
                     {
                         return new[] { api.GroupName };
                     }
-                     
+
                     var controllerActionDescriptor = api.ActionDescriptor as ControllerActionDescriptor;
                     if (controllerActionDescriptor != null)
                     {
@@ -259,7 +262,7 @@ namespace Global.API {
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env )
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
             if (env.IsDevelopment())
@@ -282,7 +285,7 @@ namespace Global.API {
 
             app.UseStatusCodePages(context =>
             {
-                var agent= context.HttpContext.Request.Headers["User-Agent"].ToString().ToLower();
+                var agent = context.HttpContext.Request.Headers["User-Agent"].ToString().ToLower();
                 if (agent.Contains("android") || agent.Contains("iphone"))
                 {
                     return Task.CompletedTask;
