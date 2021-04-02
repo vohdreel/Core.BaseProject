@@ -158,6 +158,8 @@ namespace Global.DAO.Model
         public DateTime? DataInscricao { get; set; }
         [StringLength(500)]
         public string SenhaCriptografada { get; set; }
+        public bool? InformacoesPessoaisConcluido { get; set; }
+        public bool? ObjetivosConcluido { get; set; }
 
         [InverseProperty("IdCandidatoNavigation")]
         public virtual ICollection<AreaInteresse> AreaInteresse { get; set; }
