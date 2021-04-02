@@ -190,6 +190,21 @@ namespace Global.Util.SystemEnumerations
     }
 
 
+    public enum EnumTipoTelefone
+    {
+        [Display(Name = "Celular")]
+        Celular = 1,
+        [Display(Name = "Residencial")]
+        Residencial = 2,
+        [Display(Name = "Recados")]
+        Recado = 3,
+        [Display(Name = "Celular (aceita Whatsapp)")]
+        CelularViaWhatsapp = 4,
+
+
+    }
+
+
 
     public enum NivelFormacao
     {

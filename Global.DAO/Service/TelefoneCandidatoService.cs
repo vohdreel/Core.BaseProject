@@ -34,6 +34,13 @@ namespace Global.DAO.Service
 
         }
 
+        public Telefone[] BuscarTelefonesPorCandidato(int IdCandidato)
+        {
+
+            return Repository.Get(x => x.IdCandidato == IdCandidato, includeProperties: "IdTelefoneNavigation").Select(x => x.IdTelefoneNavigation).ToArray();
+
+        }
+
         public bool Salvar(TelefoneCandidato Dados)
         {
             

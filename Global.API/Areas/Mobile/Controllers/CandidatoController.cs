@@ -236,5 +236,90 @@ namespace Global.API.Areas.Mobile.Controllers
             }
 
         }
+
+
+        #region Telefones de Contato
+
+        [HttpGet("ObterTelefoneCandidato")]
+        public object ObterTelefoneCandidato(int IdCandidato)
+        {
+            using (var service = new TelefoneCandidatoService())
+            using (var telefoneService = new TelefoneService())
+            {
+                var _telefones = service
+                    .BuscarTelefonesPorCandidato(IdCandidato).ToList();
+
+                _telefones.ForEach(x =>
+                 {
+                     x.Numero = x.Numero.Replace("(0", "(");
+                     if (x.TipoTelefone == null)
+                         x.TipoTelefone = 1;
+                     if (x.Numero.Trim().Contains("Cel."))
+                     {
+                         x.TipoTelefone = 1;
+                         x.Numero = x.Numero.Replace("Cel.", "").Trim();
+
+                     }
+                     if (x.Numero.Trim().Contains("Res."))
+                     {
+                         x.TipoTelefone = 2;
+                         x.Numero = x.Numero.Replace("Res.", "").Trim();
+
+                     }
+                     if (x.Numero.Trim().Contains("Rec."))
+                     {
+                         x.TipoTelefone = 3;
+                         x.Numero = x.Numero.Replace("Rec.", "").Trim();
+
+                     }
+                     if (x.Numero.Trim().Contains("(aceita whatsapp)"))
+                     {
+                         x.TipoTelefone = 4;
+                         x.Numero = x.Numero.Replace("(aceita whatsapp)", "").Trim();
+                     }
+                     telefoneService.Editar(x);
+                 });
+
+                ViewModel.Telefone[] telefones = _telefones.Select(x => new ViewModel.Telefone(x)).ToArray();
+
+
+                return telefones;
+            }
+
+        }
+
+        [HttpPost("SalvarTelefoneCandidato")]
+        public object SalvarTelefoneCandidato([FromBody] Telefone telefoneCanidato, [FromQuery] int idCandidato)
+        {
+            using (var telefoneService = new TelefoneService())
+            using (var service = new TelefoneCandidatoService())
+            {
+                bool success = true; string message = "";
+                if (telefoneCanidato.Id != 0)
+                {
+                    success = telefoneService.Editar(telefoneCanidato); message = "Telefone atualizado com sucesso!";
+                }
+                else
+                {
+                    var telefoneCandidato = new TelefoneCandidato()
+                    {
+                        IdCandidato = idCandidato,
+                        IdTelefoneNavigation = new Telefone()
+                        {
+
+                            Numero = telefoneCanidato.Numero,
+                            TipoTelefone = telefoneCanidato.TipoTelefone
+                        }
+                    };
+                    success = service.Salvar(telefoneCandidato); message = "Telefone adicionado com sucesso!";
+                }
+
+                return new { ok = success, message = success ? message : "Ocorreu um erro ao tentar salvar, tente novamente mais tarde!" };
+            }
+
+        }
+
+
+        #endregion
     }
 }
