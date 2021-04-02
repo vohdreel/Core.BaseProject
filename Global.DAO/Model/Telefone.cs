@@ -18,6 +18,7 @@ namespace Global.DAO.Model
         [Required]
         [StringLength(100)]
         public string Numero { get; set; }
+        public int? TipoTelefone { get; set; }
 
         [InverseProperty("IdTelefoneNavigation")]
         public virtual ICollection<TelefoneCandidato> TelefoneCandidato { get; set; }

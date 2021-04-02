@@ -292,12 +292,12 @@ namespace Global.API.Areas.Mobile.Controllers
 
         [HttpPost("EnviarLinkRedefinirSenha")]
         [AllowAnonymous]
-        public async Task<object> ForgotPassword(string email)
+        public async Task<object> ForgotPassword([FromQuery] string email)
         {
 
             var user = await _userManager.FindByEmailAsync(email);
             //if (user != null && await _userManager.IsEmailConfirmedAsync(user))
-            if (user != null)
+            if (user != null)   
             {
                 //if (user != null && await _userManager.IsEmailConfirmedAsync(user))
                 //{
