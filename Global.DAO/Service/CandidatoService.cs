@@ -38,7 +38,15 @@ namespace Global.DAO.Service
         public Candidato BuscarCandidato(int IdCandidato)
         {
 
-            return Repository.Get(x => x.Id == IdCandidato).FirstOrDefault();
+            return Repository.Get(x => x.Id == IdCandidato, includeProperties: "TelefoneCandidato").FirstOrDefault();
+
+
+        }
+
+        public Candidato BuscarCandidatoPorIdLegado(string IdLegado)
+        {
+
+            return Repository.Get(x => x.Idlegado == IdLegado).FirstOrDefault();
 
 
         }
@@ -100,6 +108,14 @@ namespace Global.DAO.Service
         {
             Candidato candidato = Repository.Get(x => x.IdAspNetUsers == IdAspNetUsers).FirstOrDefault();
             candidato.MaterConectado = value;
+            Repository.Update(candidato);
+
+        }
+
+        public void AlternarFcmTokenConectado(string IdAspNetUsers, string fcmToken)
+        {
+            Candidato candidato = Repository.Get(x => x.IdAspNetUsers == IdAspNetUsers).FirstOrDefault();
+            candidato.Fcmtoken = fcmToken;
             Repository.Update(candidato);
 
         }

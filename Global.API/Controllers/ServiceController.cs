@@ -811,7 +811,7 @@ namespace Global.API.Controllers
                                         {
                                             Empresa = reader.GetValue(81)?.ToString(),
                                             Cargo = reader.GetValue(82)?.ToString(),
-                                            Salario = !string.IsNullOrEmpty(reader.GetString(83)) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetString(83), @"[^\d,]", "")) : null,
+                                            Salario = !string.IsNullOrEmpty(reader.GetValue(83)?.ToString()) ? (decimal?)decimal.Parse(Regex.Replace(reader.GetValue(83)?.ToString(), @"[^\d,]", "")) : null,
                                             DataAdmissao = reader.GetValue(84) != null ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 84, cultureinfo), cultureinfo) : null,
                                             DataDesligamento = reader.GetValue(85) != null && reader.GetValue(85)?.ToString() != "emprego atual" ? (DateTime?)DateTime.Parse(GetFormattedValue(reader, 85, cultureinfo), cultureinfo) : null,
                                             ResumoAtividades = reader.GetValue(86)?.ToString()

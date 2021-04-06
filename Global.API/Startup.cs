@@ -162,6 +162,7 @@ namespace Global.API
                           options.AccessDeniedPath = "/Account/AccessDenied";
 
                           //Configuração geral dos cookies para validar no Azure Dev Ops
+                          options.Cookie.SameSite = SameSiteMode.None;
                           options.Cookie.HttpOnly = true;
 
                           if (Configuration.GetProperty<bool>("ApiConfig", "useEntityCore"))

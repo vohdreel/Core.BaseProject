@@ -66,6 +66,12 @@ namespace Global.DAO.Service
         }
 
 
+        public bool SalvarNotificao(Notificacao notificacao)
+        {
+            return Repository.Insert(notificacao);       
+
+        
+        }
 
         public GlobalContext GetContext()
         {

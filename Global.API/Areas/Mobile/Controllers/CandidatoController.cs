@@ -15,7 +15,7 @@ namespace Global.API.Areas.Mobile.Controllers
     public class CandidatoController : ControllerBase
     {
         [HttpPost("AtualizarInformacoesPessoais")]
-        public object AtualizarInformacoesPessoais([FromBody] Candidato informacoesPessoais, [FromQuery] int[] idsCargosSelecionados = null, [FromQuery] int[] idsEnumAgrupamentoSelecionados = null)
+        public object AtualizarInformacoesPessoais([FromBody] Candidato informacoesPessoais, [FromQuery] bool IsInformacaoPessoal, [FromQuery] int[] idsCargosSelecionados = null, [FromQuery] int[] idsEnumAgrupamentoSelecionados = null)
         {
             using (var cargoInteresseService = new CargoInteresseService())
             using (var areaInteresseService = new AreaInteresseService())
@@ -24,6 +24,17 @@ namespace Global.API.Areas.Mobile.Controllers
 
                 Candidato candidato = service.BuscarCandidato(informacoesPessoais.Id);
 
+                if (candidato.TelefoneCandidato.ToArray().Count() == 0)
+                {
+                    return new
+                    {
+                        ok = false,
+                        message = "Você precisa cadastrar ao menos um telefone de contato!"
+                    };
+
+                }
+
+                
                 //informacoesPessoais.Id = candidato.Id;
                 //informacoesPessoais.Cpf = candidato.Cpf;
                 //informacoesPessoais.Email = candidato.Email;
@@ -73,11 +84,18 @@ namespace Global.API.Areas.Mobile.Controllers
                 candidato.PretensaoSalarial = informacoesPessoais.PretensaoSalarial != null ? informacoesPessoais.PretensaoSalarial : candidato.PretensaoSalarial;
                 candidato.PerfilProfissional = informacoesPessoais.PerfilProfissional != null ? informacoesPessoais.PerfilProfissional : candidato.PerfilProfissional;
 
+                if (IsInformacaoPessoal)
+                    candidato.InformacoesPessoaisConcluido = true;
+                else
+                    candidato.ObjetivosConcluido = true;
 
 
 
+                
 
                 bool sucesso = service.AtualizarCandidato(candidato);
+
+                
 
                 if (sucesso)
                 {
@@ -87,6 +105,13 @@ namespace Global.API.Areas.Mobile.Controllers
                         if (sucesso) areaInteresseService.AtualizarListaDeAreasInteressePorCandidato(candidato.Id, idsEnumAgrupamentoSelecionados);
 
 
+                    }
+
+                    if (candidato.InformacoesPessoaisConcluido.Value && candidato.ObjetivosConcluido.Value)
+                    { 
+                    
+                        // metodo que atualiza 
+                    
                     }
                 }
                 return new
@@ -251,33 +276,33 @@ namespace Global.API.Areas.Mobile.Controllers
 
                 _telefones.ForEach(x =>
                  {
-                     x.Numero = x.Numero.Replace("(0", "(");
                      if (x.TipoTelefone == null)
-                         x.TipoTelefone = 1;
-                     if (x.Numero.Trim().Contains("Cel."))
                      {
-                         x.TipoTelefone = 1;
-                         x.Numero = x.Numero.Replace("Cel.", "").Trim();
-
+                         x.Numero = x.Numero.Replace("(0", "(");
+                         if (x.TipoTelefone == null)
+                             x.TipoTelefone = 1;
+                         if (x.Numero.Trim().Contains("Cel."))
+                         {
+                             x.TipoTelefone = 1;
+                             x.Numero = x.Numero.Replace("Cel.", "").Trim();
+                         }
+                         if (x.Numero.Trim().Contains("Res."))
+                         {
+                             x.TipoTelefone = 2;
+                             x.Numero = x.Numero.Replace("Res.", "").Trim();
+                         }
+                         if (x.Numero.Trim().Contains("Rec."))
+                         {
+                             x.TipoTelefone = 3;
+                             x.Numero = x.Numero.Replace("Rec.", "").Trim();
+                         }
+                         if (x.Numero.Trim().Contains("(aceita whatsapp)"))
+                         {
+                             x.TipoTelefone = 4;
+                             x.Numero = x.Numero.Replace("(aceita whatsapp)", "").Trim();
+                         }
+                         telefoneService.Editar(x);
                      }
-                     if (x.Numero.Trim().Contains("Res."))
-                     {
-                         x.TipoTelefone = 2;
-                         x.Numero = x.Numero.Replace("Res.", "").Trim();
-
-                     }
-                     if (x.Numero.Trim().Contains("Rec."))
-                     {
-                         x.TipoTelefone = 3;
-                         x.Numero = x.Numero.Replace("Rec.", "").Trim();
-
-                     }
-                     if (x.Numero.Trim().Contains("(aceita whatsapp)"))
-                     {
-                         x.TipoTelefone = 4;
-                         x.Numero = x.Numero.Replace("(aceita whatsapp)", "").Trim();
-                     }
-                     telefoneService.Editar(x);
                  });
 
                 ViewModel.Telefone[] telefones = _telefones.Select(x => new ViewModel.Telefone(x)).ToArray();
@@ -319,7 +344,18 @@ namespace Global.API.Areas.Mobile.Controllers
 
         }
 
+        [HttpGet("DeletarTelefoneCandidato")]
+        public object DeletarTelefoneCandidato(int IdTelefone)
+        {
+            using (var service = new TelefoneCandidatoService())
+            {
 
+
+                bool success = service.RemoverTelefoneCandidatoPorIdTelefone(IdTelefone);
+                return new { ok = success, message = success ? "Telefone de contato excluído com sucesso!" : "Ocorreu um erro ao tentar excluir, tente novamente mais tarde!" };
+            }
+
+        }
         #endregion
     }
 }

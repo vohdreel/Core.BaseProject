@@ -54,7 +54,7 @@ namespace Global.API.Areas.Mobile.Controllers
         }
 
         [HttpGet("Login")]
-        public async Task<object> appLogin(string email, string password, bool ManterConectado)
+        public async Task<object> appLogin(string email, string password, bool ManterConectado, string FCMToken)
         {
             password = System.Uri.UnescapeDataString(password);
             IdentityUser user = new IdentityUser();
@@ -89,6 +89,10 @@ namespace Global.API.Areas.Mobile.Controllers
                     {
                         service.AlternarMaterConectado(user.Id, true);
                     }
+
+                    service.AlternarFcmTokenConectado(user.Id, FCMToken);
+
+
                     Candidato candidato = service.BuscarCandidato(user.Id);
 
                     dynamic resultData = new ExpandoObject();

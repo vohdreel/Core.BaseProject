@@ -54,6 +54,8 @@ namespace Gyan.Web.Identity.Data.Authentication
             if (enviorment == Environment.Production)
             {
                 cookie.Secure = true;
+                cookie.SameSite = SameSiteMode.None;
+
             }
             return cookie;
         }

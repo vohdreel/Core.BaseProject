@@ -41,6 +41,14 @@ namespace Global.DAO.Service
 
         }
 
+        public bool RemoverTelefoneCandidatoPorIdTelefone(int IdTelefone)
+        {
+            TelefoneCandidato telefone = Repository.Get(x => x.IdTelefone == IdTelefone).First();
+            return Repository.Delete(telefone);
+
+        }
+
+
         public bool Salvar(TelefoneCandidato Dados)
         {
             

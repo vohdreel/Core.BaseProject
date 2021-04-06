@@ -88,8 +88,21 @@ namespace Global.API.Areas.Mobile.Controllers
         [HttpPost("GerarCandidatura")]
         public object GerarCandidatura([FromBody] Candidatura candidatura)
         {
+            using (var candidadoService = new CandidatoService())
             using (var service = new CandidaturaService())
             {
+
+                Candidato candidato = candidadoService.BuscarCandidato(candidatura.IdCandidato);
+
+                if (!(candidato.InformacoesPessoaisConcluido.Value && candidato.ObjetivosConcluido.Value && !string.IsNullOrEmpty(candidato.Idlegado)))
+                {
+                    return new
+                    {
+                        ok = false,
+                        message = "Termine de cadastrar suas informações para candidatar-se à esta vaga!"
+                    };
+
+                }
 
                 if (!service.ExisteCandidatura(candidatura.IdVaga, candidatura.IdCandidato))
                 {
