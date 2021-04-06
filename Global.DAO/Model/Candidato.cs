@@ -24,6 +24,7 @@ namespace Global.DAO.Model
         [Column("ID")]
         public int Id { get; set; }
         [Column("IDLegado")]
+        [StringLength(20)]
         public string Idlegado { get; set; }
         [Column("CPF")]
         [StringLength(11)]
@@ -80,7 +81,7 @@ namespace Global.DAO.Model
         public string IdentidadeEstado { get; set; }
         [StringLength(250)]
         public string NomeMae { get; set; }
-        [StringLength(50)]
+        [StringLength(250)]
         public string NomePai { get; set; }
         public bool? Deficiente { get; set; }
         [Column("CID")]

@@ -60,6 +60,7 @@ namespace Global.DAO.Context
 
             modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();
 
+
             modelBuilder.Entity<AreaInteresse>(entity =>
             {
                 entity.HasOne(d => d.IdCandidatoNavigation)
@@ -87,6 +88,9 @@ namespace Global.DAO.Context
 
             modelBuilder.Entity<Candidato>(entity =>
             {
+                entity.HasIndex(e => e.Idlegado)
+                    .HasName("Candidato_idLegado");
+
                 entity.Property(e => e.Agrupadores).IsUnicode(false);
 
                 entity.Property(e => e.AmputacaoMembrosInferiores).IsUnicode(false);
@@ -360,6 +364,9 @@ namespace Global.DAO.Context
 
             modelBuilder.Entity<LogCandidato>(entity =>
             {
+                entity.HasIndex(e => e.IdLegado)
+                    .HasName("log_candidato_id_legado");
+
                 entity.Property(e => e.IdLegado).IsUnicode(false);
 
                 entity.Property(e => e.StackTrace).IsUnicode(false);
