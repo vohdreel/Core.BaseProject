@@ -65,7 +65,20 @@ namespace Global.DAO.Service
         
         }
 
+        public int QuantidadeNotificacaoNaoLidas(int IdCandidato)
+        {
+            return Repository.Get(x => x.IdCandidato == IdCandidato && x.Visualizado == false).ToArray().Count();
 
+
+        }
+
+
+        public bool SalvarNotificao(Notificacao notificacao)
+        {
+            return Repository.Insert(notificacao);       
+
+        
+        }
 
         public GlobalContext GetContext()
         {

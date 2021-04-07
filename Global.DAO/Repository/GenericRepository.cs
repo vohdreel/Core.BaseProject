@@ -90,10 +90,27 @@ namespace Global.DAO.Repository
             }
             catch (Exception e)
             {
-                context.Dispose();
+                //context.Dispose();
                 return false;
             }
         }
+
+        public virtual bool InsertWithException(TEntity entity, out string exception)
+        {
+            try
+            {
+                set.Add(entity);
+                context.SaveChanges();
+                exception = "";
+                return true;
+            }
+            catch (Exception e)
+            {
+                exception = e.Message + " --------- " + e.InnerException + " ------------ " + e.StackTrace;
+                return false;
+            }
+        }
+
         public virtual bool InsertTrans(TEntity entity)
         {
             try

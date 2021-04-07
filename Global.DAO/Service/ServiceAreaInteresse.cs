@@ -66,6 +66,7 @@ namespace Global.DAO.Service
         {
 
             return RepositoryAreaInteresse.Get(x => x.IdCandidato == idCandidato).ToArray();
+           // return Repository.Get(x => x.IdCandidato == idCandidato, includeProperties: "IdEnumAgrupamentoNavigation").ToArray();
 
         }
 

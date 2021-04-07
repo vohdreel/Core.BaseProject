@@ -28,7 +28,7 @@ namespace Global.API.Areas.Mobile.Controllers
 
 
         [HttpPost("AtualizarInformacoesPessoais")]
-        public object AtualizarInformacoesPessoais([FromBody] Candidato informacoesPessoais, [FromQuery] int[] idsCargosSelecionados = null, [FromQuery] int[] idsEnumAgrupamentoSelecionados = null)
+        public object AtualizarInformacoesPessoais([FromBody] Candidato informacoesPessoais, [FromQuery] bool IsInformacaoPessoal, [FromQuery] int[] idsCargosSelecionados = null, [FromQuery] int[] idsEnumAgrupamentoSelecionados = null)
         {
             using (var cargoInteresseService = new CargoInteresseService())
             using (var areaInteresseService = new ServiceAreaInteresse())
@@ -36,18 +36,28 @@ namespace Global.API.Areas.Mobile.Controllers
 
                 Candidato candidato = _serviceCandidato.BuscarPorId(informacoesPessoais.Id);
 
+                if (candidato.TelefoneCandidato.ToArray().Count() == 0)
+                {
+                    return new
+                    {
+                        ok = false,
+                        message = "Você precisa cadastrar ao menos um telefone de contato!"
+                    };
 
-                #region Montar Objeto de Atualização
-                informacoesPessoais.Id = candidato.Id;
-                informacoesPessoais.Cpf = candidato.Cpf;
-                informacoesPessoais.Email = candidato.Email;
-                informacoesPessoais.Nome = candidato.Nome;
+                }
+
+                
+                //informacoesPessoais.Id = candidato.Id;
+                //informacoesPessoais.Cpf = candidato.Cpf;
+                //informacoesPessoais.Email = candidato.Email;
+                //informacoesPessoais.Nome = candidato.Nome;
                 candidato.Bairro = !string.IsNullOrEmpty(informacoesPessoais.Bairro) ? informacoesPessoais.Bairro : candidato.Bairro;
                 candidato.Nacionalidade = !string.IsNullOrEmpty(informacoesPessoais.Nacionalidade) ? informacoesPessoais.Nacionalidade : candidato.Nacionalidade;
                 candidato.EstadoNascimento = !string.IsNullOrEmpty(informacoesPessoais.EstadoNascimento) ? informacoesPessoais.EstadoNascimento : candidato.EstadoNascimento;
                 candidato.DataNascimento = informacoesPessoais.DataNascimento != null ? informacoesPessoais.DataNascimento : candidato.DataNascimento;
                 candidato.Sexo = !string.IsNullOrEmpty(informacoesPessoais.Sexo) ? informacoesPessoais.Sexo : candidato.Sexo;
-                candidato.Raca = !string.IsNullOrEmpty(informacoesPessoais.Raca) ? informacoesPessoais.Raca : candidato.Raca;
+                candidato.Raca = informacoesPessoais.Raca != null ? informacoesPessoais.Raca : candidato.Raca;
+                candidato.EstadoCivil = informacoesPessoais.EstadoCivil != null ? informacoesPessoais.EstadoCivil : candidato.EstadoCivil;
                 candidato.PossuiDependentes = informacoesPessoais.PossuiDependentes != null ? informacoesPessoais.PossuiDependentes : candidato.PossuiDependentes;
                 candidato.QuantidadeDependentes = informacoesPessoais.QuantidadeDependentes != null ? informacoesPessoais.QuantidadeDependentes : candidato.QuantidadeDependentes;
                 candidato.PossuiCnh = informacoesPessoais.PossuiCnh != null ? informacoesPessoais.PossuiCnh : candidato.PossuiCnh;
@@ -86,11 +96,18 @@ namespace Global.API.Areas.Mobile.Controllers
                 candidato.PretensaoSalarial = informacoesPessoais.PretensaoSalarial != null ? informacoesPessoais.PretensaoSalarial : candidato.PretensaoSalarial;
                 candidato.PerfilProfissional = informacoesPessoais.PerfilProfissional != null ? informacoesPessoais.PerfilProfissional : candidato.PerfilProfissional;
 
-                #endregion
+                if (IsInformacaoPessoal)
+                    candidato.InformacoesPessoaisConcluido = true;
+                else
+                    candidato.ObjetivosConcluido = true;
 
 
 
-                bool sucesso = _serviceCandidato.Atualizar(candidato);
+                
+
+                bool sucesso = service.AtualizarCandidato(candidato);
+
+                
 
                 if (sucesso)
                 {
@@ -100,6 +117,13 @@ namespace Global.API.Areas.Mobile.Controllers
                         if (sucesso) areaInteresseService.AtualizarListaDeAreasInteressePorCandidato(candidato.Id, idsEnumAgrupamentoSelecionados);
 
 
+                    }
+
+                    if (candidato.InformacoesPessoaisConcluido.Value && candidato.ObjetivosConcluido.Value)
+                    { 
+                    
+                        // metodo que atualiza 
+                    
                     }
                 }
                 return new
@@ -112,8 +136,6 @@ namespace Global.API.Areas.Mobile.Controllers
 
             }
         }
-
-
 
         [HttpGet("ObterInformacoesPessoais")]
         public object ObterInformacoesPessoais(int idCandidato, bool isObjetivo = false)
@@ -130,24 +152,219 @@ namespace Global.API.Areas.Mobile.Controllers
 
             EnumAgrupamento[] areas = new EnumAgrupamentoService().BuscarTodos();
 
-            int[] idsCargosSelecionados = new CargoInteresseService().BuscarTodosPorCandidato(idCandidato)
-                .Select(x => x.IdCargo)
-                .ToArray();
+                Cargo[] idsCargosSelecionados = new CargoInteresseService().BuscarTodosPorCandidato(idCandidato)
+                    .Select(x => x.IdCargoNavigation)
+                    .ToArray();
 
-            int[] idsEnumAgrupamentoSelecionados = new ServiceAreaInteresse().BuscarTodosPorCandidato(idCandidato)
-                .Select(x => x.IdEnumAgrupamento)
-                .ToArray();
+                EnumAgrupamento[] idsEnumAgrupamentoSelecionados = new AreaInteresseService().BuscarTodosPorCandidato(idCandidato)
+                    .Select(x => x.IdEnumAgrupamentoNavigation)
+                    .ToArray();
 
 
-            return new
+                return new
+                {
+                    candidato,
+                    cargos,
+                    areas,
+                    idsCargosSelecionados,
+                    idsEnumAgrupamentoSelecionados
+                };
+
+
+
+
+
+            }
+        }
+
+        #region Experiencias Profissionais
+
+        [HttpGet("ObterExperienciasProfissionais")]
+        public object ObterExperienciasProfissionais(int IdCandidato)
+        {
+            using (var service = new ExperienciaProfissionalService())
             {
-                candidato,
-                cargos,
-                areas,
-                idsCargosSelecionados,
-                idsEnumAgrupamentoSelecionados
-            };
+                ViewModel.ExperienciaProfissional[] experienciaProfissional = service
+                    .BuscarPorCandidato(IdCandidato)
+                    .Select(x => new ViewModel.ExperienciaProfissional(x)).ToArray();
+
+                return experienciaProfissional;
+            }
 
         }
+
+        [HttpPost("SalvarNovaExpericenciaProfissional")]
+        public object SalvarNovaExpericenciaProfissional([FromBody] ExperienciaProfissional experienciaProfissional)
+        {
+            using (var service = new ExperienciaProfissionalService())
+            {
+                bool success = true; string message = "";
+                if (experienciaProfissional.Id == 0)
+                {
+                    success = service.Salvar(experienciaProfissional); message = "Nova experiênica cadastrada com sucesso!";
+                }
+                else
+                {
+                    success = service.Editar(experienciaProfissional); message = "Experiênica atualizada com sucesso!";
+                }
+
+                return new { ok = success, message = success ? message : "Ocorreu um erro ao tentar salvar, tente novamente mais tarde!" };
+            }
+
+        }
+
+        [HttpGet("DeletarExperienciaProfissional")]
+        public object DeletarExperienciaProfissional(int IdExperiencia)
+        {
+            using (var service = new ExperienciaProfissionalService())
+            {
+                bool success = service.Excluir(IdExperiencia);
+                return new { ok = success, message = success ? "Experiênica excluída com sucesso!" : "Ocorreu um erro ao tentar excluir, tente novamente mais tarde!" };
+            }
+
+        }
+
+        #endregion
+
+        [HttpGet("ObterFormacoesCandidato")]
+        public object ObterFormacoesCandidato(int IdCandidato)
+        {
+            using (var service = new FormacaoCandidatoService())
+            {
+                ViewModel.FormacaoCandidato[] formacaoCandidatos = service
+                    .BuscarPorCandidato(IdCandidato)
+                    .Select(x => new ViewModel.FormacaoCandidato(x)).ToArray();
+
+                return formacaoCandidatos;
+            }
+
+        }
+
+        [HttpPost("SalvarNovaFormacaoCandidato")]
+        public object SalvarNovaFormacaoCandidato([FromBody] FormacaoCandidato formacaoCandidato)
+        {
+            using (var service = new FormacaoCandidatoService())
+            {
+                bool success = true; string message = "";
+                if (formacaoCandidato.Id == 0)
+                {
+                    success = service.Salvar(formacaoCandidato); message = "Nova formação cadastrada com sucesso!";
+                }
+                else
+                {
+                    success = service.Editar(formacaoCandidato); message = "Formação atualizada com sucesso!";
+                }
+
+                return new { ok = success, message = success ? message : "Ocorreu um erro ao tentar salvar, tente novamente mais tarde!" };
+            }
+
+        }
+
+        [HttpGet("DeletarFormacaoCandidato")]
+        public object DeletarFormacaoCandidato(int IdFormacao)
+        {
+            using (var service = new FormacaoCandidatoService())
+            {
+                bool success = service.Excluir(IdFormacao);
+                return new { ok = success, message = success ? "Formação excluída com sucesso!" : "Ocorreu um erro ao tentar excluir, tente novamente mais tarde!" };
+            }
+
+        }
+
+
+        #region Telefones de Contato
+
+        [HttpGet("ObterTelefoneCandidato")]
+        public object ObterTelefoneCandidato(int IdCandidato)
+        {
+            using (var service = new TelefoneCandidatoService())
+            using (var telefoneService = new TelefoneService())
+            {
+                var _telefones = service
+                    .BuscarTelefonesPorCandidato(IdCandidato).ToList();
+
+                _telefones.ForEach(x =>
+                 {
+                     if (x.TipoTelefone == null)
+                     {
+                         x.Numero = x.Numero.Replace("(0", "(");
+                         if (x.TipoTelefone == null)
+                             x.TipoTelefone = 1;
+                         if (x.Numero.Trim().Contains("Cel."))
+                         {
+                             x.TipoTelefone = 1;
+                             x.Numero = x.Numero.Replace("Cel.", "").Trim();
+                         }
+                         if (x.Numero.Trim().Contains("Res."))
+                         {
+                             x.TipoTelefone = 2;
+                             x.Numero = x.Numero.Replace("Res.", "").Trim();
+                         }
+                         if (x.Numero.Trim().Contains("Rec."))
+                         {
+                             x.TipoTelefone = 3;
+                             x.Numero = x.Numero.Replace("Rec.", "").Trim();
+                         }
+                         if (x.Numero.Trim().Contains("(aceita whatsapp)"))
+                         {
+                             x.TipoTelefone = 4;
+                             x.Numero = x.Numero.Replace("(aceita whatsapp)", "").Trim();
+                         }
+                         telefoneService.Editar(x);
+                     }
+                 });
+
+                ViewModel.Telefone[] telefones = _telefones.Select(x => new ViewModel.Telefone(x)).ToArray();
+
+
+                return telefones;
+            }
+
+        }
+
+        [HttpPost("SalvarTelefoneCandidato")]
+        public object SalvarTelefoneCandidato([FromBody] Telefone telefoneCanidato, [FromQuery] int idCandidato)
+        {
+            using (var telefoneService = new TelefoneService())
+            using (var service = new TelefoneCandidatoService())
+            {
+                bool success = true; string message = "";
+                if (telefoneCanidato.Id != 0)
+                {
+                    success = telefoneService.Editar(telefoneCanidato); message = "Telefone atualizado com sucesso!";
+                }
+                else
+                {
+                    var telefoneCandidato = new TelefoneCandidato()
+                    {
+                        IdCandidato = idCandidato,
+                        IdTelefoneNavigation = new Telefone()
+                        {
+
+                            Numero = telefoneCanidato.Numero,
+                            TipoTelefone = telefoneCanidato.TipoTelefone
+                        }
+                    };
+                    success = service.Salvar(telefoneCandidato); message = "Telefone adicionado com sucesso!";
+                }
+
+                return new { ok = success, message = success ? message : "Ocorreu um erro ao tentar salvar, tente novamente mais tarde!" };
+            }
+
+        }
+
+        [HttpGet("DeletarTelefoneCandidato")]
+        public object DeletarTelefoneCandidato(int IdTelefone)
+        {
+            using (var service = new TelefoneCandidatoService())
+            {
+
+
+                bool success = service.RemoverTelefoneCandidatoPorIdTelefone(IdTelefone);
+                return new { ok = success, message = success ? "Telefone de contato excluído com sucesso!" : "Ocorreu um erro ao tentar excluir, tente novamente mais tarde!" };
+            }
+
+        }
+        #endregion
     }
 }

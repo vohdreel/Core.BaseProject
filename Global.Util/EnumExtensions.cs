@@ -22,7 +22,6 @@ namespace Global.Util
         public static string GetEnumDisplayName(this Enum value)
         {
             var fi = value.GetType().GetField(value.ToString());
-
             var attributes =
                 (DisplayAttribute[])fi.GetCustomAttributes(
                 typeof(DisplayAttribute), false);
@@ -65,6 +64,58 @@ namespace Global.Util
             {
                 return value.ToString();
             }
+        }
+
+        public static T GetValueFromName<T>(string name)
+        {
+            var type = typeof(T);
+            if (!type.IsEnum) throw new InvalidOperationException();
+
+            foreach (var field in type.GetFields())
+            {
+                var attribute = Attribute.GetCustomAttribute(field,
+                    typeof(DisplayAttribute)) as DisplayAttribute;
+                if (attribute != null)
+                {
+                    if (attribute.Name.ToLower().RemoveDiacritics() == name.ToLower().RemoveDiacritics())
+                    {
+                        return (T)field.GetValue(null);
+                    }
+                }
+                else
+                {
+                    if (field.Name.ToLower().RemoveDiacritics() == name.ToLower().RemoveDiacritics())
+                        return (T)field.GetValue(null);
+                }
+            }
+
+            return default(T);
+        }
+
+        public static T GetValueFromShortName<T>(string name)
+        {
+            var type = typeof(T);
+            if (!type.IsEnum) throw new InvalidOperationException();
+
+            foreach (var field in type.GetFields())
+            {
+                var attribute = Attribute.GetCustomAttribute(field,
+                    typeof(DisplayAttribute)) as DisplayAttribute;
+                if (attribute != null)
+                {
+                    if (attribute.ShortName.ToLower().RemoveDiacritics() == name.ToLower().RemoveDiacritics())
+                    {
+                        return (T)field.GetValue(null);
+                    }
+                }
+                else
+                {
+                    if (field.Name.ToLower().RemoveDiacritics() == name.ToLower().RemoveDiacritics())
+                        return (T)field.GetValue(null);
+                }
+            }
+
+            return default(T);
         }
 
         public static int GetEnumOrder(this Enum value)

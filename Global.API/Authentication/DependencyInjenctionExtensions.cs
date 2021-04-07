@@ -51,10 +51,6 @@ namespace Global.API.Authentication
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
-                options.Secure = CookieSecurePolicy.Always;
-                options.HttpOnly = HttpOnlyPolicy.Always;
-                options.CheckConsentNeeded = context => true;
-
                 options.MinimumSameSitePolicy = SameSiteMode.None;
                 options.OnAppendCookie = cookieContext =>
                    CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);

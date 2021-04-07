@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Global.DAO.Model;
-using Global.DAO.Procedure.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Global.DAO.Procedure.Models;
 
 namespace Global.DAO.Context
 {
@@ -19,6 +19,7 @@ namespace Global.DAO.Context
         }
 
         public virtual DbSet<AreaInteresse> AreaInteresse { get; set; }
+        public virtual DbSet<Banner> Banner { get; set; }
         public virtual DbSet<Being> Being { get; set; }
         public virtual DbSet<Candidato> Candidato { get; set; }
         public virtual DbSet<Candidatura> Candidatura { get; set; }
@@ -29,6 +30,10 @@ namespace Global.DAO.Context
         public virtual DbSet<EnumAgrupamento> EnumAgrupamento { get; set; }
         public virtual DbSet<EnumPais> EnumPais { get; set; }
         public virtual DbSet<EnumTipoDocumento> EnumTipoDocumento { get; set; }
+        public virtual DbSet<ExperienciaProfissional> ExperienciaProfissional { get; set; }
+        public virtual DbSet<FormacaoCandidato> FormacaoCandidato { get; set; }
+        public virtual DbSet<LogCandidato> LogCandidato { get; set; }
+        public virtual DbSet<Logger> Logger { get; set; }
         public virtual DbSet<Machine> Machine { get; set; }
         public virtual DbSet<MechaUser> MechaUser { get; set; }
         public virtual DbSet<Notificacao> Notificacao { get; set; }
@@ -50,8 +55,11 @@ namespace Global.DAO.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();
+
 
             modelBuilder.Entity<AreaInteresse>(entity =>
             {
@@ -64,7 +72,14 @@ namespace Global.DAO.Context
                     .WithMany(p => p.AreaInteresse)
                     .HasForeignKey(d => d.IdEnumAgrupamento)
                     .HasConstraintName("FK_EnumAgrupamento_AreaInteresse");
-            });        
+            });
+
+            modelBuilder.Entity<Banner>(entity =>
+            {
+                entity.Property(e => e.Base64Code).IsUnicode(false);
+
+                entity.Property(e => e.UrlRedirect).IsUnicode(false);
+            });
 
             modelBuilder.Entity<Being>(entity =>
             {
@@ -73,13 +88,32 @@ namespace Global.DAO.Context
 
             modelBuilder.Entity<Candidato>(entity =>
             {
+                entity.HasIndex(e => e.Idlegado)
+                    .HasName("Candidato_idLegado");
+
                 entity.Property(e => e.Agrupadores).IsUnicode(false);
 
                 entity.Property(e => e.AmputacaoMembrosInferiores).IsUnicode(false);
 
                 entity.Property(e => e.AmputacaoMembrosSuperiores).IsUnicode(false);
 
+                entity.Property(e => e.AreaAtuacao)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
                 entity.Property(e => e.Bairro).IsUnicode(false);
+
+                entity.Property(e => e.CargoAtual)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.CargoInteresse)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.CargoInteresseSecundario)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.CategoriaCnh).IsUnicode(false);
 
@@ -105,15 +139,21 @@ namespace Global.DAO.Context
 
                 entity.Property(e => e.EmailSecundario).IsUnicode(false);
 
+                entity.Property(e => e.EmpresaAtual)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
                 entity.Property(e => e.Endereco).IsUnicode(false);
 
                 entity.Property(e => e.Estado).IsUnicode(false);
 
-                entity.Property(e => e.EstadoCivil).IsUnicode(false);
-
                 entity.Property(e => e.EstadoNascimento).IsUnicode(false);
 
                 entity.Property(e => e.Fcmtoken).IsUnicode(false);
+
+                entity.Property(e => e.FotoCandidato)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.IdAspNetUsers).IsUnicode(false);
 
@@ -125,6 +165,10 @@ namespace Global.DAO.Context
 
                 entity.Property(e => e.Idlegado).IsUnicode(false);
 
+                entity.Property(e => e.IntervaloData)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
                 entity.Property(e => e.Latitude).IsUnicode(false);
 
                 entity.Property(e => e.LocalPreferencia).IsUnicode(false);
@@ -133,7 +177,15 @@ namespace Global.DAO.Context
 
                 entity.Property(e => e.Longitude).IsUnicode(false);
 
+                entity.Property(e => e.MatematicaFinanceira)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
                 entity.Property(e => e.Nacionalidade).IsUnicode(false);
+
+                entity.Property(e => e.NiveEspanhol).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.NiveIngles).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.NivelProfissionalVagaDesejada).HasDefaultValueSql("((0))");
 
@@ -142,6 +194,10 @@ namespace Global.DAO.Context
                 entity.Property(e => e.NomeMae).IsUnicode(false);
 
                 entity.Property(e => e.NomePai).IsUnicode(false);
+
+                entity.Property(e => e.NomeProcesso)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.Numero).IsUnicode(false);
 
@@ -153,9 +209,17 @@ namespace Global.DAO.Context
 
                 entity.Property(e => e.Pais).IsUnicode(false);
 
-                entity.Property(e => e.Raca).IsUnicode(false);
+                entity.Property(e => e.SenhaCriptografada).IsUnicode(false);
 
                 entity.Property(e => e.Sexo).IsUnicode(false);
+
+                entity.Property(e => e.SituacaoPlanoSaude)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.TesteOnlineCandidato)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.TipoVaga).IsUnicode(false);
             });
@@ -190,7 +254,7 @@ namespace Global.DAO.Context
             modelBuilder.Entity<CargoInteresse>(entity =>
             {
                 entity.HasOne(d => d.IdCandidatoNavigation)
-                    .WithMany(p => p.CargoInteresse)
+                    .WithMany(p => p.CargoInteresseNavigation)
                     .HasForeignKey(d => d.IdCandidato)
                     .HasConstraintName("FK_Candidato_CargoInteresse");
 
@@ -264,6 +328,53 @@ namespace Global.DAO.Context
             modelBuilder.Entity<EnumTipoDocumento>(entity =>
             {
                 entity.Property(e => e.NomeTipoDocumento).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ExperienciaProfissional>(entity =>
+            {
+                entity.Property(e => e.Cargo)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.Empresa)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.ResumoAtividades)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.HasOne(d => d.IdCandidatoNavigation)
+                    .WithMany(p => p.ExperienciaProfissional)
+                    .HasForeignKey(d => d.IdCandidato)
+                    .HasConstraintName("FK_Candidato_ExperienciaProfissional");
+            });
+
+            modelBuilder.Entity<FormacaoCandidato>(entity =>
+            {
+                entity.Property(e => e.Curso).IsUnicode(false);
+
+                entity.Property(e => e.Instituicao).IsUnicode(false);
+
+                entity.HasOne(d => d.IdCandidatoNavigation)
+                    .WithMany(p => p.FormacaoCandidato)
+                    .HasForeignKey(d => d.IdCandidato)
+                    .HasConstraintName("FK_Candidato_FormacaoCandidato");
+            });
+
+            modelBuilder.Entity<LogCandidato>(entity =>
+            {
+                entity.HasIndex(e => e.IdLegado)
+                    .HasName("log_candidato_id_legado");
+
+                entity.Property(e => e.IdLegado).IsUnicode(false);
+
+                entity.Property(e => e.StackTrace).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Logger>(entity =>
+            {
+                entity.Property(e => e.TextoLog).IsUnicode(false);
             });
 
             modelBuilder.Entity<Machine>(entity =>
@@ -362,6 +473,10 @@ namespace Global.DAO.Context
                 entity.Property(e => e.Numero).IsUnicode(false);
 
                 entity.Property(e => e.Requisitos).IsUnicode(false);
+
+                entity.Property(e => e.ResumoAtividades)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.UrlVaga)
                     .IsUnicode(false)

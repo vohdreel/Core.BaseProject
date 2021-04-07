@@ -67,6 +67,19 @@ namespace Global.DAO.Service
         }
 
 
+        public Cargo BuscarCargoPorReferenceNumberENomeCargo(int referenceNumber, string nomeCargo)
+        {
+            return Repository.Get(x => x.NomeCargo == nomeCargo && x.ReferenceNumber == referenceNumber)
+                .FirstOrDefault();
+        }
+
+        public Cargo BuscarCargoPorNome(string nomeCargo)
+        {
+            return Repository.Get(x => x.NomeCargo == nomeCargo)
+                .FirstOrDefault();
+        }
+
+
         public Cargo BuscarCargoFeed(string nomeCargo)
         {
             return Repository.Get(x => x.NomeCargo == nomeCargo && x.IdEnumAgrupamentoNavigation.NomeAgrupamento == "Prestação de Serviços")

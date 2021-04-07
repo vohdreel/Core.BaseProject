@@ -46,6 +46,7 @@ namespace Global.DAO.Model
         public int? ReferenceNumber { get; set; }
         [StringLength(200)]
         public string UrlVaga { get; set; }
+        public string ResumoAtividades { get; set; }
 
         [ForeignKey(nameof(IdCargo))]
         [InverseProperty(nameof(Cargo.Vaga))]

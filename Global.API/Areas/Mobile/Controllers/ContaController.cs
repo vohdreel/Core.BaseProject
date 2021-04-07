@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web.Http;
+using DeviceDetectorNET;
 using Global.DAO.Model;
 using Global.DAO.Service;
 using Global.Util;
@@ -12,6 +15,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using Environment = Gyan.Web.Identity.Data.Authentication.Environment;
 using FromBodyAttribute = Microsoft.AspNetCore.Mvc.FromBodyAttribute;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
@@ -49,55 +54,60 @@ namespace Global.API.Areas.Mobile.Controllers
         }
 
         [HttpGet("Login")]
-        public async Task<object> appLogin(string email, string password, bool ManterConectado)
+        public async Task<object> appLogin(string email, string password, bool ManterConectado, string FCMToken)
         {
             password = System.Uri.UnescapeDataString(password);
             IdentityUser user = new IdentityUser();
             user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                user = await _userManager.FindByNameAsync(email);
             if (user != null && await _userManager.CheckPasswordAsync(user, password))
             {
-                // user is valid do whatever you want
-                if (!await _userManager.IsEmailConfirmedAsync(user))
-                    return new
-                    {
-                        unverified = true,
-                        Ok = false,
-                        Message = "Essa conta ainda não foi confirmada. Por favor verifique sua caixa de mensagens."
-                    };
-
+                //user is valid do whatever you want
+                //if (!await _userManager.IsEmailConfirmedAsync(user))
+                //    return new
+                //    {
+                //        unverified = true,
+                //        Ok = false,
+                //        Message = "Essa conta ainda não foi confirmada. Por favor verifique sua caixa de mensagens. (Em alguns casos, a mensagem pode ser marcado como spam)!"
+                //    };
 
                 var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
 
                 if (result.Succeeded)
                 {
-                    //await _signInManager.SignInAsync(user, true);
                     // adicionar token 
                     var roles = await _userManager.GetRolesAsync(user);
                     var token = TokenService.GenerateToken(user, roles.ToList());
 
-                    //HttpContext.Session.SetString("JWToken", token);
-
                     HttpContext.Response.Cookies
-                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
+                        .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment")));
 
                     ServiceCandidato service = new ServiceCandidato();
 
                     if (ManterConectado)
                     {
                         service.AlternarMaterConectado(user.Id, true);
-
                     }
+
+                    service.AlternarFcmTokenConectado(user.Id, FCMToken);
+
+
                     Candidato candidato = service.BuscarCandidato(user.Id);
 
+                    dynamic resultData = new ExpandoObject();
 
+                    resultData.idCandidato = candidato.Id;
+                    resultData.ok = true;
+                    resultData.message = "Logged in";
 
-                    return new
-                    {
+                    DeviceDetector detector = new DeviceDetector(HttpContext.Request.Headers["User-Agent"].ToString());
+                    detector.Parse();
 
-                        IdCandidato = candidato.Id,
-                        Ok = true,
-                        Message = "Logged in"
-                    };
+                    if (detector.GetOs().Match.Name == "iOS")
+                        resultData.token = token;
+
+                    return resultData;
                 }
 
             }
@@ -126,10 +136,17 @@ namespace Global.API.Areas.Mobile.Controllers
                         HttpContext.Response.Cookies
                             .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment")));
 
-                        return new
-                        {
-                            ok = true
-                        };
+                        dynamic resultData = new ExpandoObject();
+
+                        resultData.ok = true;
+
+                        DeviceDetector detector = new DeviceDetector(HttpContext.Request.Headers["User-Agent"].ToString());
+                        detector.Parse();
+
+                        if (detector.GetOs().Match.Name == "iOS")
+                            resultData.token = token;
+
+                        return resultData;
                     }
                 }
             }
@@ -163,10 +180,44 @@ namespace Global.API.Areas.Mobile.Controllers
 
         }
 
-        public async Task<bool> SendEmailForEmailConfirmation(string email, IdentityUser user)
+        [AllowAnonymous]
+        [HttpGet("getSession")]
+        public object getJwt()
         {
+            return HttpContext.Session;
+
+        }
+
+        [AllowAnonymous]
+        [HttpGet("getDevice")]
+        public object getDevice()
+        {
+            var dd = new DeviceDetector(HttpContext.Request.Headers["User-Agent"].ToString());
+            dd.Parse();
+
+            return dd.GetOs();
+
+        }
+
+        [AllowAnonymous]
+        [HttpGet("getCookies")]
+        public object getCookies()
+        {
+            return HttpContext.Request.Cookies;
+
+        }
+
+        [HttpGet("FakeEmail")]
+        public async Task<bool> FakeEmail()
+        {
+
             try
             {
+
+                var user = await _userManager.FindByNameAsync("44649563860");
+                string email = "phmqaaa@gmail.com";
+
+
                 await _userManager.UpdateSecurityStampAsync(user);
 
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -184,7 +235,56 @@ namespace Global.API.Areas.Mobile.Controllers
                         }
                 };
 
-                await _emailService.SendEmailForEmailConfirmation(options);
+                options = _emailService.ReturnConfirmationBody(options);
+                var client = new SendGridClient("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");
+                var from = new EmailAddress("management.globalempregos@gmail.com", "Global Empregos");
+                var subject = options.Subject;
+                var to = new EmailAddress(email);
+                //var plainTextContent = "and easy to do anywhere, even with C#";
+                var htmlContent = options.Body;
+                var msg = MailHelper.CreateSingleEmail(from, to, subject, htmlContent, htmlContent);
+                var response = await client.SendEmailAsync(msg);
+
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> SendEmailForEmailConfirmation(string email, IdentityUser user, string nomeCandidato)
+        {
+            try
+            {
+                await _userManager.UpdateSecurityStampAsync(user);
+
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                var emailConfirmLink = Url.Action("ConfirmEmail", "Account",
+                            new { email = email, token = token }, Request.Scheme);
+
+                UserEmailOptions options = new UserEmailOptions
+                {
+                    ToEmails = new List<string>() { user.Email },
+                    PlaceHolders = new List<KeyValuePair<string, string>>()
+                        {
+                            new KeyValuePair<string, string>("{{UserName}}", nomeCandidato),
+                            new KeyValuePair<string, string>("{{Link}}", emailConfirmLink)
+                        }
+                };
+
+                options = _emailService.ReturnConfirmationBody(options);
+                var client = new SendGridClient("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");
+                var from = new EmailAddress("management.globalempregos@gmail.com", "Global Empregos");
+                var subject = options.Subject;
+                var to = new EmailAddress(user.Email);
+                var htmlContent = options.Body;
+                var msg = MailHelper.CreateSingleEmail(from, to, subject, htmlContent, htmlContent);
+                var response = await client.SendEmailAsync(msg);
+
+
                 return true;
             }
             catch (Exception e)
@@ -196,12 +296,19 @@ namespace Global.API.Areas.Mobile.Controllers
 
         [HttpPost("EnviarLinkRedefinirSenha")]
         [AllowAnonymous]
-        public async Task<object> ForgotPassword(string email)
+        public async Task<object> ForgotPassword([FromQuery] string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
 
-            if (user != null && await _userManager.IsEmailConfirmedAsync(user))
+            var user = await _userManager.FindByEmailAsync(email);
+            //if (user != null && await _userManager.IsEmailConfirmedAsync(user))
+            if (user != null)   
             {
+                //if (user != null && await _userManager.IsEmailConfirmedAsync(user))
+                //{
+                string nomeCandidato = new CandidatoService()
+                    .BuscarCandidato(user.Id)
+                    .Nome;
+
                 await _userManager.RemoveAuthenticationTokenAsync(user, TokenOptions.DefaultProvider, "ResetPassword");
 
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -214,14 +321,19 @@ namespace Global.API.Areas.Mobile.Controllers
                     ToEmails = new List<string>() { user.Email },
                     PlaceHolders = new List<KeyValuePair<string, string>>()
                         {
-                            new KeyValuePair<string, string>("{{UserName}}", user.UserName),
+                            new KeyValuePair<string, string>("{{UserName}}", nomeCandidato),
                             new KeyValuePair<string, string>("{{Link}}", passwordResetLink)
                         }
                 };
 
-                await _emailService.SendEmailForForgotPassword(options);
-
-                //_logger.Log(LogLevel.Warning, passwordResetLink);
+                options = _emailService.ReturnForgotPasswordBody(options);
+                var client = new SendGridClient("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");
+                var from = new EmailAddress("management.globalempregos@gmail.com", "Global Empregos");
+                var subject = options.Subject;
+                var to = new EmailAddress(user.Email);
+                var htmlContent = options.Body;
+                var msg = MailHelper.CreateSingleEmail(from, to, subject, htmlContent, htmlContent);
+                var response = await client.SendEmailAsync(msg);
 
                 return new
                 {
@@ -230,6 +342,7 @@ namespace Global.API.Areas.Mobile.Controllers
                         "Por favor, verifique sua caixa de mensagens (Em alguns casos, a mensagem pode ser marcado como spam)!"
 
                 };
+                //}
             }
 
             return new
@@ -241,6 +354,70 @@ namespace Global.API.Areas.Mobile.Controllers
             };
 
         }
+
+
+        [Authorize]
+        [HttpGet("InAppRedefinirSenha")]
+        public async Task<object> ForgotPassword()
+        {
+
+            var user = await _userManager.FindByIdAsync(User.FindFirstValue("IdAspNetUser"));
+            if (user != null)
+            {
+
+                //if (user != null && await _userManager.IsEmailConfirmedAsync(user))
+                //{
+                string nomeCandidato = new CandidatoService()
+                    .BuscarCandidato(user.Id)
+                    .Nome;
+
+                await _userManager.RemoveAuthenticationTokenAsync(user, TokenOptions.DefaultProvider, "ResetPassword");
+
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                var passwordResetLink = Url.Action("ResetPassword", "Account",
+                        new { email = user.Email, token = token }, Request.Scheme);
+
+                UserEmailOptions options = new UserEmailOptions
+                {
+                    ToEmails = new List<string>() { user.Email },
+                    PlaceHolders = new List<KeyValuePair<string, string>>()
+                        {
+                            new KeyValuePair<string, string>("{{UserName}}", nomeCandidato),
+                            new KeyValuePair<string, string>("{{Link}}", passwordResetLink)
+                        }
+                };
+
+                options = _emailService.ReturnForgotPasswordBody(options);
+                var client = new SendGridClient("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");
+                var from = new EmailAddress("management.globalempregos@gmail.com", "Global Empregos");
+                var subject = options.Subject;
+                var to = new EmailAddress(user.Email);
+                var htmlContent = options.Body;
+                var msg = MailHelper.CreateSingleEmail(from, to, subject, htmlContent, htmlContent);
+                var response = await client.SendEmailAsync(msg);
+
+                return new
+                {
+                    ok = true,
+                    message = "Enviamos pare esse endereço de email as instruções para redefinir sua senha.<br /><br />" +
+                        "Por favor, verifique sua caixa de mensagens (Em alguns casos, a mensagem pode ser marcado como spam)!"
+
+                };
+                //}
+            }
+            return new
+            {
+                ok = false,
+                message = "Não existe nenhuma conta registrada usando este email.<br /><br />" +
+                        "Verifique se digitou o endereço de email corretamente e tente novamente!"
+
+            };
+
+        }
+
+
+
 
         [Authorize]
         [HttpGet("GetClaims")]
@@ -254,7 +431,6 @@ namespace Global.API.Areas.Mobile.Controllers
 
             };
         }
-
 
         [AllowAnonymous]
         [HttpGet("VerificarEmail")]
@@ -279,14 +455,12 @@ namespace Global.API.Areas.Mobile.Controllers
             }
         }
 
-
-
         [AllowAnonymous]
         [HttpPost("CadastrarUsuario")]
         public async Task<object> SingUp([FromBody] dynamic userInfo)
         {
             var user = new IdentityUser();
-            user.UserName = userInfo.UserName;
+            user.UserName = userInfo.Cpf;
             user.UserName = user.UserName.RemoveDiacritics();
             user.Email = userInfo.Email;
 
@@ -303,6 +477,8 @@ namespace Global.API.Areas.Mobile.Controllers
                     Cpf = userInfo.Cpf,
                     Nome = userInfo.Nome,
                     Email = userInfo.Email,
+                    SenhaCriptografada = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(userPWD)),
+                    DataInscricao = DateTime.Now,
                     TelefoneCandidato = new List<TelefoneCandidato>() {
                         new TelefoneCandidato(){
                             IdTelefoneNavigation = new Telefone(){
@@ -320,7 +496,8 @@ namespace Global.API.Areas.Mobile.Controllers
                 {
                     try
                     {
-                        await SendEmailForEmailConfirmation(user.Email, user);
+                        await SendEmailForEmailConfirmation(user.Email, user, candidato.Nome);
+
                     }
                     catch (Exception e) { }
                 }
@@ -360,7 +537,6 @@ namespace Global.API.Areas.Mobile.Controllers
             }
         }
 
-
         [AllowAnonymous]
         [HttpPost("SalvarPreferencias")]
         public object SalvarPreferencias([FromBody] ViewModel.Preferencias preferencias)
@@ -390,7 +566,6 @@ namespace Global.API.Areas.Mobile.Controllers
 
 
         }
-
 
         [Authorize]
         [HttpGet("Logout")]

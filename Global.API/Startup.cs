@@ -19,7 +19,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-//using System.Web.Http;
 using System.Net.Http;
 using System.Net;
 using Global.API.Data;
@@ -35,6 +34,8 @@ using Global.DAO.Service;
 using Global.API.Authentication;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http.Features;
 using Global.DAO.Interface.Service;
 using Global.DAO.Interface.Repository;
 using Global.DAO.Repository;
@@ -65,6 +66,15 @@ namespace Global.API
                       .AddDefaultTokenProviders();
             }
 
+            services.Configure<FormOptions>(options =>
+            {
+                options.ValueLengthLimit = int.MaxValue;
+                options.MultipartBodyLengthLimit = long.MaxValue; // <-- ! long.MaxValue
+                options.MultipartBoundaryLengthLimit = int.MaxValue;
+                options.MultipartHeadersCountLimit = int.MaxValue;
+                options.MultipartHeadersLengthLimit = int.MaxValue;
+            });
+
             // Set token life span to 5 hours
             services.Configure<DataProtectionTokenProviderOptions>(o =>
                 o.TokenLifespan = TimeSpan.FromMinutes(5));
@@ -78,7 +88,7 @@ namespace Global.API
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                    builder => builder.WithOrigins("http://localhost:8100", "https://globalempregosapi.azurewebsites.net/")
+                    builder => builder.WithOrigins("http://localhost:8100", "https://globalempregosapi.azurewebsites.net/", "https://globalempregosapi-dev.azurewebsites.net/")
                     .SetIsOriginAllowed(origin => true)
                     .AllowAnyMethod()
                     .AllowAnyHeader()
@@ -141,6 +151,8 @@ namespace Global.API
                 };
             });
 
+
+
             //Configuração do Cookie Authentication
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                       .AddCookie(options =>
@@ -154,6 +166,7 @@ namespace Global.API
 
                           //Configuração geral dos cookies para validar no Azure Dev Ops
                           options.Cookie.SameSite = SameSiteMode.None;
+                          options.Cookie.HttpOnly = true;
 
                           if (Configuration.GetProperty<bool>("ApiConfig", "useEntityCore"))
                           {
@@ -196,7 +209,7 @@ namespace Global.API
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
-                options.Password.RequiredUniqueChars = 6;
+                options.Password.RequiredUniqueChars = 5;
 
                 // Lockout settings  
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
@@ -321,11 +334,9 @@ namespace Global.API
 
             app.UseRouting();
 
-            app.UseCookiePolicy();
-
             app.UseCors("CorsPolicy");
-            app.UseAuthentication();
             app.UseAuthorization();
+            app.UseAuthentication();
 
             if (Configuration.GetProperty<bool>("ApiConfig", "useMVC"))
             {

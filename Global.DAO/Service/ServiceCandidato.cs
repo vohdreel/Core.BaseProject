@@ -37,21 +37,48 @@ namespace Global.DAO.Service
             return RepositoryCandidato.Get();
         
         }
+        public Candidato[] BuscarMassaDeCandidatos()
+        {
 
+            return Repository.Get(x => !string.IsNullOrEmpty(x.IdAspNetUsers) && !string.IsNullOrEmpty(x.SenhaCriptografada)).OrderByDescending(x=> x.Id).Take(100).ToArray();
+
+
+        }
+
+        public Candidato BuscarCandidato(int IdCandidato)
         public bool Salvar(Candidato candidato)
         {
+
+            return Repository.Get(x => x.Id == IdCandidato, includeProperties: "TelefoneCandidato").FirstOrDefault();
+
+
             return RepositoryCandidato.Insert(candidato);
         
         
         }
 
-        public bool Atualizar(Candidato candidato)
+        public Candidato BuscarCandidatoPorIdLegado(string IdLegado)
         {
-            return RepositoryCandidato.Update(candidato);
+
+            return Repository.Get(x => x.Idlegado == IdLegado).FirstOrDefault();
+
+
+        }
+        public bool CadastrarCandidato(Candidato candidato)
+        {
+            return Repository.Insert(candidato);
+
 
         }
 
-        public bool Excluir(int IdCandidato)
+        public bool CadastrarCandidato(Candidato candidato, out string exception)
+        {
+            return Repository.InsertWithException(candidato, out exception);
+
+
+        }
+
+        public bool AtualizarCandidato(Candidato candidato)
         {
             bool resultado = RepositoryCandidato.Delete(IdCandidato);
 
@@ -70,16 +97,41 @@ namespace Global.DAO.Service
         public bool ExisteCpfUsuario(string cpf)
         {
 
-            return RepositoryCandidato.Get(x => x.Cpf == cpf).FirstOrDefault() != null;
+            return Repository.Get(x => x.Cpf == cpf.Replace(".", "").Replace("-", "")).FirstOrDefault() != null;
 
 
         }
 
+        public bool ExisteIdlegadoUsuario(string idlegado)
+        {
+
+            return Repository.Get(x => x.Idlegado == idlegado).FirstOrDefault() != null;
+
+
+        }
+
+        public void DeleteCandidatosDuplicados()
+        {
+
+            Candidato[] candidatosDuplicados = Repository.Get(x => !string.IsNullOrEmpty(x.Idlegado) && string.IsNullOrEmpty(x.IdAspNetUsers));
+
+            Repository.DeleteAll(candidatosDuplicados);
+        
+        
+        }
         public void AlternarMaterConectado(string IdAspNetUsers, bool value)
         {
             Candidato candidato = RepositoryCandidato.Get(x => x.IdAspNetUsers == IdAspNetUsers).FirstOrDefault();
             candidato.MaterConectado = value;
             RepositoryCandidato.Update(candidato); 
+
+        }
+
+        public void AlternarFcmTokenConectado(string IdAspNetUsers, string fcmToken)
+        {
+            Candidato candidato = Repository.Get(x => x.IdAspNetUsers == IdAspNetUsers).FirstOrDefault();
+            candidato.Fcmtoken = fcmToken;
+            Repository.Update(candidato);
 
         }
 
@@ -112,13 +164,11 @@ namespace Global.DAO.Service
             {
                 fullAddress += candidato.Endereco.Trim();
                 if (!string.IsNullOrEmpty(candidato.Numero))
-                {
                     fullAddress += (", " + candidato.Numero.Trim());
-                    if (!string.IsNullOrEmpty(candidato.Cep))
-                    {
-                        fullAddress += (" - " + candidato.Cep.Trim());
-                    }
-                }
+                if (!string.IsNullOrEmpty(candidato.Cep))
+                    fullAddress += (" - " + candidato.Cep.Trim());
+
+
             }
 
             return fullAddress;
@@ -148,6 +198,16 @@ namespace Global.DAO.Service
 
             return candidato;
 
+        }
+
+        public Candidato[] VerificarCandidatoSemUsuario()
+        {
+            return Repository.Get(x => string.IsNullOrEmpty(x.IdAspNetUsers)).ToArray();
+
+        }
+        public GlobalContext GetContext()
+        {
+            return Repository.GetContext();
         }
 
     }

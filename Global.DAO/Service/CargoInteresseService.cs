@@ -43,7 +43,7 @@ namespace Global.DAO.Service
         public CargoInteresse[] BuscarTodosPorCandidato(int idCandidato)
         {
 
-            return Repository.Get(x => x.IdCandidato == idCandidato).ToArray();
+            return Repository.Get(x => x.IdCandidato == idCandidato, includeProperties: "IdCargoNavigation").ToArray();
 
         }
 

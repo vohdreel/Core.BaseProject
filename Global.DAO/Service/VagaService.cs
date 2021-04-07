@@ -1,4 +1,5 @@
-﻿using Global.DAO.Context;
+﻿
+using Global.DAO.Context;
 using Global.DAO.Model;
 using Global.DAO.Procedure.Models;
 using Global.DAO.Repository;
@@ -214,14 +215,12 @@ namespace Global.DAO.Service
             {
                 fullAddress += vaga.Endereco.Trim();
                 if (!string.IsNullOrEmpty(vaga.Numero))
-                {
                     fullAddress += (", " + vaga.Numero.Trim());
-                    if (!string.IsNullOrEmpty(vaga.Cep))
-                    {
-                        fullAddress += (" - " + vaga.Cep.Trim());
-                    }
-                }
+                if (!string.IsNullOrEmpty(vaga.Cep))
+                    fullAddress += (" - " + vaga.Cep.Trim());
+
             }
+            fullAddress += vaga.Cidade + ", " + vaga.Estado;
 
             return fullAddress;
 
@@ -239,6 +238,15 @@ namespace Global.DAO.Service
                 return "https://via.placeholder.com/50x50";
 
         }
+
+        public bool VerificarVagaPorReferenceNumber(int referenceNumber) 
+        {
+            return Repository.Get(x => x.ReferenceNumber == referenceNumber).FirstOrDefault() != null;
+        
+        
+        
+        }
+
 
 
         public bool Salvar(Vaga Dados)
@@ -298,13 +306,6 @@ namespace Global.DAO.Service
             return resultado;
         }
 
-
-        public bool VerificarVagaPorReferenceNumber(int referenceNumber)
-        {
-            return Repository.Get(x => x.ReferenceNumber == referenceNumber).FirstOrDefault() != null;
-
-
-        }
 
         public GlobalContext GetContext()
         {

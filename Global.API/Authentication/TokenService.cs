@@ -53,8 +53,9 @@ namespace Gyan.Web.Identity.Data.Authentication
             cookie.HttpOnly = true;
             if (enviorment == Environment.Production)
             {
-                cookie.SameSite = SameSiteMode.None;
                 cookie.Secure = true;
+                cookie.SameSite = SameSiteMode.None;
+
             }
             return cookie;
         }
@@ -66,7 +67,7 @@ namespace Gyan.Web.Identity.Data.Authentication
             if (enviorment == Environment.Production)
             {
                 if (SameSiteCookiesServiceCollectionExtensions.DisallowsSameSiteNone(userAgent))
-                    cookie.SameSite = SameSiteMode.None;
+                    cookie.SameSite = SameSiteMode.Unspecified;
                 else
                     cookie.SameSite = SameSiteMode.None;
                 cookie.Secure = true;
