@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Global.DAO.Model;
 using Global.DAO.Service;
@@ -94,6 +95,21 @@ namespace Global.API.Areas.Mobile.Controllers
                 return notificacoes;
             }
 
+        }
+
+        [HttpGet("VerifyNotificationCandidato")]
+        public object VerifyNotificationCandidato()
+        {
+            using (var notifyService = new NotificacaoService())
+            using (var service = new CandidatoService())
+            {
+
+                Candidato candidato = service.BuscarCandidato(User.FindFirstValue("IdAspNetUser"));
+
+                return notifyService.QuantidadeNotificacaoNaoLidas(candidato.Id);
+
+
+            }
         }
 
         [AllowAnonymous]
