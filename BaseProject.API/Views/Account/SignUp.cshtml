@@ -1,0 +1,64 @@
+﻿@model BaseProject.API.Models.SignUpViewModel
+@{
+    Layout = "_LayoutMetronicLogin";
+    ViewData["Title"] = "Cadastro";
+}
+
+
+<!--begin::Signup-->
+<div class="login-form login-signin py-11">
+    <!--begin::Form-->
+    <form class="form" asp-action="SignUp" onsubmit="CheckValidation();">
+        <!--begin::Title-->
+        <div class="text-center pb-8">
+            <h3 class="font-weight-bolder text-dark display5">Cadastre-se</h3>
+            <p class="text-muted font-weight-bold font-size-h4">Entre com seus dados para criar sua conta!</p>
+        </div>
+        <!--end::Title-->
+        <!--begin::Form group-->
+        <div class="form-group">
+            <label class="font-size-h6 font-weight-bolder text-dark" asp-for="UserName"></label>
+            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" asp-for="UserName" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+        <!--end::Form group-->
+        <!--begin::Form group-->
+        <div class="form-group">
+            <label class="font-size-h6 font-weight-bolder text-dark" asp-for="Email"></label>
+            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" asp-for="Email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <!--end::Form group-->
+        <!--begin::Form group-->
+        <div class="form-group">
+            <label class="font-size-h6 font-weight-bolder text-dark" asp-for="Password"></label>
+            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" asp-for="Password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <!--end::Form group-->
+        <!--begin::Form group-->
+        <div class="form-group">
+            <label class="font-size-h6 font-weight-bolder text-dark" asp-for="ConfirmPassword"></label>
+            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" asp-for="ConfirmPassword" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+        <!--end::Form group-->
+        <!--begin::Form group-->
+        <div class="form-group">
+            <label class="checkbox mb-0">
+                <input type="checkbox" onchange="submitBtn.disabled = !this.checked;" />Eu aceito os
+                <a href="#">termos e condições</a>.
+                <span></span>
+            </label>
+        </div>
+        <!--end::Form group-->
+        <!--begin::Form group-->
+        <div class="form-group d-flex flex-wrap flex-center pb-lg-0 pb-3">
+            <input type="submit" name="submitBtn" value="Cadastrar" class="btn btn-dark font-weight-bolder font-size-h6 px-8 py-4 my-3" disabled />
+            <a asp-action="Login" class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mx-4">Voltar</a>
+        </div>
+        <!--end::Form group-->
+    </form>
+    <!--end::Form-->
+</div>
+<!--end::Signup-->
