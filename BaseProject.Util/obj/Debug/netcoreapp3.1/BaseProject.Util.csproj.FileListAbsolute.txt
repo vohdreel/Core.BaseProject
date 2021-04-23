@@ -1,9 +1,0 @@
-C:\Core.BaseProject\BaseProject.Util\bin\Debug\netcoreapp3.1\BaseProject.Util.deps.json
-C:\Core.BaseProject\BaseProject.Util\bin\Debug\netcoreapp3.1\BaseProject.Util.dll
-C:\Core.BaseProject\BaseProject.Util\bin\Debug\netcoreapp3.1\BaseProject.Util.pdb
-C:\Core.BaseProject\BaseProject.Util\obj\Debug\netcoreapp3.1\BaseProject.Util.csprojAssemblyReference.cache
-C:\Core.BaseProject\BaseProject.Util\obj\Debug\netcoreapp3.1\BaseProject.Util.AssemblyInfoInputs.cache
-C:\Core.BaseProject\BaseProject.Util\obj\Debug\netcoreapp3.1\BaseProject.Util.AssemblyInfo.cs
-C:\Core.BaseProject\BaseProject.Util\obj\Debug\netcoreapp3.1\BaseProject.Util.csproj.CoreCompileInputs.cache
-C:\Core.BaseProject\BaseProject.Util\obj\Debug\netcoreapp3.1\BaseProject.Util.dll
-C:\Core.BaseProject\BaseProject.Util\obj\Debug\netcoreapp3.1\BaseProject.Util.pdb

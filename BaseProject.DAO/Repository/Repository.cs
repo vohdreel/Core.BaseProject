@@ -16,8 +16,8 @@ using System.Threading.Tasks;
 namespace BaseProject.DAO.Repository
 {
     public abstract class Repository<TEntity, TContext> : IDisposable, IRepository<TEntity>
-        where TEntity : class
-        where TContext : IdentityDbContext, new()
+    where TEntity : class
+    where TContext : IdentityDbContext, new()
     {
         internal TContext context;
         internal DbSet<TEntity> set;
@@ -867,4 +867,5 @@ namespace BaseProject.DAO.Repository
         }
 
     }
+
 }
