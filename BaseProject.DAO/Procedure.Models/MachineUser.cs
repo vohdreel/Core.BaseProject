@@ -12,7 +12,7 @@ namespace BaseProject.DAO.Procedure.Models
 
     }
 
-    public class EgressUnit
+    public class BattleUnit
     {
         public string MachineAlias { get; set; }
         public string beingName { get; set; }

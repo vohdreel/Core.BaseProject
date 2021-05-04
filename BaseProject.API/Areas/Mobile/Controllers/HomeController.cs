@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BaseProject.DAO.Interface.Service;
 using BaseProject.DAO.Model;
 using BaseProject.DAO.Procedure.Models;
 using BaseProject.DAO.Service;
@@ -15,7 +16,16 @@ namespace BaseProject.API.Areas.Mobile.Controllers
     [Authorize]
     public class HomeController : ControllerBase
     {
-        public HomeController() { }
+
+        private readonly IServiceMachine _machineService;
+
+        public HomeController(
+            IServiceMachine machineService
+            )
+        {
+            _machineService = machineService;
+
+        }
 
 
         [HttpGet("MobileIndex")]
@@ -37,55 +47,14 @@ namespace BaseProject.API.Areas.Mobile.Controllers
 
         }
 
-        //[HttpGet("ServiceTest")]
-        //[Authorize]
-        //public Machine ServiceTest()
-        //{
-        //    using (var service = new MachineService())
-        //    {
-        //        return service.GetMachines().First();
+        [HttpGet("UnitProcedure")]
+        [Authorize]
+        public BattleUnit[] Procedure()
+        {
 
-        //    }
+            return _machineService.ListarBattleUnits();
 
-        //}
-
-
-        //[HttpGet("UnreachableMethod")]
-        //[Authorize(Roles = "Overlord")]
-        //public Machine Unreachable()
-        //{
-        //    using (var service = new MachineService())
-        //    {
-        //        return service.GetMachines().First();
-
-        //    }
-
-        //}
-
-
-        //[HttpGet("ProcedureTest")]
-        //[Authorize]
-        //public MachineUser[] ProcedureTest()
-        //{
-        //    using (var service = new MachineService())
-        //    {
-        //        return service.GetMachinesByProcudeure();
-
-        //    }
-
-        //}
-
-        //[HttpGet("UnitProcedure")]
-        //[Authorize]
-        //public EgressUnit Procedure()
-        //{
-        //    using (var service = new MachineService())
-        //    {
-        //        return service.GetEgressByProcudeure();
-
-        //    }
-
-        //}
+        }
 
     }
 

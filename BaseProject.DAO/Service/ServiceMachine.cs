@@ -1,6 +1,8 @@
 ﻿using BaseProject.DAO.Interface.Repository;
 using BaseProject.DAO.Interface.Service;
 using BaseProject.DAO.Model;
+using BaseProject.DAO.Procedure.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +56,17 @@ namespace BaseProject.DAO.Service
         {
 
             return RepositoryMachine.Get();
+        }
+
+        public BattleUnit[] ListarBattleUnits()
+        {
+            return RepositoryMachine.
+                GetContext()
+                .Set<BattleUnit>()
+                .FromSqlInterpolated($"EXEC [SelectAllBattleUnits]")
+                .AsEnumerable()
+                .ToArray();
+
         }
     }
 }

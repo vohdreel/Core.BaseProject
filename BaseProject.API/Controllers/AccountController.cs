@@ -396,8 +396,6 @@ namespace BaseProject.API.Controllers
                     var msg = MailHelper.CreateSingleEmail(from, to, subject, htmlContent, htmlContent);
                     var response = await client.SendEmailAsync(msg);
 
-
-
                     _logger.Log(LogLevel.Warning, passwordResetLink);
 
                     return View("ForgotPasswordConfirmation");

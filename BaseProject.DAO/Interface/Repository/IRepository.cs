@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BaseProject.DAO.Context;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -6,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace BaseProject.DAO.Interface.Repository
 {
-    public interface IRepository<TEntity>
-        where TEntity : class
+    public interface IRepository<TEntity, TContext>
+    where TEntity : class
+    where TContext : IdentityDbContext, new()
     {
 
         bool Insert(TEntity entity);
@@ -26,6 +29,8 @@ namespace BaseProject.DAO.Interface.Repository
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = "",
             bool noTracking = false);
+
+        TContext GetContext();
 
 
     }

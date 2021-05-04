@@ -1,4 +1,5 @@
 ﻿using BaseProject.DAO.Model;
+using BaseProject.DAO.Procedure.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace BaseProject.DAO.Interface.Service
         bool Excluir(int idDocumento);
         Machine BuscarPorId(int idDocumento);
         Machine[] ListarPorUsuario(int idCandidato);
+        BattleUnit[] ListarBattleUnits();
     }
 }

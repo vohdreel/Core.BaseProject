@@ -2,7 +2,7 @@
 **Aqui estão templates de como incluir caso você precise criar objetos para Procedures**
 
 modelBuilder.Entity<MachineUser>().HasNoKey();
-modelBuilder.Entity<EgressUnit>().HasNoKey();
+modelBuilder.Entity<BattleUnit>().HasNoKey();
 modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();
 
 
