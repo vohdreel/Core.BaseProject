@@ -15,10 +15,7 @@ namespace BaseProject.API.Areas.Mobile.Controllers
     [Authorize]
     public class HomeController : ControllerBase
     {
-    private readonly I
-
-
-        public HomeController
+        public HomeController() { }
 
 
         [HttpGet("MobileIndex")]
