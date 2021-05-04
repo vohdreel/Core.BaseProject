@@ -7,30 +7,30 @@ define(["require", "exports"], function (require, exports) {
                 if (input.value === '') {
                     return { valid: true };
                 }
-                var v = input.value.toUpperCase();
-                if (!/^[0-9A-Z]{9}$/.test(v)) {
+                var value = input.value.toUpperCase();
+                if (!/^[0123456789ABCDEFGHJKLMNPQRSTUVWXYZ*@#]{9}$/.test(value)) {
                     return { valid: false };
                 }
-                var converted = v.split('').map(function (item) {
-                    var code = item.charCodeAt(0);
-                    return (code >= 'A'.charCodeAt(0) && code <= 'Z'.charCodeAt(0))
-                        ? (code - 'A'.charCodeAt(0) + 10) + ''
-                        : item;
+                var chars = value.split('');
+                var lastChar = chars.pop();
+                var converted = chars.map(function (c) {
+                    var code = c.charCodeAt(0);
+                    switch (true) {
+                        case (c === '*'): return 36;
+                        case (c === '@'): return 37;
+                        case (c === '#'): return 38;
+                        case (code >= 'A'.charCodeAt(0) && code <= 'Z'.charCodeAt(0)): return (code - 'A'.charCodeAt(0) + 10);
+                        default: return parseInt(c, 10);
+                    }
                 });
-                var length = converted.length;
-                var sum = 0;
-                for (var i = 0; i < length - 1; i++) {
-                    var num = parseInt(converted[i], 10);
-                    if (i % 2 !== 0) {
-                        num *= 2;
-                    }
-                    if (num > 9) {
-                        num -= 9;
-                    }
-                    sum += num;
-                }
-                sum = (10 - (sum % 10)) % 10;
-                return { valid: sum === parseInt(converted[length - 1], 10) };
+                var sum = converted
+                    .map(function (v, i) {
+                    var double = (i % 2 === 0) ? v : 2 * v;
+                    return Math.floor(double / 10) + double % 10;
+                })
+                    .reduce(function (a, b) { return a + b; }, 0);
+                var checkDigit = (10 - (sum % 10)) % 10;
+                return { valid: lastChar === "" + checkDigit };
             },
         };
     }

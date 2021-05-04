@@ -18,18 +18,58 @@ define(["require", "exports", "../core/Plugin"], function (require, exports, Plu
         __extends(Declarative, _super);
         function Declarative(opts) {
             var _this = _super.call(this, opts) || this;
+            _this.addedFields = new Map();
             _this.opts = Object.assign({}, {
                 html5Input: false,
                 pluginPrefix: 'data-fvp-',
                 prefix: 'data-fv-',
             }, opts);
+            _this.fieldAddedHandler = _this.onFieldAdded.bind(_this);
+            _this.fieldRemovedHandler = _this.onFieldRemoved.bind(_this);
             return _this;
         }
         Declarative.prototype.install = function () {
             var _this = this;
             this.parsePlugins();
             var opts = this.parseOptions();
-            Object.keys(opts).forEach(function (field) { return _this.core.addField(field, opts[field]); });
+            Object.keys(opts).forEach(function (field) {
+                if (!_this.addedFields.has(field)) {
+                    _this.addedFields.set(field, true);
+                }
+                _this.core.addField(field, opts[field]);
+            });
+            this.core
+                .on('core.field.added', this.fieldAddedHandler)
+                .on('core.field.removed', this.fieldRemovedHandler);
+        };
+        Declarative.prototype.uninstall = function () {
+            this.addedFields.clear();
+            this.core
+                .off('core.field.added', this.fieldAddedHandler)
+                .off('core.field.removed', this.fieldRemovedHandler);
+        };
+        Declarative.prototype.onFieldAdded = function (e) {
+            var _this = this;
+            var elements = e.elements;
+            if (!elements || elements.length === 0 || this.addedFields.has(e.field)) {
+                return;
+            }
+            this.addedFields.set(e.field, true);
+            elements.forEach(function (ele) {
+                var declarativeOptions = _this.parseElement(ele);
+                if (!_this.isEmptyOption(declarativeOptions)) {
+                    var mergeOptions = {
+                        selector: e.options.selector,
+                        validators: Object.assign({}, e.options.validators || {}, declarativeOptions.validators),
+                    };
+                    _this.core.setFieldOptions(e.field, mergeOptions);
+                }
+            });
+        };
+        Declarative.prototype.onFieldRemoved = function (e) {
+            if (e.field && this.addedFields.has(e.field)) {
+                this.addedFields.delete(e.field);
+            }
         };
         Declarative.prototype.parseOptions = function () {
             var _this = this;
@@ -176,10 +216,15 @@ define(["require", "exports", "../core/Plugin"], function (require, exports, Plu
                 if (items && items.length === 4) {
                     var v = this.toCamelCase(items[1]);
                     opts[v] = Object.assign({}, items[3]
-                        ? (_a = {}, _a[this.toCamelCase(items[3])] = value, _a) : { enabled: ('' === value || 'true' === value) }, opts[v]);
+                        ? (_a = {}, _a[this.toCamelCase(items[3])] = this.normalizeValue(value), _a) : { enabled: ('' === value || 'true' === value) }, opts[v]);
                 }
             }
             return { validators: opts };
+        };
+        Declarative.prototype.normalizeValue = function (value) {
+            return value === 'true'
+                ? true
+                : (value === 'false' ? false : value);
         };
         Declarative.prototype.toUpperCase = function (input) {
             return input.charAt(1).toUpperCase();

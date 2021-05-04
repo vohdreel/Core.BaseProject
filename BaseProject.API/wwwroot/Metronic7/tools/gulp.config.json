@@ -2,12 +2,12 @@
     "name": "metronic",
     "theme": "metronic",
     "desc": "Metronic build config file for Gulp",
-    "version": "7.0.1",
+    "version": "7.1.5",
     "config": {
         "debug": false,
         "compile": {
             "rtl": {
-                "enabled": false,
+                "enabled": true,
                 "skip": [
                     "select2",
                     "socicon",
@@ -19,22 +19,22 @@
                     "owl.carousel",
                     "fullcalendar",
                     "bootstrap-datepicker",
-                    "bootstrap-datetime-picker",
                     "bootstrap-switch",
+                    "tempusdominus-bootstrap-4",
                     "nouislider",
                     "tinymce",
-                    "sweetalert2"
+                    "sweetalert2",
+                    "jquery-mask-plugin"
                 ]
             },
-            "jsUglify": false,
+            "jsMinify": false,
             "cssMinify": false,
             "jsSourcemaps": false,
             "cssSourcemaps": false
         },
         "path": {
             "src": "./../{demo}/src",
-            "node_modules": "./node_modules",
-            "demo_api_url": "https://keenthemes.com/metronic/tools/preview/"
+            "node_modules": "./node_modules"
         },
         "dist": [
             "./../{demo}/dist/assets"
@@ -77,7 +77,7 @@
                         },
                         "moment": {
                             "scripts": [
-                                "{$config.path.node_modules}/moment/min/moment.min.js"
+                                "{$config.path.node_modules}/moment/min/moment-with-locales.min.js"
                             ]
                         },
                         "perfect-scrollbar": {
@@ -110,13 +110,7 @@
                             "scripts": [
                                 "{$config.path.node_modules}/es6-shim/es6-shim.min.js",
                                 "{$config.path.src}/plugins/formvalidation/dist/js/FormValidation.full.min.js",
-                                "{$config.path.src}/plugins/formvalidation/dist/js/plugins/Bootstrap.min.js",
-								"{$config.path.src}/plugins/formvalidation/dist/js/plugins/PasswordStrength.min.js"
-                            ]
-                        },
-                        "jquery-form": {
-                            "scripts": [
-                                "{$config.path.node_modules}/jquery-form/dist/jquery.form.min.js"
+                                "{$config.path.src}/plugins/formvalidation/dist/js/plugins/Bootstrap.min.js"
                             ]
                         },
                         "block-ui": {
@@ -130,16 +124,16 @@
                             ],
                             "scripts": [
                                 "{$config.path.node_modules}/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js",
-                                "{$config.path.node_modules}/bootstrap-datepicker/dist/locales/bootstrap-datepicker.pt-BR.min.js",
                                 "{$config.path.src}/js/vendors/plugins/bootstrap-datepicker.init.js"
                             ]
                         },
-                        "bootstrap-datetime-picker": {
+                        "tempusdominus-bootstrap-4": {
                             "styles": [
-                                "{$config.path.node_modules}/bootstrap-datetime-picker/css/bootstrap-datetimepicker.css"
+                                "{$config.path.node_modules}/tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4.css"
                             ],
                             "scripts": [
-                                "{$config.path.node_modules}/bootstrap-datetime-picker/js/bootstrap-datetimepicker.min.js"
+                                "{$config.path.node_modules}/tempusdominus-bootstrap-4/build/js/tempusdominus-bootstrap-4.js",
+                                "{$config.path.src}/js/vendors/plugins/tempusdominus-bootstrap-4.init.js"
                             ]
                         },
                         "bootstrap-timepicker": {
@@ -272,16 +266,16 @@
                         },
                         "summernote": {
                             "styles": [
-                                "{$config.path.node_modules}/summernote/dist/summernote.css"
+                                "{$config.path.node_modules}/summernote/dist/summernote-bs4.css"
                             ],
                             "scripts": [
-                                "{$config.path.node_modules}/summernote/dist/summernote.js"
+                                "{$config.path.node_modules}/summernote/dist/summernote-bs4.js"
                             ],
                             "fonts": [
                                 "{$config.path.node_modules}/summernote/dist/font/**"
                             ]
                         },
-                        "bootstrap-makrdown": {
+                        "bootstrap-markdown": {
                             "styles": [
                                 "{$config.path.node_modules}/bootstrap-markdown/css/bootstrap-markdown.min.css"
                             ],
@@ -350,6 +344,11 @@
                                 "{$config.path.node_modules}/es6-promise-polyfill/promise.min.js",
                                 "{$config.path.node_modules}/sweetalert2/dist/sweetalert2.min.js",
                                 "{$config.path.src}/js/vendors/plugins/sweetalert2.init.js"
+                            ]
+                        },
+                        "jquery-mask-plugin": {
+                            "scripts": [
+                                "{$config.path.node_modules}/jquery-mask-plugin/dist/jquery.mask.js"
                             ]
                         },
                         "sticky-js": {
@@ -628,6 +627,16 @@
                     },
                     "output": {
                         "scripts": "{$config.dist}/plugins/custom/tinymce/plugins"
+                    }
+                },
+                "tinymce-icons": {
+                    "src": {
+                        "scripts": [
+                            "{$config.path.node_modules}/tinymce/icons/**"
+                        ]
+                    },
+                    "output": {
+                        "scripts": "{$config.dist}/plugins/custom/tinymce/icons"
                     }
                 },
                 "ckeditor-classic": {

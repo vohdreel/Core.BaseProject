@@ -49,7 +49,7 @@ $header-mobile-icon-color-hover: $primary;
 @include media-breakpoint-down(md) {
 	.header-mobile {
 		background-color: $header-mobile-bg;
-		box-shadow: $header-mobile-shadow;
+		//box-shadow: $header-mobile-shadow;
 
 		// Burger Icon
 		.burger-icon {

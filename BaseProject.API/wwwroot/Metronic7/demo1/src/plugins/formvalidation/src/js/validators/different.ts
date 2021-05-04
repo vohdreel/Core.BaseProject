@@ -6,17 +6,17 @@
 
 import { Localization, ValidateInput, ValidateOptions, ValidateResult } from '../core/Core';
 
-type CompareWithCallback = () => string;
+type CompareDifferentCallback = () => string;
 
 export interface DifferentOptions extends ValidateOptions {
-    compare: string | CompareWithCallback;
+    compare: string | CompareDifferentCallback;
 }
 
 export default function different() {
     return {
         validate(input: ValidateInput<DifferentOptions, Localization>): ValidateResult {
             const compareWith = ('function' === typeof input.options.compare)
-                ? (input.options.compare as CompareWithCallback).call(this)
+                ? (input.options.compare as CompareDifferentCallback).call(this)
                 : (input.options.compare as string);
 
             return {

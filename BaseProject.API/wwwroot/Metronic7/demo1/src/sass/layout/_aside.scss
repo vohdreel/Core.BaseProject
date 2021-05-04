@@ -35,7 +35,7 @@
 		}
 
 		// Minimized Aside Mode
-		.aside-minimize & {
+		.aside-minimize:not(.aside-minimize-hover) & {
 			width: get($aside-config, base, minimized-width);
 		}
 
@@ -44,7 +44,7 @@
 	}
 
 	// Fixed Aside & Minimize Aside Hover Modes
-	.aside-fixed.aside-minimize-hover {
+	.aside-fixed.aside-minimize.aside-minimize-hover {
 		.aside {
 			width: get($aside-config, base, width);
 		}
@@ -55,7 +55,7 @@
 	}
 
 	// Fixed Aside, Fixed Header & Minimize Aside Hover Modes
-	.aside-fixed.header-fixed.aside-minimize-hover {
+	.aside-fixed.header-fixed.aside-minimize.aside-minimize-hover {
 		.header {
 			left: get($aside-config, base, minimized-width);
 		}

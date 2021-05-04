@@ -25,15 +25,18 @@
 
     .note-toolbar {
         position: static;
+        padding: 0.5rem 0.5rem;
+        @include border-radius($border-radius);
 
         .note-btn-group {
+            margin-top: 0;
+
             .btn {
                 background: white;
                 border: 1px solid $gray-200;
 
                 i {
                     font-size: 1rem;
-                    vertical-align: initial;
                     line-height: 0;
                     padding-right: 0;
                     color: $dark-50;
@@ -51,6 +54,14 @@
                     }
                 }
             }
+
+            &.note-color {
+                .dropdown-toggle {
+                    &:after {
+                        margin-left: 0;
+                    }
+                }
+            }
         }
     }
 
@@ -63,6 +74,12 @@
                 right: 25px;
                 top: 20px;
                 font-size: 0;
+            }
+        }
+
+        &.note-modal {
+            .modal-dialog {
+                box-shadow: $modal-content-box-shadow;
             }
         }
     }

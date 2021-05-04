@@ -9,16 +9,19 @@
 		.footer-fixed & {
 			position: fixed;
 			height: get($footer-config, fixed, height);
-			z-index: get($footer-config, fixed, z-index);
+			z-index: get($footer-config, fixed, zindex);
 			box-shadow: get($footer-config, fixed, shadow);
 			bottom: 0;
 			right: 0;
+		}
+
+		// Aside Enabled & Fixed Footer Modes
+		.aside-enabled.footer-fixed & {
 			left: get($aside-config, base, width);
 		}
 
-		// Aside Minimized, Aside Minimize Hover & Fixed Footer Modes
-		.aside-minimize-hover.footer-fixed &,
-		.aside-minimize.footer-fixed & {
+		// Aside Enabled, Aside Minimized, Aside Minimize Hover & Fixed Footer Modes
+		.aside-enabled.aside-minimize.footer-fixed & {
 			left: get($aside-config, base, minimized-width);
 		}
 	}

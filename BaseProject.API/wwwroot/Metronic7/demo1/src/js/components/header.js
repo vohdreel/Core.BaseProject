@@ -68,8 +68,6 @@ var KTHeader = function(elementId, options) {
          */
         build: function() {
             var eventTriggerState = true;
-            var viewportHeight = KTUtil.getViewPort().height;
-            var documentHeight = KTUtil.getDocumentHeight();
             var lastScrollTop = 0;
 
             window.addEventListener('scroll', function() {

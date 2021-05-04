@@ -138,11 +138,11 @@ var KTLayoutChat = function () {
 
 	// Public methods
 	return {
-		init: function() {
-			// init modal chat example
-			_init(KTUtil.getById('kt_chat_modal'));
+		init: function(id) {
+			// Init modal chat example
+			_init(KTUtil.getById(id));
 
-			// trigger click to show popup modal chat on page load
+			// Trigger click to show popup modal chat on page load
 			if (encodeURI(window.location.hostname) == 'keenthemes.com' || encodeURI(window.location.hostname) == 'www.keenthemes.com') {
 				setTimeout(function() {
 		            if (!KTCookie.getCookie('kt_app_chat_shown')) {

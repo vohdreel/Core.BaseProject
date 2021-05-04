@@ -25,7 +25,7 @@
             align-items: center;
             margin: $card-header-spacer-y;
             margin-left: 0;
-            flex-wrap: wrap;
+            //flex-wrap: wrap;
 
             .card-icon {
                 margin-right: 0.75rem;
@@ -112,6 +112,12 @@
     // Footer
     > .card-footer {
         background-color: transparent;
+    }
+
+    // Scroll
+    .card-scroll {
+        position: relative;
+        overflow: auto;
     }
 
     // Make full height
@@ -213,16 +219,20 @@
         box-shadow: none;
     }
 
+    // Reset Padding X
+    &.card-px-0 {
+        .card-header,
+        .card-body,
+        .card-footer {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+
     // Border style
     &.card-border {
         box-shadow: none;
         border: 1px solid $card-border-color;
-    }
-
-    // Scroll
-    .card-scroll {
-        position: relative;
-        overflow: auto;
     }
 
     // Collapsed Mode

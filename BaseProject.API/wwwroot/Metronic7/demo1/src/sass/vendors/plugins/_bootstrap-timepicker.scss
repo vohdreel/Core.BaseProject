@@ -20,19 +20,21 @@
 
     table td {
         @include border-radius($border-radius);
+        text-align: center;
 
         > a {
-            display: flex;
             border: 0;
             @include border-radius($border-radius);
             width: 33px;
             height: 33px;
             align-items: center;
             justify-content: center;
+            margin: 0 auto;
 
             span {
                 font-size: 0.75rem;
                 color: $text-muted;
+                line-height: 1;
             }
 
             &:hover {

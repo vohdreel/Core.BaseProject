@@ -47,7 +47,7 @@ if (args.prod !== false) {
   // force disable debug for production
   build.config.debug = false;
   build.config.compile = Object.assign(build.config.compile, {
-    'jsUglify': true,
+    'jsMinify': true,
     'cssMinify': true,
     'jsSourcemaps': false,
     'cssSourcemaps': false,

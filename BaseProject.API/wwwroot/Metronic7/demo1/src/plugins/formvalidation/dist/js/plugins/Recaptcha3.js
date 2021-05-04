@@ -1,5 +1,5 @@
 /**
- * FormValidation (https://formvalidation.io), v1.6.0 (4730ac5)
+ * FormValidation (https://formvalidation.io), v1.7.0 (71bbaaa)
  * The best validation library for JavaScript
  * (c) 2013 - 2020 Nguyen Huu Phuoc <me@phuoc.ng>
  */
@@ -78,6 +78,19 @@
     return _setPrototypeOf(o, p);
   }
 
+  function _isNativeReflectConstruct() {
+    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+    if (Reflect.construct.sham) return false;
+    if (typeof Proxy === "function") return true;
+
+    try {
+      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   function _assertThisInitialized(self) {
     if (self === void 0) {
       throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -94,65 +107,84 @@
     return _assertThisInitialized(self);
   }
 
-  var Plugin = FormValidation.Plugin;
+  function _createSuper(Derived) {
+    var hasNativeReflectConstruct = _isNativeReflectConstruct();
 
-  var fetch = FormValidation.utils.fetch;
+    return function _createSuperInternal() {
+      var Super = _getPrototypeOf(Derived),
+          result;
 
-  var Recaptcha3 =
-  /*#__PURE__*/
-  function (_Plugin) {
-    _inherits(Recaptcha3, _Plugin);
+      if (hasNativeReflectConstruct) {
+        var NewTarget = _getPrototypeOf(this).constructor;
 
-    function Recaptcha3(opts) {
+        result = Reflect.construct(Super, arguments, NewTarget);
+      } else {
+        result = Super.apply(this, arguments);
+      }
+
+      return _possibleConstructorReturn(this, result);
+    };
+  }
+
+  var e = FormValidation.Plugin;
+
+  var t = FormValidation.utils.fetch;
+
+  var s = /*#__PURE__*/function (_e) {
+    _inherits(s, _e);
+
+    var _super = _createSuper(s);
+
+    function s(e) {
       var _this;
 
-      _classCallCheck(this, Recaptcha3);
+      _classCallCheck(this, s);
 
-      _this = _possibleConstructorReturn(this, _getPrototypeOf(Recaptcha3).call(this, opts));
+      _this = _super.call(this, e);
       _this.opts = Object.assign({}, {
         minimumScore: 0
-      }, opts);
+      }, e);
       _this.iconPlacedHandler = _this.onIconPlaced.bind(_assertThisInitialized(_this));
       return _this;
     }
 
-    _createClass(Recaptcha3, [{
+    _createClass(s, [{
       key: "install",
       value: function install() {
         var _this2 = this;
 
-        this.core.on('plugins.icon.placed', this.iconPlacedHandler);
-        var loadPrevCaptcha = typeof window[Recaptcha3.LOADED_CALLBACK] === 'undefined' ? function () {} : window[Recaptcha3.LOADED_CALLBACK];
+        this.core.on("plugins.icon.placed", this.iconPlacedHandler);
+        var e = typeof window[s.LOADED_CALLBACK] === "undefined" ? function () {} : window[s.LOADED_CALLBACK];
 
-        window[Recaptcha3.LOADED_CALLBACK] = function () {
-          loadPrevCaptcha();
-          var tokenField = document.createElement('input');
-          tokenField.setAttribute('type', 'hidden');
-          tokenField.setAttribute('name', Recaptcha3.CAPTCHA_FIELD);
-          document.getElementById(_this2.opts.element).appendChild(tokenField);
+        window[s.LOADED_CALLBACK] = function () {
+          e();
+          var i = document.createElement("input");
+          i.setAttribute("type", "hidden");
+          i.setAttribute("name", s.CAPTCHA_FIELD);
+          document.getElementById(_this2.opts.element).appendChild(i);
 
-          _this2.core.addField(Recaptcha3.CAPTCHA_FIELD, {
+          _this2.core.addField(s.CAPTCHA_FIELD, {
             validators: {
               promise: {
                 message: _this2.opts.message,
-                promise: function promise(input) {
-                  return new Promise(function (resolve, reject) {
-                    window['grecaptcha'].execute(_this2.opts.siteKey, {
+                promise: function promise(e) {
+                  return new Promise(function (e, i) {
+                    window["grecaptcha"].execute(_this2.opts.siteKey, {
                       action: _this2.opts.action
-                    }).then(function (token) {
-                      fetch(_this2.opts.backendVerificationUrl, {
-                        method: 'POST',
-                        params: _defineProperty({}, Recaptcha3.CAPTCHA_FIELD, token)
-                      }).then(function (response) {
-                        var isValid = "".concat(response.success) === 'true' && response.score >= _this2.opts.minimumScore;
+                    }).then(function (o) {
+                      t(_this2.opts.backendVerificationUrl, {
+                        method: "POST",
+                        params: _defineProperty({}, s.CAPTCHA_FIELD, o)
+                      }).then(function (t) {
+                        var s = "".concat(t.success) === "true" && t.score >= _this2.opts.minimumScore;
 
-                        resolve({
-                          message: response.message || _this2.opts.message,
-                          meta: response,
-                          valid: isValid
+                        e({
+                          message: t.message || _this2.opts.message,
+                          meta: t,
+                          valid: s
                         });
-                      })["catch"](function (_) {
-                        reject({
+                      })["catch"](function (e) {
+                        i({
                           valid: false
                         });
                       });
@@ -164,48 +196,49 @@
           });
         };
 
-        var src = this.getScript();
+        var i = this.getScript();
 
-        if (!document.body.querySelector("script[src=\"".concat(src, "\"]"))) {
-          var script = document.createElement('script');
-          script.type = 'text/javascript';
-          script.async = true;
-          script.defer = true;
-          script.src = src;
-          document.body.appendChild(script);
+        if (!document.body.querySelector("script[src=\"".concat(i, "\"]"))) {
+          var _e2 = document.createElement("script");
+
+          _e2.type = "text/javascript";
+          _e2.async = true;
+          _e2.defer = true;
+          _e2.src = i;
+          document.body.appendChild(_e2);
         }
       }
     }, {
       key: "uninstall",
       value: function uninstall() {
-        this.core.off('plugins.icon.placed', this.iconPlacedHandler);
-        var src = this.getScript();
-        var scripts = [].slice.call(document.body.querySelectorAll("script[src=\"".concat(src, "\"]")));
-        scripts.forEach(function (s) {
-          return s.parentNode.removeChild(s);
+        this.core.off("plugins.icon.placed", this.iconPlacedHandler);
+        var e = this.getScript();
+        var t = [].slice.call(document.body.querySelectorAll("script[src=\"".concat(e, "\"]")));
+        t.forEach(function (e) {
+          return e.parentNode.removeChild(e);
         });
-        this.core.removeField(Recaptcha3.CAPTCHA_FIELD);
+        this.core.removeField(s.CAPTCHA_FIELD);
       }
     }, {
       key: "getScript",
       value: function getScript() {
-        var lang = this.opts.language ? "&hl=".concat(this.opts.language) : '';
-        return 'https://www.google.com/recaptcha/api.js?' + "onload=".concat(Recaptcha3.LOADED_CALLBACK, "&render=").concat(this.opts.siteKey).concat(lang);
+        var e = this.opts.language ? "&hl=".concat(this.opts.language) : "";
+        return "https://www.google.com/recaptcha/api.js?" + "onload=".concat(s.LOADED_CALLBACK, "&render=").concat(this.opts.siteKey).concat(e);
       }
     }, {
       key: "onIconPlaced",
       value: function onIconPlaced(e) {
-        if (e.field === Recaptcha3.CAPTCHA_FIELD) {
-          e.iconElement.style.display = 'none';
+        if (e.field === s.CAPTCHA_FIELD) {
+          e.iconElement.style.display = "none";
         }
       }
     }]);
 
-    return Recaptcha3;
-  }(Plugin);
-  Recaptcha3.CAPTCHA_FIELD = '___g-recaptcha-token___';
-  Recaptcha3.LOADED_CALLBACK = '___reCaptcha3Loaded___';
+    return s;
+  }(e);
+  s.CAPTCHA_FIELD = "___g-recaptcha-token___";
+  s.LOADED_CALLBACK = "___reCaptcha3Loaded___";
 
-  return Recaptcha3;
+  return s;
 
 })));

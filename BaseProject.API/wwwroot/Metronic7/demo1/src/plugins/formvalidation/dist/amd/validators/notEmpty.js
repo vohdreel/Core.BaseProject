@@ -4,7 +4,11 @@ define(["require", "exports"], function (require, exports) {
     function notEmpty() {
         return {
             validate: function (input) {
-                return { valid: input.value !== '' };
+                var trim = !!input.options && !!input.options.trim;
+                var value = input.value;
+                return {
+                    valid: (!trim && value !== '') || (trim && value !== '' && value.trim() !== ''),
+                };
             },
         };
     }

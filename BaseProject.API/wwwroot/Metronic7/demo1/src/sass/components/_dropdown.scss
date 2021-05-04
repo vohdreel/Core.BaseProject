@@ -71,6 +71,25 @@
     display: inline-block;
 }
 
+// Hover
+.dropdown {
+    &.dropdown-hover:hover {
+        > .dropdown-menu {
+            display: block;
+
+            &.dropdown-menu-right {
+                left: auto;
+                right: 0;
+            }
+        }
+
+        > .dropdown-toggle:active {
+            /*Without this, clicking will make it sticky*/
+            pointer-events: none;
+        }
+    }
+}
+
 // Animations
 @keyframes animation-dropdown-menu-fade-in {
     from   { opacity: 0; }

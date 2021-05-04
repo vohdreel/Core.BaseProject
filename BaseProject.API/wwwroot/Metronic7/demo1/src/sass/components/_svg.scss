@@ -5,7 +5,7 @@
 
 // Base
 .svg {
-    @each $name, $color in $theme-colors  {
+    @each $name, $color in $theme-text-colors  {
         &.svg-fill-#{$name} {
             fill: $color !important;
         }

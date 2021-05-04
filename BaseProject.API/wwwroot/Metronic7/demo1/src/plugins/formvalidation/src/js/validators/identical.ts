@@ -6,17 +6,17 @@
 
 import { Localization, ValidateInput, ValidateOptions, ValidateResult } from '../core/Core';
 
-type CompareWithCallback = () => string;
+type CompareIdenticalCallback = () => string;
 
 export interface IdenticalOptions extends ValidateOptions {
-    compare: string | CompareWithCallback;
+    compare: string | CompareIdenticalCallback;
 }
 
 export default function identical() {
     return {
         validate(input: ValidateInput<IdenticalOptions, Localization>): ValidateResult {
             const compareWith = ('function' === typeof input.options.compare)
-                ? (input.options.compare as CompareWithCallback).call(this)
+                ? (input.options.compare as CompareIdenticalCallback).call(this)
                 : (input.options.compare as string);
 
             return {

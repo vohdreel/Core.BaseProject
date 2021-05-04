@@ -8,14 +8,15 @@ import Plugin from '../core/Plugin';
 
 export interface SubmitButtonOptions {
     aspNetButton?: boolean;
-    selector: string;
+    // Allow to query the submit button(s)
+    // It's useful in case the submit button is outside of form
+    buttons?: (form: HTMLFormElement) => Element[];
 }
 
 export default class SubmitButton extends Plugin<SubmitButtonOptions> {
     private submitHandler: EventListener;
     private buttonClickHandler: EventListener;
     private isFormValid: boolean = false;
-    private selectorButtons: Element[];
     private submitButtons: Element[];
     private clickedButton?: HTMLElement;
 
@@ -27,8 +28,9 @@ export default class SubmitButton extends Plugin<SubmitButtonOptions> {
         this.opts = Object.assign({}, {
             // Set it to `true` to support classical ASP.Net form
             aspNetButton: false,
-            // Don't perform validation when clicking on the submit button/input which have `formnovalidate` attribute
-            selector: '[type="submit"]:not([formnovalidate])',
+            // By default, don't perform validation when clicking on
+            // the submit button/input which have `formnovalidate` attribute
+            buttons: (form: HTMLFormElement) => [].slice.call(form.querySelectorAll('[type="submit"]:not([formnovalidate])')) as Element[],
         }, opts);
 
         this.submitHandler = this.handleSubmitEvent.bind(this);
@@ -40,8 +42,7 @@ export default class SubmitButton extends Plugin<SubmitButtonOptions> {
             return;
         }
         const form = this.core.getFormElement() as HTMLFormElement;
-        this.selectorButtons = [].slice.call(form.querySelectorAll(this.opts.selector)) as Element[];
-        this.submitButtons = [].slice.call(form.querySelectorAll('[type="submit"]')) as Element[];
+        this.submitButtons = this.opts.buttons(form);
 
         // Disable client side validation in HTML 5
         form.setAttribute('novalidate', 'novalidate');
@@ -75,10 +76,7 @@ export default class SubmitButton extends Plugin<SubmitButtonOptions> {
 
     private handleClickEvent(e: Event): void {
         const target = e.currentTarget;
-        if ((target instanceof HTMLElement)
-            // Don't perform validation when clicking on the submit button/input which
-            // aren't defined by the the `opts.selector` option
-            && (this.selectorButtons.indexOf(target) !== -1)) {
+        if (target instanceof HTMLElement) {
             if (this.opts.aspNetButton && this.isFormValid === true) {
                 // Do nothing
             } else {

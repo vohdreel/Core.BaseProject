@@ -1,4 +1,4 @@
-define(["require", "exports"], function (require, exports) {
+define(["require", "exports", "../../algorithms/mod97And10", "../id/nlId"], function (require, exports, mod97And10_1, nlId_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function nlVat(value) {
@@ -12,18 +12,10 @@ define(["require", "exports"], function (require, exports) {
                 valid: false,
             };
         }
-        var weight = [9, 8, 7, 6, 5, 4, 3, 2];
-        var sum = 0;
-        for (var i = 0; i < 8; i++) {
-            sum += parseInt(v.charAt(i), 10) * weight[i];
-        }
-        sum = sum % 11;
-        if (sum > 9) {
-            sum = 0;
-        }
+        var id = v.substr(0, 9);
         return {
             meta: {},
-            valid: "" + sum === v.substr(8, 1),
+            valid: nlId_1.default(id).valid || mod97And10_1.default("NL" + v),
         };
     }
     exports.default = nlVat;

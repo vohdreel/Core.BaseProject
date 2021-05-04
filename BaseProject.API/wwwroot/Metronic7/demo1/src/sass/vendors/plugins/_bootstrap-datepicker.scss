@@ -89,7 +89,7 @@
 
                 &.today {
                     position: relative;
-                    background: rgba($primary, 0.12) !important;
+                    background: $primary-light !important;
                     color: $primary !important;
 
                     &:before {
@@ -97,8 +97,8 @@
                         display: inline-block;
                         border: solid transparent;
                         border-width: 0 0 7px 7px;
-                        border-bottom-color: #ffffff;
-                        border-top-color: $gray-200;
+                        border-bottom-color: $primary;
+                        border-top-color: $primary;
                         position: absolute;
                         bottom: 4px;
                         right: 4px;
@@ -161,5 +161,11 @@
 
     input {
         text-align: left;
+    }
+
+    .input-group-append {
+        .input-group-text {
+            border-right: 0;
+        }
     }
 }

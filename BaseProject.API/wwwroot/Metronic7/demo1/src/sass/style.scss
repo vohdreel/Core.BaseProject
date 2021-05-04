@@ -11,20 +11,14 @@
 @import "init";
 
 // 2: Bootstrap framework includes
-@import "../../../tools/node_modules/bootstrap/scss/bootstrap";
+@import "bootstrap/scss/bootstrap.scss";
 
 // 3: Components
 @import
-    "components/utilities/background",
-    "components/utilities/flex",
-    "components/utilities/opacity",
-    "components/utilities/borders",
-    "components/utilities/sizing",
-    "components/utilities/position",
-    "components/utilities/text",
-    "components/utilities/icon",
+    "components/utilities",
     "components/burger-icon",
     "components/card",
+    "components/wizard",
     "components/type",
     "components/breadcrumb",
     "components/nav",
@@ -41,7 +35,6 @@
     "components/tooltip",
     "components/accordion",
     "components/datatable",
-    "components/bar-chart",
     "components/checkbox",
     "components/radio",
     "components/switch",
@@ -66,13 +59,14 @@
     "components/timeline-3",
     "components/timeline-4",
     "components/timeline-5",
+    "components/timeline-6",
     "components/overlay",
-    "components/demo",
     "components/wave",
     "components/list",
     "components/bullet",
     "components/navi",
     "components/ribbon",
+    "components/offcanvas",
     "components/toggle";
 
 // 4: Plugins
@@ -81,7 +75,7 @@
     "vendors/plugins/blockui",
     "vendors/plugins/bootstrap-datepicker",
     "vendors/plugins/bootstrap-daterangepicker",
-    "vendors/plugins/bootstrap-datetimepicker",
+    "vendors/plugins/tempusdominus-bootstrap-4",
     "vendors/plugins/bootstrap-markdown",
     "vendors/plugins/bootstrap-maxlength",
     "vendors/plugins/bootstrap-notify",
@@ -122,6 +116,7 @@
 
 // 5: Layout
 @import "layout/init";
+
 ////////////////////////////////////////////////////////////////
 ///////////// DO NOT MODIFY ABOVE INCLUDE ORDER ////////////////
 ////////////////////////////////////////////////////////////////

@@ -835,7 +835,7 @@
 				}
 			},
 
-            maxWidthList: {},
+			maxWidthList: {},
 
 			/**
 			 * Adjust width to match container size
@@ -845,7 +845,7 @@
 				var containerWidth = $(datatable.tableBody).innerWidth() - Plugin.iconOffset;
 
 				// get total number of columns
-				var columns = $(datatable.tableBody).
+				var columns = $(datatable.tableHead).
 					find('.' + pfx + 'datatable-row:first-child').
 					find('.' + pfx + 'datatable-cell').
 					// exclude expand icon
@@ -1053,7 +1053,7 @@
 					tablePart.appendChild(row);
 				}
 
-                $.each(columns, function (i, column) {
+				$.each(columns, function(i, column) {
 					var th = ths[i];
 					if (typeof th === 'undefined') {
 						th = document.createElement('th');
@@ -1392,12 +1392,16 @@
 						Plugin.dataRender();
 					},
 					populate: function() {
+						datatable.dataSet = datatable.dataSet || [];
+						// no records available
+						if (datatable.dataSet.length === 0) return;
+
 						var icons = Plugin.getOption('layout.icons.pagination');
 						var title = Plugin.getOption('translate.toolbar.pagination.items.default');
 						// pager root element
 						pg.pager = $('<div/>').addClass(pfx + 'datatable-pager ' + pfx + 'datatable-paging-loaded');
 						// numbering links
-						var pagerNumber = $('<ul/>').addClass(pfx + 'datatable-pager-nav');
+						var pagerNumber = $('<ul/>').addClass(pfx + 'datatable-pager-nav my-2 mb-sm-0');
 						pg.pagerLayout['pagination'] = pagerNumber;
 
 						// pager first/previous button
@@ -1414,15 +1418,6 @@
 								attr('title', title.prev).
 								addClass(pfx + 'datatable-pager-link ' + pfx + 'datatable-pager-link-prev').
 								append($('<i/>').addClass(icons.prev)).
-								on('click', pg.gotoMorePage)).
-							appendTo(pagerNumber);
-
-						// more previous pages
-						$('<li/>').
-							append($('<a/>').
-								attr('title', title.more).
-								addClass(pfx + 'datatable-pager-link ' + pfx + 'datatable-pager-link-more-prev').
-								html($('<i/>').addClass(icons.more)).
 								on('click', pg.gotoMorePage)).
 							appendTo(pagerNumber);
 
@@ -1458,15 +1453,6 @@
 								appendTo(pagerNumber);
 						}
 
-						// more next pages
-						$('<li/>').
-							append($('<a/>').
-								attr('title', title.more).
-								addClass(pfx + 'datatable-pager-link ' + pfx + 'datatable-pager-link-more-next').
-								html($('<i/>').addClass(icons.more)).
-								on('click', pg.gotoMorePage)).
-							appendTo(pagerNumber);
-
 						// pager next/last button
 						$('<li/>').
 							append($('<a/>').
@@ -1486,7 +1472,7 @@
 
 						// page info
 						if (Plugin.getOption('toolbar.items.info')) {
-							pg.pagerLayout['info'] = $('<div/>').addClass(pfx + 'datatable-pager-info').append($('<span/>').addClass(pfx + 'datatable-pager-detail'));
+							pg.pagerLayout['info'] = $('<div/>').addClass(pfx + 'datatable-pager-info my-2 mb-sm-0').append($('<span/>').addClass(pfx + 'datatable-pager-detail'));
 						}
 
 						$.each(Plugin.getOption('toolbar.layout'), function(i, layout) {
@@ -2131,8 +2117,10 @@
 						while ($(this)[0].offsetWidth < $(this)[0].scrollWidth && recursive < options.columns.length) {
 							$(datatable.table).find('.' + pfx + 'datatable-row').each(function(i) {
 								var cell = $(this).find('.' + pfx + 'datatable-cell:not(:hidden):not([data-autohide-disabled])').last();
-								$(cell).hide();
-								hiddenExist = true;
+									if (cell.length) {
+										$(cell).hide();
+										hiddenExist = true;
+									}
 							});
 							recursive++;
 						}
@@ -2419,7 +2407,9 @@
 
 						var column = Plugin.getColumnByField(meta.field);
 						// sort is disabled for this column
-						if (typeof column !== 'undefined' && typeof column.sortable !== 'undefined' && column.sortable === false) return;
+						if (typeof column === 'undefined') return;
+						if (typeof column.sortable !== 'undefined' && column.sortable === false) return;
+						if (typeof column.selector !== 'undefined' && column.selector === true) return;
 
 						// sort icon beside column header
 						var td = $(datatable.tableHead).find('.' + pfx + 'datatable-cell[data-field="' + meta.field + '"]').attr('data-sort', meta.sort);
@@ -2442,7 +2432,9 @@
 						var field = $(this).data('field');
 						var column = Plugin.getColumnByField(field);
 						// sort is disabled for this column
+						if (typeof column === 'undefined') return;
 						if (typeof column.sortable !== 'undefined' && column.sortable === false) return;
+						if (typeof column.selector !== 'undefined' && column.selector === true) return;
 
 						// set sorted class to header
 						$(datatable.tableHead).find('th').removeClass(pfx + 'datatable-cell-sorted');
@@ -2865,7 +2857,28 @@
 				datatable = initialDatatable;
 				$(datatable).trigger(pfx + 'datatable-on-destroy');
 				Plugin.isInit = false;
+
+				// clean up variables
 				initialDatatable = null;
+				datatable.dataSet = null;
+				datatable.originalDataSet = null;
+				datatable.tableHead = null;
+				datatable.tableBody = null;
+				datatable.table = null;
+				datatable.wrap = null;
+				datatable.API = {
+					record: null,
+					value: null,
+					params: null,
+				};
+
+				Plugin.ajaxParams = {};
+				Plugin.pagingObject = {};
+				Plugin.nodeTr = [];
+				Plugin.nodeTd = [];
+				Plugin.nodeCols = [];
+				Plugin.recentNode = [];
+
 				return initialDatatable;
 			},
 

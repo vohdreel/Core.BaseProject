@@ -10,6 +10,7 @@ const TerserJSPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const WebpackMessages = require('webpack-messages');
 const ExcludeAssetsPlugin = require('webpack-exclude-assets-plugin');
+const MergeIntoSingle = require('webpack-merge-and-include-globally');
 
 // paths
 const rootPath = path.resolve(__dirname, '..');
@@ -17,7 +18,7 @@ const rootPath = path.resolve(__dirname, '..');
 // arguments/params from the line command
 const args = getParameters();
 // get theme name
-let theme = getTheme();
+let theme = 'metronic';
 // get selected demo, default demo1
 let demo = getDemos(rootPath)[0];
 
@@ -29,12 +30,70 @@ const srcPath = demoPath + '/src';
 
 const extraPlugins = [];
 const exclude = [];
-const extraConfig = [];
 
 const js = args.indexOf('js') !== -1;
 const css = args.indexOf('css') !== -1 || args.indexOf('scss') !== -1;
 
 addtionalSettings();
+importDatatables();
+
+function importDatatables() {
+  var rtlExt = '';
+  if (args.indexOf('rtl') !== -1) {
+    rtlExt = 'rtl.';
+  }
+  // Optional: bundle datatables.net
+  extraPlugins.push(new MergeIntoSingle({
+    files: [
+      {
+        src: [
+          'node_modules/datatables.net/js/jquery.dataTables.js',
+          'node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js',
+          '@/src/js/vendors/plugins/datatables.init.js',
+          'node_modules/datatables.net-autofill/js/dataTables.autoFill.min.js',
+          'node_modules/datatables.net-autofill-bs4/js/autoFill.bootstrap4.min.js',
+          'node_modules/jszip/dist/jszip.min.js',
+          'node_modules/pdfmake/build/pdfmake.min.js',
+          'node_modules/pdfmake/build/vfs_fonts.js',
+          'node_modules/datatables.net-buttons/js/dataTables.buttons.min.js',
+          'node_modules/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js',
+          'node_modules/datatables.net-buttons/js/buttons.colVis.js',
+          'node_modules/datatables.net-buttons/js/buttons.flash.js',
+          'node_modules/datatables.net-buttons/js/buttons.html5.js',
+          'node_modules/datatables.net-buttons/js/buttons.print.js',
+          'node_modules/datatables.net-colreorder/js/dataTables.colReorder.min.js',
+          'node_modules/datatables.net-fixedcolumns/js/dataTables.fixedColumns.min.js',
+          'node_modules/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js',
+          'node_modules/datatables.net-keytable/js/dataTables.keyTable.min.js',
+          'node_modules/datatables.net-responsive/js/dataTables.responsive.min.js',
+          'node_modules/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js',
+          'node_modules/datatables.net-rowgroup/js/dataTables.rowGroup.min.js',
+          'node_modules/datatables.net-rowreorder/js/dataTables.rowReorder.min.js',
+          'node_modules/datatables.net-scroller/js/dataTables.scroller.min.js',
+          'node_modules/datatables.net-select/js/dataTables.select.min.js',
+        ],
+        dest: 'plugins/custom/datatables/datatables.bundle.js',
+      },
+      {
+        src: [
+          'node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css',
+          'node_modules/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css',
+          'node_modules/datatables.net-autofill-bs4/css/autoFill.bootstrap4.min.css',
+          'node_modules/datatables.net-colreorder-bs4/css/colReorder.bootstrap4.min.css',
+          'node_modules/datatables.net-fixedcolumns-bs4/css/fixedColumns.bootstrap4.min.css',
+          'node_modules/datatables.net-fixedheader-bs4/css/fixedHeader.bootstrap4.min.css',
+          'node_modules/datatables.net-keytable-bs4/css/keyTable.bootstrap4.min.css',
+          'node_modules/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css',
+          'node_modules/datatables.net-rowgroup-bs4/css/rowGroup.bootstrap4.min.css',
+          'node_modules/datatables.net-rowreorder-bs4/css/rowReorder.bootstrap4.min.css',
+          'node_modules/datatables.net-scroller-bs4/css/scroller.bootstrap4.min.css',
+          'node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css',
+        ],
+        dest: 'plugins/custom/datatables/datatables.bundle.' + rtlExt + 'css',
+      },
+    ],
+  }));
+}
 
 function addtionalSettings() {
   if (args.indexOf('rtl') !== -1) {
@@ -67,7 +126,7 @@ function getEntryFiles() {
     // 3rd party plugins css/js
     'plugins/global/plugins.bundle': ['./webpack/plugins/plugins.js', './webpack/plugins/plugins.scss'],
     // Metronic css/js
-    'css/style.bundle': path.relative('./', srcPath) + '/sass/style.scss',
+    'css/style.bundle': './' + path.relative('./', srcPath) + '/sass/style.scss',
     'js/scripts.bundle': './webpack/scripts.' + demo + '.js',
   };
 
@@ -85,15 +144,15 @@ function getEntryFiles() {
 
   // Metronic css pages (single page use)
   (glob.sync(path.relative('./', srcPath) + '/sass/pages/**/!(_)*.scss') || []).forEach(file => {
-    entries[file.replace(/.*sass\/(.*?)\.scss$/ig, 'css/$1')] = file;
+    entries[file.replace(/.*sass\/(.*?)\.scss$/ig, 'css/$1')] = './' + file;
   });
   (glob.sync(path.relative('./', srcPath) + '/js/pages/**/!(_)*.js') || []).forEach(file => {
-    entries[file.replace(/.*js\/(.*?)\.js$/ig, 'js/$1')] = file;
+    entries[file.replace(/.*js\/(.*?)\.js$/ig, 'js/$1')] = './' + file;
   });
 
   // Metronic theme
   (glob.sync(path.relative('./', srcPath) + '/sass/themes/**/!(_)*.scss') || []).forEach(file => {
-    entries[file.replace(/.*sass\/(.*?)\.scss$/ig, 'css/$1')] = file;
+    entries[file.replace(/.*sass\/(.*?)\.scss$/ig, 'css/$1')] = './' + file;
   });
 
   return entries;
@@ -192,7 +251,10 @@ function mainConfig() {
               loader: 'sass-loader',
               options: {
                 sourceMap: false,
-                includePaths: [demoPath],
+                includePaths: [
+                  demoPath,
+                  path.resolve(__dirname, 'node_modules')
+                ],
               },
             },
           ],
@@ -247,7 +309,7 @@ function mainConfig() {
     },
     // webpack dev server config
     devServer: {
-      contentBase: demoPath,
+      contentBase: demoPath + '/dist',
       compress: true,
       port: 3000,
     },
@@ -261,20 +323,6 @@ function getParameters() {
     return arg.replace(/--/i, '');
   });
   return argv;
-}
-
-function getTheme() {
-  // debug
-  // console.log('getTheme()');
-
-  const themes = ['metronic', 'keen', 'craft'];
-  let theme = themes[0];
-  themes.forEach((th) => {
-    if (args.indexOf(th) === 0) {
-      theme = th;
-    }
-  });
-  return theme;
 }
 
 function getDemos(pathDemos) {

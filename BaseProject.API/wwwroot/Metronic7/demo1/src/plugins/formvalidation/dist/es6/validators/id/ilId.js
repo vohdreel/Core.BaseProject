@@ -1,13 +1,1 @@
-import luhn from '../../algorithms/luhn';
-export default function ilId(value) {
-    if (!/^\d{1,9}$/.test(value)) {
-        return {
-            meta: {},
-            valid: false,
-        };
-    }
-    return {
-        meta: {},
-        valid: luhn(value),
-    };
-}
+import t from"../../algorithms/luhn";export default function e(e){if(!/^\d{1,9}$/.test(e)){return{meta:{},valid:false}}return{meta:{},valid:t(e)}}

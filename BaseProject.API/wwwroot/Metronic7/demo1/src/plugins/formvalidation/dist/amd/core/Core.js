@@ -8,6 +8,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 define(["require", "exports", "./emitter", "./filter", "../filters/getFieldValue", "../validators/index"], function (require, exports, emitter_1, filter_1, getFieldValue_1, index_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Core = void 0;
     var Core = (function () {
         function Core(form, fields) {
             this.elements = {};
@@ -429,6 +430,10 @@ define(["require", "exports", "./emitter", "./filter", "../filters/getFieldValue
             if (this.fields[field] && this.fields[field].validators && this.fields[field].validators[validator]) {
                 this.fields[field].validators[validator][name] = value;
             }
+            return this;
+        };
+        Core.prototype.setFieldOptions = function (field, options) {
+            this.fields[field] = options;
             return this;
         };
         Core.prototype.destroy = function () {

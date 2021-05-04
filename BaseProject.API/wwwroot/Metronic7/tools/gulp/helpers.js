@@ -7,12 +7,11 @@ var rewrite = require('gulp-rewrite-css');
 var concat = require('gulp-concat');
 var lazypipe = require('lazypipe');
 var gulpif = require('gulp-if');
-var uglify = require('gulp-uglify-es').default;
+var terser = require('gulp-terser');
 var sourcemaps = require('gulp-sourcemaps');
 var build = require('./build');
 var path = require('path');
 var fs = require('fs');
-var filter = require('gulp-filter');
 var autoprefixer = require('gulp-autoprefixer');
 var rtlcss = require('gulp-rtlcss');
 var cleancss = require('gulp-clean-css');
@@ -34,7 +33,7 @@ if (args.sass === false && args.js === false && args.media === false) {
 if (args.prod !== false) {
     // force disable debug for production
     build.config.debug = false;
-    build.config.compile.jsUglify = true;
+    build.config.compile.jsMinify = true;
     build.config.compile.cssMinify = true;
 }
 
@@ -45,7 +44,7 @@ module.exports = {
         demo: '',
         debug: true,
         compile: {
-            jsUglify: false,
+            jsMinify: false,
             cssMinify: false,
             jsSourcemaps: false,
             cssSourcemaps: false,
@@ -99,7 +98,7 @@ module.exports = {
         return lazypipe().pipe(function () {
             return gulpif(config.jsSourcemaps, sourcemaps.init({loadMaps: true, debug: config.debug}));
         }).pipe(function () {
-            return gulpif(config.jsUglify, uglify());
+            return gulpif(config.jsMinify, terser());
         }).pipe(function () {
             return gulpif(config.jsSourcemaps, sourcemaps.write('./'));
         });
@@ -115,7 +114,7 @@ module.exports = {
         }).pipe(function () {
             return sass({
                 errLogToConsole: true,
-                includePaths: includePaths,
+                includePaths: ['node_modules'].concat(includePaths),
                 // outputStyle: config.cssMinify ? 'compressed' : '',
             }).on('error', sass.logError);
         }).pipe(function () {
@@ -167,6 +166,17 @@ module.exports = {
         }
 
         var piping = lazypipe();
+
+        if (type === 'styles') {
+            piping = piping.pipe(function () {
+                return gulpif(build.config.compile.cssMinify, rename({suffix: '.min'}));
+            });
+        }
+        if (type === 'scripts') {
+            piping = piping.pipe(function () {
+                return gulpif(build.config.compile.jsMinify, rename({suffix: '.min'}));
+            });
+        }
 
         var regex = new RegExp(/\{\$.*?\}/);
         var matched = path.match(regex);
@@ -234,12 +244,6 @@ module.exports = {
                     if (isCss[0] === '.css') {
 
                         if (/plugins\.bundle/.test(bundle['styles'])) {
-                            var filePcs = ctx.targetFile.split(/\\|\//);
-                            if (filePcs.length > 2) {
-                                filePcs.shift();
-                                filePcs.shift();
-                            }
-
                             var pieces = ctx.sourceDir.split(/\\|\//);
                             // only vendors/base pass this
                             var vendor = pieces[pieces.indexOf('node_modules') + 1];
@@ -251,7 +255,7 @@ module.exports = {
                                 extension = 'images/';
                             }
 
-                            return path.join(extension, vendor, filePcs.join('/'));
+                            return path.join(extension, vendor, path.basename(ctx.targetFile));
                         }
 
                         return ctx.targetFile.replace(/\.?\.\//, '');

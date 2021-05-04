@@ -6,10 +6,18 @@
 
 import { Localization, ValidateInput, ValidateOptions, ValidateResult } from '../core/Core';
 
+export interface NotEmptyOptions extends ValidateOptions {
+    trim?: boolean;
+}
+
 export default function notEmpty() {
     return {
-        validate(input: ValidateInput<ValidateOptions, Localization>): ValidateResult {
-            return { valid: input.value !== '' };
+        validate(input: ValidateInput<NotEmptyOptions, Localization>): ValidateResult {
+            const trim = !!input.options && !!input.options.trim;
+            const value = input.value;
+            return {
+                valid: (!trim && value !== '') || (trim && value !== '' && value.trim() !== ''),
+            };
         },
     };
 }

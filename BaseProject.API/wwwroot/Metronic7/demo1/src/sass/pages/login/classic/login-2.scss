@@ -59,8 +59,13 @@
 }
 
 // Desktop view
-@include media-breakpoint-up(xs) {
+@include media-breakpoint-up(lg) {
     .login.login-2 {
+        .login-aside {
+            width: 100%;
+            max-width: 600px;
+        }
+
         .login-form {
             width: 100%;
             max-width: 450px;
@@ -70,12 +75,28 @@
 
 // Tablet and Mobile mode
 @include media-breakpoint-between(lg, xl) {
+    .login.login-2 {
+        .login-aside {
+            width: 100%;
+            max-width: 450px;
+        }
+    }
+}
 
+// Tablet mode
+@include media-breakpoint-down(md) {
+    .login.login-2 {
+        .login-form {
+            width: 100%;
+            max-width: 400px;
+        }
+    }
 }
 
 // Mobile mode
 @include media-breakpoint-down(xs) {
     .login.login-2 {
+
         .login-form {
             width: 100%;
             max-width: 100%;

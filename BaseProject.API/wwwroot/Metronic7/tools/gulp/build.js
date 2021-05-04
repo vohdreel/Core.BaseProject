@@ -5,7 +5,6 @@ var gulp = require('gulp');
 var replace = require('gulp-replace');
 var rename = require('gulp-rename');
 var concat = require('gulp-concat');
-global.atob = require('atob');
 
 // merge with default parameters
 var args = Object.assign({

@@ -49,18 +49,14 @@
     &.show-calendar {
         .ranges {
             border-right: 1px solid $gray-200;
+            margin-top: 0;
+            height: 297px;
         }
     }
 
     &.show-ranges {
         .drp-calendar.left {
             border-left: 0;
-        }
-    }
-
-    &.show-calendar {
-        .ranges {
-            margin-top: 0;
         }
     }
 
@@ -178,5 +174,26 @@
         background: transparent !important;
         border-color: $input-border-color !important;
         color: $input-color !important;
+    }
+}
+
+@media (min-width: 730px) {
+    .daterangepicker {
+        &.show-calendar {
+            .ranges {
+                height: 297px !important;                
+            }
+        }
+    }
+}
+
+// Mobile mode
+@include media-breakpoint-down(sm) {
+    .daterangepicker {
+        &.show-calendar {
+            .ranges {
+                height: 245px;
+            }
+        }
     }
 }

@@ -21,7 +21,7 @@ define(["require", "exports", "../core/Plugin"], function (require, exports, Plu
             _this.isFormValid = false;
             _this.opts = Object.assign({}, {
                 aspNetButton: false,
-                selector: '[type="submit"]:not([formnovalidate])',
+                buttons: function (form) { return [].slice.call(form.querySelectorAll('[type="submit"]:not([formnovalidate])')); },
             }, opts);
             _this.submitHandler = _this.handleSubmitEvent.bind(_this);
             _this.buttonClickHandler = _this.handleClickEvent.bind(_this);
@@ -33,8 +33,7 @@ define(["require", "exports", "../core/Plugin"], function (require, exports, Plu
                 return;
             }
             var form = this.core.getFormElement();
-            this.selectorButtons = [].slice.call(form.querySelectorAll(this.opts.selector));
-            this.submitButtons = [].slice.call(form.querySelectorAll('[type="submit"]'));
+            this.submitButtons = this.opts.buttons(form);
             form.setAttribute('novalidate', 'novalidate');
             form.addEventListener('submit', this.submitHandler);
             this.hiddenClickedEle = document.createElement('input');
@@ -60,8 +59,7 @@ define(["require", "exports", "../core/Plugin"], function (require, exports, Plu
         };
         SubmitButton.prototype.handleClickEvent = function (e) {
             var target = e.currentTarget;
-            if ((target instanceof HTMLElement)
-                && (this.selectorButtons.indexOf(target) !== -1)) {
+            if (target instanceof HTMLElement) {
                 if (this.opts.aspNetButton && this.isFormValid === true) {
                 }
                 else {

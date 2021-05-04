@@ -1,6 +1,7 @@
 define(["require", "exports", "../algorithms/luhn"], function (require, exports, luhn_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.CREDIT_CARD_TYPES = void 0;
     var CREDIT_CARD_TYPES = {
         AMERICAN_EXPRESS: {
             length: [15],

@@ -4,6 +4,9 @@
  * (c) 2013 - 2020 Nguyen Huu Phuoc <me@phuoc.ng>
  */
 
+import mod97And10 from '../../algorithms/mod97And10';
+import nlId from '../id/nlId';
+
 /**
  * Validate Dutch VAT number
  *
@@ -21,17 +24,9 @@ export default function nlVat(value: string) {
         };
     }
 
-    const weight = [9, 8, 7, 6, 5, 4, 3, 2];
-    let sum = 0;
-    for (let i = 0; i < 8; i++) {
-        sum += parseInt(v.charAt(i), 10) * weight[i];
-    }
-    sum = sum % 11;
-    if (sum > 9) {
-        sum = 0;
-    }
+    const id = v.substr(0, 9);
     return {
         meta: {},
-        valid: `${sum}` === v.substr(8, 1),
+        valid: nlId(id).valid || mod97And10(`NL${v}`),
     };
 }

@@ -1,5 +1,5 @@
 /**
- * FormValidation (https://formvalidation.io), v1.6.0 (4730ac5)
+ * FormValidation (https://formvalidation.io), v1.7.0 (71bbaaa)
  * The best validation library for JavaScript
  * (c) 2013 - 2020 Nguyen Huu Phuoc <me@phuoc.ng>
  */
@@ -78,6 +78,19 @@
     return _setPrototypeOf(o, p);
   }
 
+  function _isNativeReflectConstruct() {
+    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+    if (Reflect.construct.sham) return false;
+    if (typeof Proxy === "function") return true;
+
+    try {
+      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   function _assertThisInitialized(self) {
     if (self === void 0) {
       throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -94,57 +107,76 @@
     return _assertThisInitialized(self);
   }
 
-  var Plugin = FormValidation.Plugin;
+  function _createSuper(Derived) {
+    var hasNativeReflectConstruct = _isNativeReflectConstruct();
 
-  var InternationalTelephoneInput =
-  /*#__PURE__*/
-  function (_Plugin) {
-    _inherits(InternationalTelephoneInput, _Plugin);
+    return function _createSuperInternal() {
+      var Super = _getPrototypeOf(Derived),
+          result;
 
-    function InternationalTelephoneInput(opts) {
+      if (hasNativeReflectConstruct) {
+        var NewTarget = _getPrototypeOf(this).constructor;
+
+        result = Reflect.construct(Super, arguments, NewTarget);
+      } else {
+        result = Super.apply(this, arguments);
+      }
+
+      return _possibleConstructorReturn(this, result);
+    };
+  }
+
+  var e = FormValidation.Plugin;
+
+  var t = /*#__PURE__*/function (_e) {
+    _inherits(t, _e);
+
+    var _super = _createSuper(t);
+
+    function t(e) {
       var _this;
 
-      _classCallCheck(this, InternationalTelephoneInput);
+      _classCallCheck(this, t);
 
-      _this = _possibleConstructorReturn(this, _getPrototypeOf(InternationalTelephoneInput).call(this, opts));
+      _this = _super.call(this, e);
       _this.intlTelInstances = new Map();
       _this.countryChangeHandler = new Map();
       _this.fieldElements = new Map();
       _this.opts = Object.assign({}, {
-        autoPlaceholder: 'polite',
-        utilsScript: ''
-      }, opts);
+        autoPlaceholder: "polite",
+        utilsScript: ""
+      }, e);
       _this.validatePhoneNumber = _this.checkPhoneNumber.bind(_assertThisInitialized(_this));
-      _this.fields = typeof _this.opts.field === 'string' ? _this.opts.field.split(',') : _this.opts.field;
+      _this.fields = typeof _this.opts.field === "string" ? _this.opts.field.split(",") : _this.opts.field;
       return _this;
     }
 
-    _createClass(InternationalTelephoneInput, [{
+    _createClass(t, [{
       key: "install",
       value: function install() {
         var _this2 = this;
 
-        this.core.registerValidator(InternationalTelephoneInput.INT_TEL_VALIDATOR, this.validatePhoneNumber);
-        this.fields.forEach(function (field) {
-          _this2.core.addField(field, {
-            validators: _defineProperty({}, InternationalTelephoneInput.INT_TEL_VALIDATOR, {
+        this.core.registerValidator(t.INT_TEL_VALIDATOR, this.validatePhoneNumber);
+        this.fields.forEach(function (e) {
+          _this2.core.addField(e, {
+            validators: _defineProperty({}, t.INT_TEL_VALIDATOR, {
               message: _this2.opts.message
             })
           });
 
-          var ele = _this2.core.getElements(field)[0];
+          var s = _this2.core.getElements(e)[0];
 
-          var handler = function handler() {
-            return _this2.core.revalidateField(field);
+          var i = function i() {
+            return _this2.core.revalidateField(e);
           };
 
-          ele.addEventListener('countrychange', handler);
+          s.addEventListener("countrychange", i);
 
-          _this2.countryChangeHandler.set(field, handler);
+          _this2.countryChangeHandler.set(e, i);
 
-          _this2.fieldElements.set(field, ele);
+          _this2.fieldElements.set(e, s);
 
-          _this2.intlTelInstances.set(field, intlTelInput(ele, _this2.opts));
+          _this2.intlTelInstances.set(e, intlTelInput(s, _this2.opts));
         });
       }
     }, {
@@ -152,19 +184,19 @@
       value: function uninstall() {
         var _this3 = this;
 
-        this.fields.forEach(function (field) {
-          var handler = _this3.countryChangeHandler.get(field);
+        this.fields.forEach(function (e) {
+          var s = _this3.countryChangeHandler.get(e);
 
-          var ele = _this3.fieldElements.get(field);
+          var i = _this3.fieldElements.get(e);
 
-          var intlTel = _this3.intlTelInstances.get(field);
+          var n = _this3.intlTelInstances.get(e);
 
-          if (handler && ele && intlTel) {
-            ele.removeEventListener('countrychange', handler);
+          if (s && i && n) {
+            i.removeEventListener("countrychange", s);
 
-            _this3.core.disableValidator(field, InternationalTelephoneInput.INT_TEL_VALIDATOR);
+            _this3.core.disableValidator(e, t.INT_TEL_VALIDATOR);
 
-            intlTel.destroy();
+            n.destroy();
           }
         });
       }
@@ -174,29 +206,29 @@
         var _this4 = this;
 
         return {
-          validate: function validate(input) {
-            var value = input.value;
+          validate: function validate(e) {
+            var t = e.value;
 
-            var intlTel = _this4.intlTelInstances.get(input.field);
+            var s = _this4.intlTelInstances.get(e.field);
 
-            if (value === '' || !intlTel) {
+            if (t === "" || !s) {
               return {
                 valid: true
               };
             }
 
             return {
-              valid: intlTel.isValidNumber()
+              valid: s.isValidNumber()
             };
           }
         };
       }
     }]);
 
-    return InternationalTelephoneInput;
-  }(Plugin);
-  InternationalTelephoneInput.INT_TEL_VALIDATOR = '___InternationalTelephoneInputValidator';
+    return t;
+  }(e);
+  t.INT_TEL_VALIDATOR = "___InternationalTelephoneInputValidator";
 
-  return InternationalTelephoneInput;
+  return t;
 
 })));

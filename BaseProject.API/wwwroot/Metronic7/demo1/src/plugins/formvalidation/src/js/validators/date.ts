@@ -8,7 +8,7 @@ import { Localization, ValidateInput, ValidateOptions, ValidateResult } from '..
 import format from '../utils/format';
 import isValidDate from '../utils/isValidDate';
 
-type CompareCallback = () => (string | Date);
+type CompareDateCallback = () => (string | Date);
 
 export interface DateOptions extends ValidateOptions {
     // The date format. Default is MM/DD/YYYY
@@ -18,9 +18,9 @@ export interface DateOptions extends ValidateOptions {
     // - date, time and A (indicating AM or PM)
     format: string;
     // The maximum date
-    max?: string | Date | CompareCallback;
+    max?: string | Date | CompareDateCallback;
     // The minimum date
-    min?: string | Date | CompareCallback;
+    min?: string | Date | CompareDateCallback;
     // Use to separate the date, month, and year. By default, it is /
     separator?: string;
 }

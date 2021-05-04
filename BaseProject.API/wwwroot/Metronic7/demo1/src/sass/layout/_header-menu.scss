@@ -96,6 +96,8 @@
 @include media-breakpoint-down(md) {
 	// Header Wrapper
 	.header-menu-wrapper {
+		overflow: auto;
+
 		// Logo
 		.header-logo {
 			display: none;

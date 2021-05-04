@@ -21,62 +21,6 @@ var KTLayoutAside = function() {
 				state: 'mobile-toggle-active'
 			}
 		});
-
-		// Handle Minimized Aside Hover
-		if (KTUtil.hasClass(_body, 'aside-fixed') && KTUtil.hasClass(_body, 'aside-minimize-hoverable')) {
-			var insideTm;
-			var outsideTm;
-
-            // Handle Aside Hover Mode
-			KTUtil.addEvent(_element, 'mouseenter', function(e) {
-				e.preventDefault();
-
-				if (KTUtil.isBreakpointUp('lg') === false) {
-					return;
-				}
-
-				if (outsideTm) {
-					clearTimeout(outsideTm);
-					outsideTm = null;
-				}
-
-				insideTm = setTimeout(function() {
-					if (KTUtil.hasClass(_body, 'aside-minimize') && KTUtil.isBreakpointUp('lg')) {
-						KTUtil.removeClass(_body, 'aside-minimize');
-
-						// Hover class
-						KTUtil.addClass(_body, 'aside-minimize-hover');
-
-						KTLayoutAsideMenu.getMenu().scrollUpdate();
-						KTLayoutAsideMenu.getMenu().scrollTop();
-					}
-				}, 50);
-			});
-
-			KTUtil.addEvent(_element, 'mouseleave', function(e) {
-				e.preventDefault();
-
-				if (KTUtil.isBreakpointUp('lg') === false) {
-					return;
-				}
-
-				if (insideTm) {
-					clearTimeout(insideTm);
-					insideTm = null;
-				}
-
-				outsideTm = setTimeout(function() {
-				    if (KTUtil.hasClass(_body, 'aside-minimize-hover') && KTUtil.isBreakpointUp('lg')) {
-					    KTUtil.removeClass(_body, 'aside-minimize-hover');
-					    KTUtil.addClass(_body, 'aside-minimize');
-
-						// Hover class
-                        KTLayoutAsideMenu.getMenu().scrollUpdate();
-						KTLayoutAsideMenu.getMenu().scrollTop();
-					}
-				}, 100);
-			});
-		}
 	}
 
     // Public methods

@@ -4,23 +4,27 @@
 
 @mixin offcanvas-base($class, $config) {
 	$width: get($config, width);
-	$transition: left 0.3s ease, right 0.3s ease;
+	$height: get($config, height);
+	$offset: 20px;
+
+	$transition: left 0.3s ease, right 0.3s ease, bottom 0.3s ease, top 0.3s ease;
 
 	.#{$class} {
 		z-index: get($config, zindex);
 		position: fixed;
 		top: 0;
 		bottom: 0;
-		overflow-y: auto;
-
-		//backface-visibility: hidden;
-		//-webkit-transform: translate3d(0, 0, 0);
-		//-webkit-backface-visibility: hidden;
-		//-webkit-overflow-scrolling: touch;
-
-		width: $width;
+		//overflow-y: auto;
 		transition: $transition;
-		left: -($width + 20px);
+
+		@if $width != null {
+			left: -($width + $offset);
+			width: $width;
+		}
+
+		@if $height != null {
+			height: $height;
+		}
 
 		&.#{$class}-on {
 			transition: $transition;
@@ -32,15 +36,47 @@
 		}
 	}
 
-	// Right Direction
-	.#{$class}.#{$class}-right {
-		right: -($width + 20px);
-		left: auto;
-
-		&.#{$class}-on {
-			transition: $transition;
-			right: 0;
+	@if $width != null {
+		// Right Direction
+		.#{$class}.#{$class}-right {
+			right: -($width + $offset);
 			left: auto;
+
+			&.#{$class}-on {
+				transition: $transition;
+				right: 0;
+				left: auto;
+			}
+		}
+	}
+
+	@if $height != null {
+		// Top Direction
+		.#{$class}.#{$class}-top {
+			top: -($height + $offset);
+			left: 0;
+			right: 0;
+
+			&.#{$class}-on {
+				transition: $transition;
+				top: 0;
+				left: 0;
+				right: 0;
+			}
+		}
+
+		// Bottom Direction
+		.#{$class}.#{$class}-bottom {
+			bottom: -($height + $offset);
+			left: 0;
+			right: 0;
+
+			&.#{$class}-on {
+				transition: $transition;
+				bottom: 0;
+				left: 0;
+				right: 0;
+			}
 		}
 	}
 
@@ -64,9 +100,11 @@
 }
 
 @mixin offcanvas-width($class, $width) {
+	$offset: 20px;
+
 	.#{$class} {
 		width: $width;
-		left: -($width + 20px);
+		left: -($width + $offset);
 
 		&.#{$class}-on {
 			left: 0;
@@ -75,12 +113,42 @@
 
 	// Right Direction
 	.#{$class}.#{$class}-right {
-		right: -($width + 20px);
+		right: -($width + $offset);
 		left: auto;
 
 		&.#{$class}-on {
 			right: 0;
 			left: auto;
+		}
+	}
+}
+
+@mixin offcanvas-height($class, $height) {
+	$offset: 20px;
+
+	// Top Direction
+	.#{$class}.#{$class}-top {
+		top: -($height + $offset);
+		left: 0;
+		right: 0;
+
+		&.#{$class}-on {
+			top: 0;
+			left: 0;
+			right: 0;
+		}
+	}
+
+	// Bottom Direction
+	.#{$class}.#{$class}-bottom {
+		bottom: -($height + $offset);
+		left: 0;
+		right: 0;
+
+		&.#{$class}-on {
+			bottom: 0;
+			left: 0;
+			right: 0;
 		}
 	}
 }
@@ -149,9 +217,18 @@
 	}
 
 	// Responsive Width
-	@media (max-width: get($config, width) + 50px) {
-		.#{$class} {
-			width: 90% !important;
+	@if has($config, width)  {
+		@media (max-width: get($config, width) + 50px) {
+			.#{$class} {
+				width: 90% !important;
+			}
+		}
+	}
+
+	// Tablet & Mobile Modes
+	@include media-breakpoint-down(md) {
+		[data-offcanvas-#{$class}=on] {
+			overflow: hidden !important;
 		}
 	}
 }

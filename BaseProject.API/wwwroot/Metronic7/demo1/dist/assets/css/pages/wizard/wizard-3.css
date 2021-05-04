@@ -48,7 +48,7 @@
       .wizard.wizard-3 .wizard-nav .wizard-steps .wizard-step .wizard-label .wizard-bar {
         height: 4px;
         width: 100%;
-        background-color: #ECF0F3;
+        background-color: #EBEDF3;
         position: relative; }
         .wizard.wizard-3 .wizard-nav .wizard-steps .wizard-step .wizard-label .wizard-bar:after {
           content: " ";
@@ -67,55 +67,6 @@
       .wizard.wizard-3 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="current"] .wizard-label .wizard-bar:after {
         width: 100%;
         background-color: #3699FF; }
-
-.wizard.wizard-3 [data-wizard-type="step-info"] {
-  display: none; }
-  .wizard.wizard-3 [data-wizard-type="step-info"][data-wizard-state="current"] {
-    display: block; }
-
-.wizard.wizard-3 [data-wizard-type="step-content"] {
-  display: none; }
-  .wizard.wizard-3 [data-wizard-type="step-content"][data-wizard-state="current"] {
-    display: block; }
-
-.wizard.wizard-3 [data-wizard-type="action-prev"] {
-  display: none; }
-
-.wizard.wizard-3 [data-wizard-type="action-next"] {
-  display: inline-block; }
-
-.wizard.wizard-3 [data-wizard-type="action-submit"] {
-  display: none; }
-
-.wizard.wizard-3[data-wizard-state="first"] [data-wizard-type="action-prev"] {
-  display: none; }
-
-.wizard.wizard-3[data-wizard-state="first"] [data-wizard-type="action-next"] {
-  display: inline-block; }
-
-.wizard.wizard-3[data-wizard-state="first"] [data-wizard-type="action-submit"] {
-  display: none; }
-
-.wizard.wizard-3[data-wizard-state="between"] [data-wizard-type="action-prev"] {
-  display: inline-block; }
-
-.wizard.wizard-3[data-wizard-state="between"] [data-wizard-type="action-next"] {
-  display: inline-block; }
-
-.wizard.wizard-3[data-wizard-state="between"] [data-wizard-type="action-submit"] {
-  display: none; }
-
-.wizard.wizard-3[data-wizard-state="last"] [data-wizard-type="action-prev"] {
-  display: inline-block; }
-
-.wizard.wizard-3[data-wizard-state="last"] [data-wizard-type="action-next"] {
-  display: none; }
-
-.wizard.wizard-3[data-wizard-state="last"] [data-wizard-type="action-submit"] {
-  display: inline-block; }
-
-.wizard.wizard-3[data-wizard-clickable="true"] .wizard-step {
-  cursor: pointer; }
 
 @media (max-width: 991.98px) {
   .wizard.wizard-3 .wizard-nav .wizard-steps {

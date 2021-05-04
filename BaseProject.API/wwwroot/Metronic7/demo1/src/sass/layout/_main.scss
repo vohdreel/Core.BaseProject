@@ -27,7 +27,7 @@ body {
 		}
 
 		// Minimize Aside
-		.aside-fixed.aside-minimize & {
+		.aside-fixed.aside-minimize:not(.aside-minimize-hover) & {
 			padding-left: get($aside-config, base, minimized-width);
 		}
 	}
@@ -46,6 +46,11 @@ body {
 		// Fixed Header
 		.header-mobile-fixed & {
 			padding-top: get($header-config, tablet-and-mobile, fixed, height);
+		}
+
+		// Fixed Subheader
+		.header-mobile-fixed.subheader-mobile-fixed.subheader-enabled & {
+			padding-top: get($header-config, tablet-and-mobile, fixed, height) + get($subheader-config, fixed, height-mobile);
 		}
 	}
 

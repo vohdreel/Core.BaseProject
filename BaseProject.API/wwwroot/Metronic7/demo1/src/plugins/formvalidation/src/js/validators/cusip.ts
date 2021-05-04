@@ -17,32 +17,38 @@ export default function cusip() {
                 return { valid: true };
             }
 
-            const v = input.value.toUpperCase();
-            if (!/^[0-9A-Z]{9}$/.test(v)) {
+            const value = input.value.toUpperCase();
+
+            // O, I aren't allowed
+            if (!/^[0123456789ABCDEFGHJKLMNPQRSTUVWXYZ*@#]{9}$/.test(value)) {
                 return { valid: false };
             }
-            const converted = v.split('').map((item) => {
-                const code = item.charCodeAt(0);
-                return (code >= 'A'.charCodeAt(0) && code <= 'Z'.charCodeAt(0))
-                        // Replace A, B, C, ..., Z with 10, 11, ..., 35
-                        ? (code - 'A'.charCodeAt(0) + 10) + ''
-                        : item;
-            });
-            const length = converted.length;
-            let sum = 0;
-            for (let i = 0; i < length - 1; i++) {
-                let num = parseInt(converted[i], 10);
-                if (i % 2 !== 0) {
-                    num *= 2;
-                }
-                if (num > 9) {
-                    num -= 9;
-                }
-                sum += num;
-            }
 
-            sum = (10 - (sum % 10)) % 10;
-            return { valid: sum === parseInt(converted[length - 1], 10) };
+            // Get the last char
+            const chars = value.split('');
+            const lastChar = chars.pop();
+
+            const converted = chars.map((c) => {
+                const code = c.charCodeAt(0);
+                switch (true) {
+                    case (c === '*'): return 36;
+                    case (c === '@'): return 37;
+                    case (c === '#'): return 38;
+                    // Replace A, B, C, ..., Z with 10, 11, ..., 35
+                    case (code >= 'A'.charCodeAt(0) && code <= 'Z'.charCodeAt(0)): return (code - 'A'.charCodeAt(0) + 10);
+                    default: return parseInt(c, 10);
+                }
+            });
+
+            const sum = converted
+                .map((v, i) => {
+                    const double = (i % 2 === 0) ? v : 2 * v;
+                    return Math.floor(double / 10) + double % 10;
+                })
+                .reduce((a, b) => a + b, 0);
+            const checkDigit = (10 - (sum % 10)) % 10;
+
+            return { valid: lastChar === `${checkDigit}` };
         },
     };
 }

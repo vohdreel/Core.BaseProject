@@ -1,7 +1,13 @@
-﻿modelBuilder.Entity<MachineUser>().HasNoKey();
+﻿
+**Aqui estão templates de como incluir caso você precise criar objetos para Procedures**
+
+modelBuilder.Entity<MachineUser>().HasNoKey();
 modelBuilder.Entity<EgressUnit>().HasNoKey();
+modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();
+
+
+**Essa linha é necessaria para evitar erros com o ASP .NET Identity**
 
 base.OnModelCreating(modelBuilder);
 
-modelBuilder.Entity<VagaCompatibilidade>().HasNoKey();
 

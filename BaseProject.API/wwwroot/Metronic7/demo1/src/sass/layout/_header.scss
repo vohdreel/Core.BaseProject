@@ -29,7 +29,6 @@
 		}
 
 		// Fixed Header & Minimized Aside & Minimized Aside Hover Modes
-		.header-fixed.aside-minimize-hover &,
 		.header-fixed.aside-minimize & {
 			left: get($aside-config, base, minimized-width);
 		}

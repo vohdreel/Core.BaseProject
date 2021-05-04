@@ -237,8 +237,16 @@ var KTMenu = function(elementId, options) {
             var submenus = KTUtil.findAll(element, '.menu-submenu');
             if ( submenus ) {
                 for (var i = 0, len = submenus.length; i < len; i++) {
-                    KTUtil.css(submenus[0], 'display', '');
-                    KTUtil.css(submenus[0], 'overflow', '');
+                    var submenu = submenus[0];
+
+                    KTUtil.css(submenu, 'display', '');
+                    KTUtil.css(submenu, 'overflow', '');
+
+                    if (submenu.hasAttribute('data-hor-direction')) {
+                        KTUtil.removeClass(submenu, 'menu-submenu-left');
+                        KTUtil.removeClass(submenu, 'menu-submenu-right');
+                        KTUtil.addClass(submenu, submenu.getAttribute('data-hor-direction'));
+                    }
                 }
             }
         },
@@ -531,6 +539,25 @@ var KTMenu = function(elementId, options) {
 
             // add submenu activation class
             KTUtil.addClass(item, 'menu-item-hover');
+
+            // Change the alignment of submenu is offscreen.
+            var submenu = KTUtil.find(item, '.menu-submenu');
+
+            if (submenu && submenu.hasAttribute('data-hor-direction') === false) {
+                if (KTUtil.hasClass(submenu, 'menu-submenu-left')) {
+                    submenu.setAttribute('data-hor-direction', 'menu-submenu-left');
+                } else if (KTUtil.hasClass(submenu, 'menu-submenu-right')) {
+                    submenu.setAttribute('data-hor-direction', 'menu-submenu-right');
+                }
+            }
+
+            if ( submenu && KTUtil.isOffscreen(submenu, 'left', 15) === true ) {
+                KTUtil.removeClass(submenu, 'menu-submenu-left');
+                KTUtil.addClass(submenu, 'menu-submenu-right');
+            } else if ( submenu && KTUtil.isOffscreen(submenu, 'right', 15) === true ) {
+                KTUtil.removeClass(submenu, 'menu-submenu-right');
+                KTUtil.addClass(submenu, 'menu-submenu-left');
+            }
 
             if ( item.getAttribute('data-menu-toggle-class') ) {
                 KTUtil.addClass(body, item.getAttribute('data-menu-toggle-class'));

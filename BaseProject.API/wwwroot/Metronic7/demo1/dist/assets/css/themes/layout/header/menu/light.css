@@ -12,7 +12,7 @@
     .header-menu .menu-nav > .menu-item > .menu-link .menu-bullet.menu-bullet-line > span {
       background-color: #B5B5C3; }
     .header-menu .menu-nav > .menu-item > .menu-link .menu-text {
-      color: #464E5F; }
+      color: #3F4254; }
     .header-menu .menu-nav > .menu-item > .menu-link .menu-arrow {
       color: #B5B5C3; }
   .header-menu .menu-nav > .menu-item.menu-item-active > .menu-link {
@@ -81,7 +81,7 @@
     .header-menu .menu-nav > .menu-item .menu-submenu > .menu-subnav > .menu-item > .menu-link .menu-bullet.menu-bullet-line > span {
       background-color: #B5B5C3; }
     .header-menu .menu-nav > .menu-item .menu-submenu > .menu-subnav > .menu-item > .menu-link .menu-text {
-      color: #464E5F; }
+      color: #3F4254; }
     .header-menu .menu-nav > .menu-item .menu-submenu > .menu-subnav > .menu-item > .menu-link .menu-arrow {
       color: #B5B5C3; }
     .header-menu .menu-nav > .menu-item .menu-submenu > .menu-subnav > .menu-item.menu-item-active > .menu-link {
@@ -142,9 +142,9 @@
       .header-menu .menu-nav > .menu-item .menu-submenu > .menu-subnav > .menu-item:hover:not(.menu-item-here):not(.menu-item-active) > .menu-link > .menu-arrow, .header-menu .menu-nav > .menu-item .menu-submenu > .menu-subnav > .menu-item.menu-item-hover:not(.menu-item-here):not(.menu-item-active) > .menu-link > .menu-arrow {
         color: #3699FF; }
     .header-menu .menu-nav > .menu-item .menu-submenu > .menu-subnav .menu-content > .menu-item {
-      border-right: 1px solid #ECF0F3; }
+      border-right: 1px solid #EBEDF3; }
     .header-menu .menu-nav > .menu-item .menu-submenu > .menu-subnav .menu-content .menu-heading > .menu-text {
-      color: #212121; }
+      color: #181C32; }
     .header-menu .menu-nav > .menu-item .menu-submenu > .menu-subnav .menu-content .menu-heading > .menu-icon {
       color: #B5B5C3; }
     .header-menu .menu-nav > .menu-item .menu-submenu > .menu-subnav .menu-content .menu-inner > .menu-item > .menu-link .menu-icon {
@@ -161,7 +161,7 @@
     .header-menu .menu-nav > .menu-item .menu-submenu > .menu-subnav .menu-content .menu-inner > .menu-item > .menu-link .menu-bullet.menu-bullet-line > span {
       background-color: #B5B5C3; }
     .header-menu .menu-nav > .menu-item .menu-submenu > .menu-subnav .menu-content .menu-inner > .menu-item > .menu-link .menu-text {
-      color: #464E5F; }
+      color: #3F4254; }
     .header-menu .menu-nav > .menu-item .menu-submenu > .menu-subnav .menu-content .menu-inner > .menu-item > .menu-link .menu-arrow {
       color: #B5B5C3; }
     .header-menu .menu-nav > .menu-item .menu-submenu > .menu-subnav .menu-content .menu-inner > .menu-item.menu-item-active > .menu-link {
@@ -227,7 +227,7 @@
     background-color: #ffffff ; }
     .header-menu-mobile .menu-nav > .menu-item > .menu-heading .menu-text,
     .header-menu-mobile .menu-nav > .menu-item > .menu-link .menu-text {
-      color: #464E5F ; }
+      color: #3F4254 ; }
     .header-menu-mobile .menu-nav > .menu-item > .menu-heading .menu-icon,
     .header-menu-mobile .menu-nav > .menu-item > .menu-link .menu-icon {
       color: #B5B5C3 ; }
@@ -372,14 +372,14 @@
     .header-menu-mobile .menu-nav > .menu-item > .menu-arrow {
       color: #ffffff; }
     .header-menu-mobile .menu-nav > .menu-section .menu-text {
-      color: #80808F ; }
+      color: #7E8299 ; }
     .header-menu-mobile .menu-nav > .menu-section .menu-icon {
       color: #B5B5C3 ; }
     .header-menu-mobile .menu-nav > .menu-separator {
-      border-bottom: 1px solid #ECF0F3 ; }
+      border-bottom: 1px solid #EBEDF3 ; }
     .header-menu-mobile .menu-nav > .menu-item .menu-submenu .menu-item > .menu-heading .menu-text,
     .header-menu-mobile .menu-nav > .menu-item .menu-submenu .menu-item > .menu-link .menu-text {
-      color: #464E5F ; }
+      color: #3F4254 ; }
     .header-menu-mobile .menu-nav > .menu-item .menu-submenu .menu-item > .menu-heading .menu-icon,
     .header-menu-mobile .menu-nav > .menu-item .menu-submenu .menu-item > .menu-link .menu-icon {
       color: #B5B5C3 ; }
@@ -512,8 +512,8 @@
         .header-menu-mobile .menu-nav > .menu-item .menu-submenu .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover > .menu-link .menu-arrow {
           color: #3699FF ; }
     .header-menu-mobile .menu-nav > .menu-item .menu-submenu .menu-section .menu-text {
-      color: #80808F ; }
+      color: #7E8299 ; }
     .header-menu-mobile .menu-nav > .menu-item .menu-submenu .menu-section .menu-icon {
       color: #B5B5C3 ; }
     .header-menu-mobile .menu-nav > .menu-item .menu-submenu .menu-separator {
-      border-bottom: 1px solid #ECF0F3 ; } }
+      border-bottom: 1px solid #EBEDF3 ; } }

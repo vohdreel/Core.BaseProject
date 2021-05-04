@@ -6,7 +6,7 @@
 
 export interface Filter {
     filters: {
-        [name: string]: Array<(...arg: any[]) => any>,
+        [name: string]: ((...arg: any[]) => any)[],
     };
     add(name: string, func: (...arg: any[]) => any): void;
     clear(): void;

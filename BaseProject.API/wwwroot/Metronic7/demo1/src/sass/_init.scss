@@ -3,38 +3,16 @@
 //
 
 
-// Theme functions
-@import
-    "base/functions/get",
-    "base/functions/math",
-    "base/functions/valueif",
-    "base/functions/theme-colors";
+// Functions
+@import "base/functions";
 
-// Theme mixins
-@import
-    "base/mixins/attr",
-    "base/mixins/browsers",
-    "base/mixins/fixes",
-    "base/mixins/reset",
-    "base/mixins/placeholder",
-    "components/mixins/buttons",
-    "components/mixins/burger-icon",
-    "components/mixins/checkbox",
-    "components/mixins/radio",
-    "components/mixins/switch",
-    "components/mixins/ki",
-    "components/mixins/symbol",
-    "components/mixins/menu-horizontal",
-    "components/mixins/menu-vertical",
-    "components/mixins/offcanvas",
-    "components/mixins/spinner",
-    "components/mixins/svg-icon",
-    "components/mixins/navi",
-    "components/mixins/label",
-    "vendors/plugins/mixins/perfect-scrollbar";
+// Mixins
+@import "base/mixins";
+@import "components/mixins";
+@import "vendors/plugins/mixins";
 
 // Bootstrap mixins
-@import "../../../tools/node_modules/bootstrap/scss/mixins";
+@import "bootstrap/scss/_mixins.scss";
 
 // Global variables
 @import "components/variables.demo";

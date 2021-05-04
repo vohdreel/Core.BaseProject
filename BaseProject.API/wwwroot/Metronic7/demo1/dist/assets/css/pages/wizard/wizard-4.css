@@ -46,7 +46,7 @@
         align-items: center;
         -ms-flex-wrap: wrap;
         flex-wrap: wrap;
-        color: #464E5F;
+        color: #3F4254;
         padding: 2rem 2.5rem; }
         .wizard.wizard-4 .wizard-nav .wizard-steps .wizard-step .wizard-wrapper .wizard-number {
           font-size: 1.3rem;
@@ -87,40 +87,21 @@
           background-color: #3699FF; }
         .wizard.wizard-4 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="current"] .wizard-wrapper .wizard-label .wizard-title {
           color: #3699FF; }
-  .wizard.wizard-4 [data-wizard-type="step-info"] {
-    display: none; }
-    .wizard.wizard-4 [data-wizard-type="step-info"][data-wizard-state="current"] {
-      display: block; }
-  .wizard.wizard-4 [data-wizard-type="step-content"] {
-    display: none; }
-    .wizard.wizard-4 [data-wizard-type="step-content"][data-wizard-state="current"] {
-      display: block; }
-  .wizard.wizard-4 [data-wizard-type="action-prev"] {
-    display: none; }
-  .wizard.wizard-4 [data-wizard-type="action-next"] {
-    display: inline-block; }
-  .wizard.wizard-4 [data-wizard-type="action-submit"] {
-    display: none; }
-  .wizard.wizard-4[data-wizard-state="first"] [data-wizard-type="action-prev"] {
-    display: none; }
-  .wizard.wizard-4[data-wizard-state="first"] [data-wizard-type="action-next"] {
-    display: inline-block; }
-  .wizard.wizard-4[data-wizard-state="first"] [data-wizard-type="action-submit"] {
-    display: none; }
-  .wizard.wizard-4[data-wizard-state="between"] [data-wizard-type="action-prev"] {
-    display: inline-block; }
-  .wizard.wizard-4[data-wizard-state="between"] [data-wizard-type="action-next"] {
-    display: inline-block; }
-  .wizard.wizard-4[data-wizard-state="between"] [data-wizard-type="action-submit"] {
-    display: none; }
-  .wizard.wizard-4[data-wizard-state="last"] [data-wizard-type="action-prev"] {
-    display: inline-block; }
-  .wizard.wizard-4[data-wizard-state="last"] [data-wizard-type="action-next"] {
-    display: none; }
-  .wizard.wizard-4[data-wizard-state="last"] [data-wizard-type="action-submit"] {
-    display: inline-block; }
-  .wizard.wizard-4[data-wizard-clickable="true"] .wizard-step {
-    cursor: pointer; }
+    .wizard.wizard-4 .wizard-nav .wizard-steps[data-total-steps="2"] .wizard-step {
+      -webkit-box-flex: 0;
+      -ms-flex: 0 0 calc(50% - 0.25rem);
+      flex: 0 0 calc(50% - 0.25rem);
+      width: calc(50% - 0.25rem); }
+    .wizard.wizard-4 .wizard-nav .wizard-steps[data-total-steps="3"] .wizard-step {
+      -webkit-box-flex: 0;
+      -ms-flex: 0 0 calc(33.33333% - 0.25rem);
+      flex: 0 0 calc(33.33333% - 0.25rem);
+      width: calc(33.33333% - 0.25rem); }
+    .wizard.wizard-4 .wizard-nav .wizard-steps[data-total-steps="4"] .wizard-step {
+      -webkit-box-flex: 0;
+      -ms-flex: 0 0 calc(25% - 0.25rem);
+      flex: 0 0 calc(25% - 0.25rem);
+      width: calc(25% - 0.25rem); }
 
 @media (max-width: 1399.98px) {
   .wizard.wizard-4 .wizard-nav .wizard-steps .wizard-step {
@@ -130,7 +111,17 @@
     width: calc(50% - 0.25rem);
     border-bottom-left-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
-    margin-bottom: 0.5rem; } }
+    margin-bottom: 0.5rem; }
+  .wizard.wizard-4 .wizard-nav .wizard-steps[data-total-steps="2"] .wizard-step, .wizard.wizard-4 .wizard-nav .wizard-steps[data-total-steps="4"] .wizard-step {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 calc(50% - 0.25rem);
+    flex: 0 0 calc(50% - 0.25rem);
+    width: calc(50% - 0.25rem); }
+  .wizard.wizard-4 .wizard-nav .wizard-steps[data-total-steps="3"] .wizard-step {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    width: 100%; } }
 
 @media (max-width: 767.98px) {
   .wizard.wizard-4 .wizard-nav .wizard-steps {
@@ -142,11 +133,11 @@
     -ms-flex-align: start;
     align-items: flex-start; }
     .wizard.wizard-4 .wizard-nav .wizard-steps .wizard-step {
-      -webkit-box-flex: 0;
-      -ms-flex: 0 0 100%;
-      flex: 0 0 100%;
+      -webkit-box-flex: 0 !important;
+      -ms-flex: 0 0 100% !important;
+      flex: 0 0 100% !important;
       position: relative;
-      width: 100%; }
+      width: 100% !important; }
       .wizard.wizard-4 .wizard-nav .wizard-steps .wizard-step .wizard-wrapper {
         -webkit-box-pack: start;
         -ms-flex-pack: start;

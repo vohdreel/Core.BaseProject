@@ -1,5 +1,5 @@
 //
-// Login 4
+// Login 3
 // Pages SASS files are compiled into separate css files
 //
 
@@ -70,7 +70,9 @@
 
 // Tablet and Mobile mode
 @include media-breakpoint-between(lg, xl) {
+    .login.login-3 {
 
+    }
 }
 
 // Mobile mode

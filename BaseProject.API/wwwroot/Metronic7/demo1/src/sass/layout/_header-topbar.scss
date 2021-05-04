@@ -43,7 +43,7 @@
 
 		// Topbar Shown Mode
 		.topbar-mobile-on & {
-			z-index: 1;
+			z-index: 2;
 			transition: all 0.3s ease;
 			border-top: 1px solid get($header-topbar-config, tablet-and-mobile, border-color);
 			margin-top: get($header-config, tablet-and-mobile, default, height);
@@ -51,7 +51,20 @@
 
 		// Fixed Mobile Header & Topbar Shown Modes
 		.topbar-mobile-on.header-mobile-fixed & {
-			margin-top: get($header-config, tablet-and-mobile, mobile, height);
+			z-index: get($header-config, tablet-and-mobile, fixed, zindex) - 1;
+			margin-top: get($header-config, tablet-and-mobile, fixed, height);
+		}
+	}
+}
+
+// Mobile View
+@include media-breakpoint-down(xs) {
+	.topbar {
+		.topbar-item {
+			.btn.btn-icon {
+				height:  35px;
+   				width:  35px;
+			}
 		}
 	}
 }

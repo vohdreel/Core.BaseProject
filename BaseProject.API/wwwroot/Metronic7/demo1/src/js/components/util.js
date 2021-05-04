@@ -48,6 +48,7 @@ if (!Element.prototype.closest) {
 	}
 })(['Element', 'CharacterData', 'DocumentType']);
 
+
 //
 // requestAnimationFrame polyfill by Erik Möller.
 //  With fixes from Paul Irish and Tino Zijdel
@@ -107,6 +108,19 @@ if (!Element.prototype.closest) {
         });
     });
 })([Element.prototype, Document.prototype, DocumentFragment.prototype]);
+
+// getAttributeNames
+if (Element.prototype.getAttributeNames == undefined) {
+  Element.prototype.getAttributeNames = function () {
+    var attributes = this.attributes;
+    var length = attributes.length;
+    var result = new Array(length);
+    for (var i = 0; i < length; i++) {
+      result[i] = attributes[i].name;
+    }
+    return result;
+  };
+}
 
 // Global variables
 window.KTUtilElementDataStore = {};
@@ -225,7 +239,14 @@ var KTUtil = function() {
          * @returns {boolean}
          */
         isMobileDevice: function() {
-            return (this.getViewPort().width < this.getBreakpoint('lg') ? true : false);
+            var test = (this.getViewPort().width < this.getBreakpoint('lg') ? true : false);
+
+            if (test === false) {
+                // For use within normal web clients
+                test = navigator.userAgent.match(/iPad/i) != null;
+            }
+
+            return test;
         },
 
         /**
@@ -302,7 +323,6 @@ var KTUtil = function() {
 
 			return (width < breakpoint);
         },
-
 
         /**
          * Generates unique ID for give prefix.
@@ -440,25 +460,26 @@ var KTUtil = function() {
             return window.Zone !== undefined ? true : false;
         },
 
-        // jQuery Workarounds
-
         // Deep extend:  $.extend(true, {}, objA, objB);
         deepExtend: function(out) {
             out = out || {};
 
             for (var i = 1; i < arguments.length; i++) {
                 var obj = arguments[i];
-
-                if (!obj)
-                    continue;
+                if (!obj) continue;
 
                 for (var key in obj) {
-                    if (obj.hasOwnProperty(key)) {
-                        if (typeof obj[key] === 'object')
-                            out[key] = KTUtil.deepExtend(out[key], obj[key]);
-                        else
-                            out[key] = obj[key];
+                    if (!obj.hasOwnProperty(key)) {
+                        continue;
                     }
+
+                    // based on https://javascriptweblog.wordpress.com/2011/08/08/fixing-the-javascript-typeof-operator/
+                    if ( Object.prototype.toString.call(obj[key]) === '[object Object]' ) {
+                        out[key] = KTUtil.deepExtend(out[key], obj[key]);
+                        continue;
+                    }
+
+                    out[key] = obj[key];
                 }
             }
 
@@ -853,6 +874,20 @@ var KTUtil = function() {
 
         height: function(el) {
             return KTUtil.css(el, 'height');
+        },
+
+        outerHeight: function(el, withMargin) {
+            var height = el.offsetHeight;
+            var style;
+
+            if (typeof withMargin !== 'undefined' && withMargin === true) {
+                style = getComputedStyle(el);
+                height += parseInt(style.marginTop) + parseInt(style.marginBottom);
+
+                return height;
+            } else {
+                return height;
+            }
         },
 
         visible: function(el) {
@@ -1408,16 +1443,54 @@ var KTUtil = function() {
 
         // Scroller
         scrollInit: function(element, options) {
-            if(!element) return;
+            if (!element) {
+                return;
+            }
+
+            // Learn more: https://github.com/mdbootstrap/perfect-scrollbar#options
+            var pluginDefOptions = {
+                wheelSpeed: 0.5,
+                swipeEasing: true,
+                wheelPropagation: false,
+                minScrollbarLength: 40,
+                maxScrollbarLength: 300,
+                suppressScrollX: true
+            };
+
+            options = KTUtil.deepExtend({}, pluginDefOptions, options);
+
             // Define init function
             function init() {
                 var ps;
                 var height;
 
+                // Get extra options via data attributes
+                var attrs = element.getAttributeNames();
+                if (attrs.length > 0) {
+                    attrs.forEach(function(attrName) {
+            			// more options; https://github.com/ganlanyuan/tiny-slider#options
+            			if ((/^data-.*/g).test(attrName)) {
+                            if (['scroll', 'height', 'mobile-height'].includes(optionName) == false) {
+                                var optionName = attrName.replace('data-', '').toLowerCase().replace(/(?:[\s-])\w/g, function(match) {
+                					return match.replace('-', '').toUpperCase();
+                				});
+
+                                options[optionName] = KTUtil.filterBoolean(element.getAttribute(attrName));
+                            }
+            			}
+            		});
+                }
+
                 if (options.height instanceof Function) {
                     height = options.height.call();
                 } else {
-                    height = options.height;
+                    if (KTUtil.isMobileDevice() === true && options.mobileHeight) {
+                        height = parseInt(options.mobileHeight);
+                    } else if (options.height) {
+                        height = parseInt(options.height);
+                    } else {
+                        height = parseInt(KTUtil.css(element, 'height'));
+                    }
                 }
 
                 if (height === false) {
@@ -1429,7 +1502,7 @@ var KTUtil = function() {
                 height = parseInt(height);
 
                 // Destroy scroll on table and mobile modes
-                if ((options.mobileNativeScroll || options.disableForMobile) && KTUtil.isBreakpointDown('lg')) {
+                if ((options.mobileNativeScroll || options.disableForMobile) && KTUtil.isMobileDevice() === true) {
                     ps = KTUtil.data(element).get('ps');
                     if (ps) {
                         if (options.resetHeightOnDestroy) {
@@ -1474,34 +1547,28 @@ var KTUtil = function() {
                     KTUtil.css(element, 'overflow', 'hidden');
                     KTUtil.addClass(element, 'scroll');
 
-                    ps = new PerfectScrollbar(element, {
-                        wheelSpeed: 0.5,
-                        swipeEasing: true,
-                        wheelPropagation: (options.windowScroll === false ? false : true),
-                        minScrollbarLength: 40,
-                        maxScrollbarLength: 300,
-                        suppressScrollX: KTUtil.attr(element, 'data-scroll-x') != 'true' ? true : false
-                    });
+                    ps = new PerfectScrollbar(element, options);
 
                     KTUtil.data(element).set('ps', ps);
                 }
 
                 // Remember scroll position in cookie
                 var uid = KTUtil.attr(element, 'id');
-                // Consider using Localstorage
-                //if (options.rememberPosition === true && Cookies && uid) {
-                //    if (KTCookie.getCookie(uid)) {
-                //        var pos = parseInt(KTCookie.getCookie(uid));
-                //
-                //        if (pos > 0) {
-                //            element.scrollTop = pos;
-                //        }
-                //    }
-                //
-                //    element.addEventListener('ps-scroll-y', function() {
-                //        KTCookie.setCookie(uid, element.scrollTop);
-                //    });
-                //}
+
+                // Todo:Consider using Localstorage
+                if (options.rememberPosition === true && KTCookie && uid) {
+                    if (KTCookie.getCookie(uid)) {
+                        var pos = parseInt(KTCookie.getCookie(uid));
+
+                        if (pos > 0) {
+                            element.scrollTop = pos;
+                        }
+                    }
+
+                    element.addEventListener('ps-scroll-y', function() {
+                        KTCookie.setCookie(uid, element.scrollTop);
+                    });
+                }
             }
 
             // Init
@@ -1543,6 +1610,19 @@ var KTUtil = function() {
             }
         },
 
+        filterBoolean: function(val) {
+            // Convert string boolean
+			if (val === true || val === 'true') {
+				return true;
+			}
+
+			if (val === false || val === 'false') {
+				return false;
+			}
+
+            return val;
+        },
+
         setHTML: function(el, html) {
             el.innerHTML = html;
         },
@@ -1564,34 +1644,34 @@ var KTUtil = function() {
             return  (document.scrollingElement || document.documentElement).scrollTop;
         },
 
-        colorDarken: function(color, amount) {
-            var subtractLight = function(color, amount){
-                var cc = parseInt(color,16) - amount;
-                var c = (cc < 0) ? 0 : (cc);
-                c = (c.toString(16).length > 1 ) ? c.toString(16) : `0${c.toString(16)}`;
+        changeColor: function(col, amt) {
 
-                return c;
+            var usePound = false;
+
+            if (col[0] == "#") {
+                col = col.slice(1);
+                usePound = true;
             }
 
-            color = (color.indexOf("#")>=0) ? color.substring(1,color.length) : color;
-            amount = parseInt((255*amount)/100);
+            var num = parseInt(col,16);
 
-            return color = `#${subtractLight(color.substring(0,2), amount)}${subtractLight(color.substring(2,4), amount)}${subtractLight(color.substring(4,6), amount)}`;
-        },
+            var r = (num >> 16) + amt;
 
-        colorLighten: function(color, amount) {
-            var addLight = function(color, amount){
-                var cc = parseInt(color,16) + amount;
-                var c = (cc > 255) ? 255 : (cc);
-                c = (c.toString(16).length > 1 ) ? c.toString(16) : `0${c.toString(16)}`;
+            if (r > 255) r = 255;
+            else if  (r < 0) r = 0;
 
-                return c;
-            }
+            var b = ((num >> 8) & 0x00FF) + amt;
 
-            color = (color.indexOf("#")>=0) ? color.substring(1,color.length) : color;
-            amount = parseInt((255*amount)/100);
+            if (b > 255) b = 255;
+            else if  (b < 0) b = 0;
 
-            return color = `#${addLight(color.substring(0,2), amount)}${addLight(color.substring(2,4), amount)}${addLight(color.substring(4,6), amount)}`;
+            var g = (num & 0x0000FF) + amt;
+
+            if (g > 255) g = 255;
+            else if (g < 0) g = 0;
+
+            return (usePound?"#":"") + (g | (b << 8) | (r << 16)).toString(16);
+
         },
 
         // Throttle function: Input as function which needs to be throttled and delay is the time interval in milliseconds
@@ -1618,6 +1698,102 @@ var KTUtil = function() {
 
         	// Executes the func after delay time.
         	timer  =  setTimeout(func, delay);
+        },
+
+        btnWait: function(el, cls, message, disable) {
+            if (!el) {
+                return;
+            }
+
+            if (typeof disable !== 'undefined' && disable === true) {
+                KTUtil.attr(el, "disabled", true);
+            }
+
+            if (cls) {
+                KTUtil.addClass(el, cls);
+                KTUtil.attr(el, "wait-class", cls);
+            }
+
+            if (message) {
+                var caption = KTUtil.find(el, '.btn-caption');
+
+                if (caption) {
+                    KTUtil.data(caption).set('caption', KTUtil.getHTML(caption));
+                    KTUtil.setHTML(caption, message);
+                } else {
+                    KTUtil.data(el).set('caption', KTUtil.getHTML(el));
+                    KTUtil.setHTML(el, message);
+                }
+            }
+        },
+
+        btnRelease: function(el) {
+            if (!el) {
+                return;
+            }
+
+            /// Show loading state on button
+            KTUtil.removeAttr(el, "disabled");
+
+            if (KTUtil.hasAttr(el, "wait-class")) {
+                KTUtil.removeClass(el, KTUtil.attr(el, "wait-class"));
+            }
+
+            var caption = KTUtil.find(el, '.btn-caption');
+
+            if (caption && KTUtil.data(caption).has('caption')) {
+                KTUtil.setHTML(caption, KTUtil.data(caption).get('caption'));
+            } else if (KTUtil.data(el).has('caption')) {
+                KTUtil.setHTML(el, KTUtil.data(el).get('caption'));
+            }
+        },
+
+        isOffscreen: function(el, direction, offset) {
+            offset = offset || 0;
+
+            var windowWidth = KTUtil.getViewPort().width;
+            var windowHeight = KTUtil.getViewPort().height;
+
+            var top = KTUtil.offset(el).top;
+            var height = KTUtil.outerHeight(el) + offset;
+            var left = KTUtil.offset(el).left;
+            var width = KTUtil.outerWidth(el) + offset;
+
+            if (direction == 'bottom') {
+                if (windowHeight < top + height) {
+                    return true;
+                } else if (windowHeight > top + height * 1.5) {
+                    return true;
+                }
+            }
+
+            if (direction == 'top') {
+                if (top < 0) {
+                    return true;
+                } else if (top > height) {
+                    return true;
+                }
+            }
+
+            if (direction == 'left') {
+                if (left < 0) {
+                    return true;
+                } else if (left * 2 > width) {
+                    //console.log('left 2');
+                    //return true;
+                }
+            }
+
+            if (direction == 'right') {
+                if (windowWidth < left + width) {
+                    return true;
+                } else {
+                    //console.log('right 2');
+                    //return true;
+                }
+            }
+
+            return false;
         }
     }
 }();

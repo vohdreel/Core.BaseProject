@@ -1,5 +1,5 @@
 /**
- * FormValidation (https://formvalidation.io), v1.6.0 (4730ac5)
+ * FormValidation (https://formvalidation.io), v1.7.0 (71bbaaa)
  * The best validation library for JavaScript
  * (c) 2013 - 2020 Nguyen Huu Phuoc <me@phuoc.ng>
  */
@@ -78,6 +78,19 @@
     return _setPrototypeOf(o, p);
   }
 
+  function _isNativeReflectConstruct() {
+    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+    if (Reflect.construct.sham) return false;
+    if (typeof Proxy === "function") return true;
+
+    try {
+      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   function _assertThisInitialized(self) {
     if (self === void 0) {
       throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -94,35 +107,54 @@
     return _assertThisInitialized(self);
   }
 
-  var Plugin = FormValidation.Plugin;
+  function _createSuper(Derived) {
+    var hasNativeReflectConstruct = _isNativeReflectConstruct();
 
-  var PasswordStrength =
-  /*#__PURE__*/
-  function (_Plugin) {
-    _inherits(PasswordStrength, _Plugin);
+    return function _createSuperInternal() {
+      var Super = _getPrototypeOf(Derived),
+          result;
 
-    function PasswordStrength(opts) {
+      if (hasNativeReflectConstruct) {
+        var NewTarget = _getPrototypeOf(this).constructor;
+
+        result = Reflect.construct(Super, arguments, NewTarget);
+      } else {
+        result = Super.apply(this, arguments);
+      }
+
+      return _possibleConstructorReturn(this, result);
+    };
+  }
+
+  var t = FormValidation.Plugin;
+
+  var a = /*#__PURE__*/function (_t) {
+    _inherits(a, _t);
+
+    var _super = _createSuper(a);
+
+    function a(t) {
       var _this;
 
-      _classCallCheck(this, PasswordStrength);
+      _classCallCheck(this, a);
 
-      _this = _possibleConstructorReturn(this, _getPrototypeOf(PasswordStrength).call(this, opts));
+      _this = _super.call(this, t);
       _this.opts = Object.assign({}, {
         minimalScore: 3,
         onValidated: function onValidated() {}
-      }, opts);
+      }, t);
       _this.validatePassword = _this.checkPasswordStrength.bind(_assertThisInitialized(_this));
       _this.validatorValidatedHandler = _this.onValidatorValidated.bind(_assertThisInitialized(_this));
       return _this;
     }
 
-    _createClass(PasswordStrength, [{
+    _createClass(a, [{
       key: "install",
       value: function install() {
-        this.core.registerValidator(PasswordStrength.PASSWORD_STRENGTH_VALIDATOR, this.validatePassword);
-        this.core.on('core.validator.validated', this.validatorValidatedHandler);
+        this.core.registerValidator(a.PASSWORD_STRENGTH_VALIDATOR, this.validatePassword);
+        this.core.on("core.validator.validated", this.validatorValidatedHandler);
         this.core.addField(this.opts.field, {
-          validators: _defineProperty({}, PasswordStrength.PASSWORD_STRENGTH_VALIDATOR, {
+          validators: _defineProperty({}, a.PASSWORD_STRENGTH_VALIDATOR, {
             message: this.opts.message,
             minimalScore: this.opts.minimalScore
           })
@@ -131,8 +163,8 @@
     }, {
       key: "uninstall",
       value: function uninstall() {
-        this.core.off('core.validator.validated', this.validatorValidatedHandler);
-        this.core.disableValidator(this.opts.field, PasswordStrength.PASSWORD_STRENGTH_VALIDATOR);
+        this.core.off("core.validator.validated", this.validatorValidatedHandler);
+        this.core.disableValidator(this.opts.field, a.PASSWORD_STRENGTH_VALIDATOR);
       }
     }, {
       key: "checkPasswordStrength",
@@ -140,33 +172,33 @@
         var _this2 = this;
 
         return {
-          validate: function validate(input) {
-            var value = input.value;
+          validate: function validate(t) {
+            var a = t.value;
 
-            if (value === '') {
+            if (a === "") {
               return {
                 valid: true
               };
             }
 
-            var result = zxcvbn(value);
-            var score = result.score;
-            var message = result.feedback.warning || 'The password is weak';
+            var e = zxcvbn(a);
+            var s = e.score;
+            var i = e.feedback.warning || "The password is weak";
 
-            if (score < _this2.opts.minimalScore) {
+            if (s < _this2.opts.minimalScore) {
               return {
-                message: message,
+                message: i,
                 meta: {
-                  message: message,
-                  score: score
+                  message: i,
+                  score: s
                 },
                 valid: false
               };
             } else {
               return {
                 meta: {
-                  message: message,
-                  score: score
+                  message: i,
+                  score: s
                 },
                 valid: true
               };
@@ -176,19 +208,19 @@
       }
     }, {
       key: "onValidatorValidated",
-      value: function onValidatorValidated(e) {
-        if (e.field === this.opts.field && e.validator === PasswordStrength.PASSWORD_STRENGTH_VALIDATOR && e.result.meta) {
-          var message = e.result.meta['message'];
-          var score = e.result.meta['score'];
-          this.opts.onValidated(e.result.valid, message, score);
+      value: function onValidatorValidated(t) {
+        if (t.field === this.opts.field && t.validator === a.PASSWORD_STRENGTH_VALIDATOR && t.result.meta) {
+          var _a = t.result.meta["message"];
+          var e = t.result.meta["score"];
+          this.opts.onValidated(t.result.valid, _a, e);
         }
       }
     }]);
 
-    return PasswordStrength;
-  }(Plugin);
-  PasswordStrength.PASSWORD_STRENGTH_VALIDATOR = '___PasswordStrengthValidator';
+    return a;
+  }(t);
+  a.PASSWORD_STRENGTH_VALIDATOR = "___PasswordStrengthValidator";
 
-  return PasswordStrength;
+  return a;
 
 })));

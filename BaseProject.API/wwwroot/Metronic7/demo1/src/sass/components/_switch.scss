@@ -5,8 +5,13 @@
 
 // Base
 .switch  {
-    display: inline-block;
+    display: flex;
+    align-items: center;
     font-size: 1rem;
+
+    label {
+        margin: 0;
+    }
 
     input:empty {
         margin-left: -999px;
@@ -124,25 +129,10 @@
             $switch-icon-font-size
         );
     }
-
-    // Form group
-    .form-group.row & {
-        margin-top: 0.15rem;
-
-        &.switch-sm {
-            margin-top: 0.3rem;
-        }
-
-        &.switch-lg {
-            margin-top: 0rem;
-            position: relative;
-            top: -0.3rem;
-        }
-    }
 }
 
 
-// Colors
+// Theme colors
 .switch {
     //switch-default-theme($base, $tick, $checked-base, $checked-tick-bg, $checked-tick-color)
     @include switch-default-theme(get($switch-config, color), $white, get($switch-config, color), get($switch-config, tick), $white);

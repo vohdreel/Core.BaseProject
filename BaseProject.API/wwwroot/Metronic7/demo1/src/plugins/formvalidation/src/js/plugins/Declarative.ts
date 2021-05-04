@@ -4,7 +4,7 @@
  * (c) 2013 - 2020 Nguyen Huu Phuoc <me@phuoc.ng>
  */
 
-import { FieldOptions, FieldsOptions } from '../core/Core';
+import { DynamicFieldEvent, FieldOptions, FieldsOptions } from '../core/Core';
 import Plugin from '../core/Plugin';
 
 export interface DeclarativeOptions {
@@ -42,6 +42,10 @@ export interface DeclarativeOptions {
  * ```
  */
 export default class Declarative extends Plugin<DeclarativeOptions> {
+    private addedFields: Map<string, boolean> = new Map();
+    private fieldAddedHandler: (e: DynamicFieldEvent) => void;
+    private fieldRemovedHandler: (e: DynamicFieldEvent) => void;
+
     constructor(opts?: DeclarativeOptions) {
         super(opts);
         this.opts = Object.assign({}, {
@@ -49,6 +53,9 @@ export default class Declarative extends Plugin<DeclarativeOptions> {
             pluginPrefix: 'data-fvp-',
             prefix: 'data-fv-',
         }, opts);
+
+        this.fieldAddedHandler = this.onFieldAdded.bind(this);
+        this.fieldRemovedHandler = this.onFieldRemoved.bind(this);
     }
 
     public install(): void {
@@ -56,7 +63,54 @@ export default class Declarative extends Plugin<DeclarativeOptions> {
         this.parsePlugins();
 
         const opts = this.parseOptions();
-        Object.keys(opts).forEach((field) => this.core.addField(field, opts[field]));
+
+        Object.keys(opts).forEach((field) => {
+            if (!this.addedFields.has(field)) {
+                this.addedFields.set(field, true);
+            }
+            this.core.addField(field, opts[field]);
+        });
+
+        this.core
+            .on('core.field.added', this.fieldAddedHandler)
+            .on('core.field.removed', this.fieldRemovedHandler);
+    }
+
+    public uninstall(): void {
+        this.addedFields.clear();
+        this.core
+            .off('core.field.added', this.fieldAddedHandler)
+            .off('core.field.removed', this.fieldRemovedHandler);
+    }
+
+    private onFieldAdded(e: DynamicFieldEvent): void {
+        const elements = e.elements;
+
+        // Don't add the element which is already available in the field lists
+        // Otherwise, it can cause an infinite loop
+        if (!elements || elements.length === 0 || this.addedFields.has(e.field)) {
+            return;
+        }
+
+        this.addedFields.set(e.field, true);
+
+        elements.forEach((ele) => {
+            const declarativeOptions = this.parseElement(ele);
+            if (!this.isEmptyOption(declarativeOptions)) {
+                // Update validator options
+                const mergeOptions = {
+                    selector: e.options.selector,
+                    validators: Object.assign({}, e.options.validators || {}, declarativeOptions.validators),
+                };
+                this.core.setFieldOptions(e.field, mergeOptions);
+            }
+        });
+    }
+
+    private onFieldRemoved(e: DynamicFieldEvent): void {
+        if (e.field && this.addedFields.has(e.field)) {
+            this.addedFields.delete(e.field);
+        }
     }
 
     private parseOptions(): FieldsOptions {
@@ -245,7 +299,7 @@ export default class Declarative extends Plugin<DeclarativeOptions> {
                 opts[v] = Object.assign(
                     {},
                     items[3]
-                        ? { [this.toCamelCase(items[3])]: value }
+                        ? { [this.toCamelCase(items[3])]: this.normalizeValue(value) }
                         : { enabled: ('' === value || 'true' === value) },
                     opts[v],
                 );
@@ -253,6 +307,14 @@ export default class Declarative extends Plugin<DeclarativeOptions> {
         }
 
         return { validators: opts };
+    }
+
+    // Many validators accept `boolean` options, for example
+    // `data-fv-between___inclusive="false"` should be identical to `inclusive: false`, not `inclusive: 'false'`
+    private normalizeValue(value: string): string | boolean {
+        return value === 'true'
+                ? true
+                : (value === 'false' ? false : value);
     }
 
     private toUpperCase(input: string): string {

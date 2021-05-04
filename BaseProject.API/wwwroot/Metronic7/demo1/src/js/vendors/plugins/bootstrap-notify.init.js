@@ -2,7 +2,7 @@
 
 $.notifyDefaults({
 	template: '' +
-	'<div data-notify="container" class="alert alert-{0} m-alert" role="alert">' +
+	'<div data-notify="container" class="alert alert-{0}" role="alert">' +
 	'<button type="button" aria-hidden="true" class="close" data-notify="dismiss"></button>' +
 	'<span data-notify="icon"></span>' +
 	'<span data-notify="title">{1}</span>' +

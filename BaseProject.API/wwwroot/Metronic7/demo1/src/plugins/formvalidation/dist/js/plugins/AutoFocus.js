@@ -1,5 +1,5 @@
 /**
- * FormValidation (https://formvalidation.io), v1.6.0 (4730ac5)
+ * FormValidation (https://formvalidation.io), v1.7.0 (71bbaaa)
  * The best validation library for JavaScript
  * (c) 2013 - 2020 Nguyen Huu Phuoc <me@phuoc.ng>
  */
@@ -63,6 +63,19 @@
     return _setPrototypeOf(o, p);
   }
 
+  function _isNativeReflectConstruct() {
+    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+    if (Reflect.construct.sham) return false;
+    if (typeof Proxy === "function") return true;
+
+    try {
+      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   function _assertThisInitialized(self) {
     if (self === void 0) {
       throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -79,23 +92,42 @@
     return _assertThisInitialized(self);
   }
 
-  var Plugin = FormValidation.Plugin;
+  function _createSuper(Derived) {
+    var hasNativeReflectConstruct = _isNativeReflectConstruct();
 
-  var FieldStatus =
-  /*#__PURE__*/
-  function (_Plugin) {
-    _inherits(FieldStatus, _Plugin);
+    return function _createSuperInternal() {
+      var Super = _getPrototypeOf(Derived),
+          result;
 
-    function FieldStatus(opts) {
+      if (hasNativeReflectConstruct) {
+        var NewTarget = _getPrototypeOf(this).constructor;
+
+        result = Reflect.construct(Super, arguments, NewTarget);
+      } else {
+        result = Super.apply(this, arguments);
+      }
+
+      return _possibleConstructorReturn(this, result);
+    };
+  }
+
+  var t = FormValidation.Plugin;
+
+  var t$1 = /*#__PURE__*/function (_e) {
+    _inherits(t, _e);
+
+    var _super = _createSuper(t);
+
+    function t(e) {
       var _this;
 
-      _classCallCheck(this, FieldStatus);
+      _classCallCheck(this, t);
 
-      _this = _possibleConstructorReturn(this, _getPrototypeOf(FieldStatus).call(this, opts));
+      _this = _super.call(this, e);
       _this.statuses = new Map();
       _this.opts = Object.assign({}, {
         onStatusChanged: function onStatusChanged() {}
-      }, opts);
+      }, e);
       _this.elementValidatingHandler = _this.onElementValidating.bind(_assertThisInitialized(_this));
       _this.elementValidatedHandler = _this.onElementValidated.bind(_assertThisInitialized(_this));
       _this.elementNotValidatedHandler = _this.onElementNotValidated.bind(_assertThisInitialized(_this));
@@ -105,22 +137,22 @@
       return _this;
     }
 
-    _createClass(FieldStatus, [{
+    _createClass(t, [{
       key: "install",
       value: function install() {
-        this.core.on('core.element.validating', this.elementValidatingHandler).on('core.element.validated', this.elementValidatedHandler).on('core.element.notvalidated', this.elementNotValidatedHandler).on('core.element.ignored', this.elementIgnoredHandler).on('core.field.added', this.fieldAddedHandler).on('core.field.removed', this.fieldRemovedHandler);
+        this.core.on("core.element.validating", this.elementValidatingHandler).on("core.element.validated", this.elementValidatedHandler).on("core.element.notvalidated", this.elementNotValidatedHandler).on("core.element.ignored", this.elementIgnoredHandler).on("core.field.added", this.fieldAddedHandler).on("core.field.removed", this.fieldRemovedHandler);
       }
     }, {
       key: "uninstall",
       value: function uninstall() {
         this.statuses.clear();
-        this.core.off('core.element.validating', this.elementValidatingHandler).off('core.element.validated', this.elementValidatedHandler).off('core.element.notvalidated', this.elementNotValidatedHandler).off('core.element.ignored', this.elementIgnoredHandler).off('core.field.added', this.fieldAddedHandler).off('core.field.removed', this.fieldRemovedHandler);
+        this.core.off("core.element.validating", this.elementValidatingHandler).off("core.element.validated", this.elementValidatedHandler).off("core.element.notvalidated", this.elementNotValidatedHandler).off("core.element.ignored", this.elementIgnoredHandler).off("core.field.added", this.fieldAddedHandler).off("core.field.removed", this.fieldRemovedHandler);
       }
     }, {
       key: "areFieldsValid",
       value: function areFieldsValid() {
-        return Array.from(this.statuses.values()).every(function (value) {
-          return value === 'Valid' || value === 'NotValidated' || value === 'Ignored';
+        return Array.from(this.statuses.values()).every(function (e) {
+          return e === "Valid" || e === "NotValidated" || e === "Ignored";
         });
       }
     }, {
@@ -131,7 +163,7 @@
     }, {
       key: "onFieldAdded",
       value: function onFieldAdded(e) {
-        this.statuses.set(e.field, 'NotValidated');
+        this.statuses.set(e.field, "NotValidated");
       }
     }, {
       key: "onFieldRemoved",
@@ -145,13 +177,13 @@
     }, {
       key: "onElementValidating",
       value: function onElementValidating(e) {
-        this.statuses.set(e.field, 'Validating');
+        this.statuses.set(e.field, "Validating");
         this.opts.onStatusChanged(false);
       }
     }, {
       key: "onElementValidated",
       value: function onElementValidated(e) {
-        this.statuses.set(e.field, e.valid ? 'Valid' : 'Invalid');
+        this.statuses.set(e.field, e.valid ? "Valid" : "Invalid");
 
         if (e.valid) {
           this.opts.onStatusChanged(this.areFieldsValid());
@@ -162,79 +194,81 @@
     }, {
       key: "onElementNotValidated",
       value: function onElementNotValidated(e) {
-        this.statuses.set(e.field, 'NotValidated');
+        this.statuses.set(e.field, "NotValidated");
         this.opts.onStatusChanged(false);
       }
     }, {
       key: "onElementIgnored",
       value: function onElementIgnored(e) {
-        this.statuses.set(e.field, 'Ignored');
+        this.statuses.set(e.field, "Ignored");
         this.opts.onStatusChanged(this.areFieldsValid());
       }
     }]);
 
-    return FieldStatus;
-  }(Plugin);
+    return t;
+  }(t);
 
-  var AutoFocus =
-  /*#__PURE__*/
-  function (_Plugin) {
-    _inherits(AutoFocus, _Plugin);
+  var s = /*#__PURE__*/function (_t) {
+    _inherits(s, _t);
 
-    function AutoFocus(opts) {
+    var _super = _createSuper(s);
+
+    function s(t) {
       var _this;
 
-      _classCallCheck(this, AutoFocus);
+      _classCallCheck(this, s);
 
-      _this = _possibleConstructorReturn(this, _getPrototypeOf(AutoFocus).call(this, opts));
-      _this.fieldStatusPluginName = '___autoFocusFieldStatus';
+      _this = _super.call(this, t);
+      _this.fieldStatusPluginName = "___autoFocusFieldStatus";
       _this.opts = Object.assign({}, {
         onPrefocus: function onPrefocus() {}
-      }, opts);
+      }, t);
       _this.invalidFormHandler = _this.onFormInvalid.bind(_assertThisInitialized(_this));
       return _this;
     }
 
-    _createClass(AutoFocus, [{
+    _createClass(s, [{
       key: "install",
       value: function install() {
-        this.core.on('core.form.invalid', this.invalidFormHandler).registerPlugin(this.fieldStatusPluginName, new FieldStatus());
+        this.core.on("core.form.invalid", this.invalidFormHandler).registerPlugin(this.fieldStatusPluginName, new t$1());
       }
     }, {
       key: "uninstall",
       value: function uninstall() {
-        this.core.off('core.form.invalid', this.invalidFormHandler).deregisterPlugin(this.fieldStatusPluginName);
+        this.core.off("core.form.invalid", this.invalidFormHandler).deregisterPlugin(this.fieldStatusPluginName);
       }
     }, {
       key: "onFormInvalid",
       value: function onFormInvalid() {
-        var plugin = this.core.getPlugin(this.fieldStatusPluginName);
-        var statuses = plugin.getStatuses();
-        var invalidFields = Object.keys(this.core.getFields()).filter(function (key) {
-          return statuses.get(key) === 'Invalid';
+        var t = this.core.getPlugin(this.fieldStatusPluginName);
+        var i = t.getStatuses();
+        var s = Object.keys(this.core.getFields()).filter(function (t) {
+          return i.get(t) === "Invalid";
         });
 
-        if (invalidFields.length > 0) {
-          var firstInvalidField = invalidFields[0];
-          var elements = this.core.getElements(firstInvalidField);
+        if (s.length > 0) {
+          var _t2 = s[0];
 
-          if (elements.length > 0) {
-            var firstElement = elements[0];
+          var _i = this.core.getElements(_t2);
+
+          if (_i.length > 0) {
+            var _s = _i[0];
             var e = {
-              firstElement: firstElement,
-              field: firstInvalidField
+              firstElement: _s,
+              field: _t2
             };
-            this.core.emit('plugins.autofocus.prefocus', e);
+            this.core.emit("plugins.autofocus.prefocus", e);
             this.opts.onPrefocus(e);
-            firstElement.focus();
+
+            _s.focus();
           }
         }
       }
     }]);
 
-    return AutoFocus;
-  }(Plugin);
+    return s;
+  }(t);
 
-  return AutoFocus;
+  return s;
 
 })));

@@ -746,6 +746,11 @@ class Core {
         return this;
     }
 
+    public setFieldOptions(field: string, options: FieldOptions): this {
+        this.fields[field] = options;
+        return this;
+    }
+
     public destroy(): this {
         // Remove plugins and filters
         Object.keys(this.plugins).forEach((id) => this.plugins[id].uninstall());
@@ -763,7 +768,7 @@ class Core {
         return this;
     }
 
-    private waterfall(promises: Array<() => Promise<string>>): Promise<string[]> {
+    private waterfall(promises: (() => Promise<string>)[]): Promise<string[]> {
         return promises.reduce((p, c, i, a) => {
             return p.then((res) => {
                 return c().then((result) => {

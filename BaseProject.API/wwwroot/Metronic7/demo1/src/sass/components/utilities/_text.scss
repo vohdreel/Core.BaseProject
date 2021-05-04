@@ -4,7 +4,12 @@
 
 
 // Theme Colors
-@each $name, $color in $theme-colors {
+@each $name, $color in $theme-text-colors {
+    // Base color
+    .text-#{$name} {
+        color: $color !important;
+    }
+
     // Inverse color
     .text-inverse-#{$name} {
         color: theme-inverse-color($name) !important;
@@ -54,15 +59,6 @@
     }
 }
 
-// Text colors
-.text-dark-50 {
-    color: $dark-50 !important;
-}
-
-.text-dark-75 {
-    color: $dark-75 !important;
-}
-
 // Font sizes
 .font-size-base {
     font-size:  $font-size-base;
@@ -100,27 +96,27 @@
 
 // Line heights
 .line-height-0 {
-    line-height: 0;
+    line-height: 0 !important;
 }
 
 .line-height-xs {
-    line-height: 0.75;
+    line-height: 0.75 !important;
 }
 
 .line-height-sm {
-    line-height: 1;
+    line-height: 1 !important;
 }
 
 .line-height-md {
-    line-height: 1.25;
+    line-height: 1.25 !important;
 }
 
 .line-height-lg {
-    line-height: 1.5;
+    line-height: 1.5 !important;
 }
 
 .line-height-xl {
-    line-height: 1.75;
+    line-height: 1.75 !important;
 }
 
 // Text transparent

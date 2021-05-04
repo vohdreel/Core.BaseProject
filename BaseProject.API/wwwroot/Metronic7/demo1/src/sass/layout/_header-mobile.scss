@@ -19,7 +19,7 @@
 		height: get($header-config, tablet-and-mobile, default, height);
 		min-height: get($header-config, tablet-and-mobile, default, height);
 		position: relative;
-		z-index: 2;
+		z-index: 3;
 
 		// Fixed Mobile Header Mode
 		.header-mobile-fixed & {

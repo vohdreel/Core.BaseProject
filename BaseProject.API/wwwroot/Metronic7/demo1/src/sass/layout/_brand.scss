@@ -16,7 +16,7 @@
 		justify-content: flex-begin;
 
 		// Minimized Aside Mode
-		.aside-minimize & {
+		.aside-minimize:not(.aside-minimize-hover) & {
 			img {
 				display: none;
 			}
@@ -46,7 +46,7 @@
 		}
 
 		// Fixed Header & Aside Minimize Modes
-		.aside-minimize & {
+		.aside-minimize:not(.aside-minimize-hover) & {
 			justify-content: center;
 
 			// Toggle Icon
@@ -64,7 +64,7 @@
 		}
 
 		// Aside Minimize & Fixed Header & Static Aside Mode
-		.header-fixed.aside-static.aside-minimize & {
+		.header-fixed.aside-static.aside-minimize:not(.aside-minimize-hover) & {
 			width: get($aside-config, base, width);
 		}
 	}

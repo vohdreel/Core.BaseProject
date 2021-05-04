@@ -75,21 +75,23 @@
             }
         }
 
+
+
         // State colors
         @each $name, $color in $theme-colors {
             &.tagify__tag--#{$name}:not(.tagify--notAllowed) {
-                 background-color: rgba($color, 0.12);
+                 background-color: $color;
 
                  div {
                      .tagify__tag-text {
-                         color: $color;
+                         color: $white;
                          font-weight: 500;
                      }
                  }
 
                  .tagify__tag__removeBtn {
                      &:after {
-                         color: $color;
+                         color: $white;
                      }
 
                      &:hover {
@@ -101,7 +103,33 @@
                          }
                      }
                  }
-            }
+             }
+
+             &.tagify__tag-light--#{$name}:not(.tagify--notAllowed) {
+                  background-color: rgba($color, 0.12);
+
+                  div {
+                      .tagify__tag-text {
+                          color: $color;
+                          font-weight: 500;
+                      }
+                  }
+
+                  .tagify__tag__removeBtn {
+                      &:after {
+                          color: $color;
+                      }
+
+                      &:hover {
+                          background: transparent;
+                          color: $white;
+
+                          & + div > span {
+                              opacity: .3;
+                          }
+                      }
+                  }
+             }
         }
 
         // Not Allowed Mode

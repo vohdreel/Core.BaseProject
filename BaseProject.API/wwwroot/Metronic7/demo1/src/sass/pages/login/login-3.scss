@@ -3,57 +3,154 @@
 // Pages SASS files are compiled into separate css files
 //
 
-
 // Initialization of global variables, mixins and functions
 @import "../../init";
 
 .login.login-3 {
-    // Form modes
-    .login-signin,
-    .login-signup,
-    .login-forgot {
-        display: none;
+    // Aside
+    .login-aside {
+        background-color: $white;
+        box-shadow: 0px 0px 40px rgba(177, 187, 208, 0.15);
+
+        // Wizard Nav
+	    .wizard-nav {
+    		padding: 0;
+
+    		// Steps
+    		.wizard-steps {
+    			display: flex;
+    			flex-direction: column;
+    			justify-content: center;
+
+    			// Step
+    			.wizard-step {
+    				padding: 0.75rem 0;
+    				transition: $transition-link;
+                    margin-bottom: 1.5rem;
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+
+    				.wizard-wrapper {
+    					display: flex;
+    				}
+
+    				.wizard-icon {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+    					transition: $transition-link;
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 50px;
+                        background-color: $gray-100;
+                        margin-right: 1.4rem;
+
+                        .wizard-check {
+                            display: none;
+                            font-size: 1.4rem;
+                        }
+
+                        .wizard-number {
+                            font-weight: 600;
+                            color: $dark-75;
+                            font-size: 1.35rem;
+                        }
+    				}
+
+    				.wizard-label {
+    					display: flex;
+    					flex-direction: column;
+    					justify-content: center;
+
+    					.wizard-title {
+    						color: $dark;
+    						font-weight: 500;
+    						font-size: 1.4rem;
+    					}
+
+    					.wizard-desc {
+    						color: $text-muted;
+                            font-size: $font-size-lg;
+                            font-weight: 500;
+    					}
+    				}
+
+                    // Done States
+                    &[data-wizard-state="done"] {
+                        .wizard-icon {
+    						transition: $transition-link;
+                            background-color: $success-light;
+
+                            .wizard-check {
+                                color: $success;
+                                display: inline-block;
+                            }
+
+                            .wizard-number {
+                                display: none;
+                            }
+    					}
+
+                        .wizard-label {
+        					.wizard-title {
+        						color: $text-muted;
+        					}
+
+        					.wizard-desc {
+                                color: $gray-400;
+        					}
+        				}
+                    }
+
+                    // Current States
+    				&[data-wizard-state="current"] {
+    					transition: $transition-link;
+
+    					.wizard-icon {
+    						transition: $transition-link;
+                            background-color: $success-light;
+
+                            .wizard-check {
+                                color: $success;
+                                display: none;
+                            }
+
+                            .wizard-number {
+                                color: $success;
+                            }
+    					}
+
+                        .wizard-label {
+        					.wizard-title {
+        						color: $dark;
+        					}
+
+        					.wizard-desc {
+                                color: $gray-500;
+        					}
+        				}
+    				}
+                }
+            }
+	    }
+
+        .aside-img-wizard {
+            min-height: 320px !important;
+            background-size: 400px;
+        }
     }
 
-    &.login-signin-on {
-        .login-signup {
-            display: none;
-        }
+    // Content
+    .login-content {
+        background-color: #F3F5F9;
 
-        .login-signin {
-            display: block;
-        }
-
-        .login-forgot {
-            display: none;
-        }
-    }
-
-    &.login-signup-on {
-        .login-signup {
-            display: block;
-        }
-
-        .login-signin {
-            display: none;
-        }
-
-        .login-forgot {
-            display: none;
-        }
-    }
-
-    &.login-forgot-on {
-        .login-signup {
-            display: none;
-        }
-
-        .login-signin {
-            display: none;
-        }
-
-        .login-forgot {
-            display: block;
+        .form-group {
+            .fv-help-block {
+                font-size: 1.1rem !important;
+                padding-top: 3px;
+            }
         }
     }
 }
@@ -64,11 +161,37 @@
         .login-aside {
             width: 100%;
             max-width: 600px;
+
+            .aside-img {
+                min-height: 550px !important;
+                background-size: 630px;
+            }
         }
 
-        .login-form {
-            width: 100%;
-            max-width: 450px;
+        .login-content {
+            .top-signup {
+                max-width:650px;
+                width: 100%;
+            }
+
+            .top-signin {
+                max-width:450px;
+                width: 100%;
+            }
+
+            .top-forgot {
+                max-width:450px;
+                width: 100%;
+            }
+
+            .login-form {
+                width: 100%;
+                max-width: 450px;
+
+                &.login-form-signup {
+                    max-width: 650px;
+                }
+            }
         }
     }
 }
@@ -78,17 +201,64 @@
     .login.login-3 {
         .login-aside {
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
         }
     }
 }
 
-// Tablet mode
+// Tablet & Mobile Modes
 @include media-breakpoint-down(md) {
     .login.login-3 {
-        .login-form {
-            width: 100%;
-            max-width: 400px;
+        .login-aside {            
+            .aside-img {
+                min-height: 500px !important;
+                background-size: 500px;
+            }
+
+            // Logo
+            .login-logo  {
+                text-align: center;
+            }
+
+            // Wizard Nav
+    	    .wizard-nav {
+        		padding: 0;
+                align-content: center;
+
+        		// Steps
+        		.wizard-steps {
+    			    // Step
+    			    .wizard-step {
+                       margin-bottom: .5rem;
+
+                       &:last-child {
+                           margin-bottom: 0;
+                       }
+                    }
+                }
+            }
+        }
+
+        .login-content {
+            .top-signup {
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .top-signin {
+                max-width:400px;
+                width: 100%;
+            }
+
+            .top-forgot {
+                max-width:400px;
+                width: 100%;
+            }
+
+            .login-form {
+                width: 100%;
+                max-width: 400px;
+            }
         }
     }
 }
@@ -96,10 +266,11 @@
 // Mobile mode
 @include media-breakpoint-down(xs) {
     .login.login-3 {
-
-        .login-form {
-            width: 100%;
-            max-width: 100%;
+        .login-aside {
+            .aside-img {
+                min-height: 300px !important;
+                background-size: 350px;
+            }
         }
     }
 }

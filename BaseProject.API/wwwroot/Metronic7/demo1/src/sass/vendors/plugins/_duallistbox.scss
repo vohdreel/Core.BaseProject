@@ -2,9 +2,6 @@
 // DualListBox
 //
 
-
-
-
 // Base
 .dual-listbox {
     // Search input
@@ -27,6 +24,15 @@
 
     // Container
     .dual-listbox__container {
+        display: flex;
+        flex-wrap: nowrap;
+
+        > div:not(.dual-listbox__buttons) {
+            width: auto;
+            flex-grow: 1;
+            flex-basis: 0;
+        }
+
         .dual-listbox__title {
             color: $dark-75;
             font-weight: 500;
@@ -72,7 +78,7 @@
 
         .dual-listbox__selected,
         .dual-listbox__available {
-            width: 225px;
+            width: auto;
             color: $input-plaintext-color;
             border: 1px solid $gray-200;
             @include border-bottom-left-radius($border-radius);

@@ -1,13 +1,11 @@
 "use strict";
 
 // Class definition
-var KTWidgets = function() {
+var KTWidgets = function () {
     // Private properties
 
-    // Private functions
-
     // General Controls
-    var _initDaterangepicker = function() {
+    var _initDaterangepicker = function () {
         if ($('#kt_dashboard_daterangepicker').length == 0) {
             return;
         }
@@ -55,7 +53,7 @@ var KTWidgets = function() {
     }
 
     // Stats widgets
-    var _initStatsWidget7 = function() {
+    var _initStatsWidget7 = function () {
         var element = document.getElementById("kt_stats_widget_7_chart");
 
         if (!element) {
@@ -169,7 +167,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -186,7 +184,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initStatsWidget8 = function() {
+    var _initStatsWidget8 = function () {
         var element = document.getElementById("kt_stats_widget_8_chart");
 
         if (!element) {
@@ -300,7 +298,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -317,7 +315,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initStatsWidget9 = function() {
+    var _initStatsWidget9 = function () {
         var element = document.getElementById("kt_stats_widget_9_chart");
 
         if (!element) {
@@ -431,7 +429,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -448,7 +446,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initStatsWidget10 = function() {
+    var _initStatsWidget10 = function () {
         var element = document.getElementById("kt_stats_widget_10_chart");
         var height = parseInt(KTUtil.css(element, 'height'));
         var color = KTUtil.hasAttr(element, 'data-color') ? KTUtil.attr(element, 'data-color') : 'info';
@@ -566,7 +564,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -583,7 +581,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initStatsWidget11 = function() {
+    var _initStatsWidget11 = function () {
         var element = document.getElementById("kt_stats_widget_11_chart");
 
         var height = parseInt(KTUtil.css(element, 'height'));
@@ -702,7 +700,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -719,7 +717,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initStatsWidget12 = function() {
+    var _initStatsWidget12 = function () {
         var element = document.getElementById("kt_stats_widget_12_chart");
 
         var height = parseInt(KTUtil.css(element, 'height'));
@@ -838,7 +836,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -856,7 +854,7 @@ var KTWidgets = function() {
     }
 
     // Charts widgets
-    var _initChartsWidget1 = function() {
+    var _initChartsWidget1 = function () {
         var element = document.getElementById("kt_charts_widget_1_chart");
 
         if (!element) {
@@ -951,7 +949,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -972,7 +970,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initChartsWidget2 = function() {
+    var _initChartsWidget2 = function () {
         var element = document.getElementById("kt_charts_widget_2_chart");
 
         if (!element) {
@@ -1067,7 +1065,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -1088,7 +1086,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initChartsWidget3 = function() {
+    var _initChartsWidget3 = function () {
         var element = document.getElementById("kt_charts_widget_3_chart");
 
         if (!element) {
@@ -1195,7 +1193,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -1222,7 +1220,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initChartsWidget4 = function() {
+    var _initChartsWidget4 = function () {
         var element = document.getElementById("kt_charts_widget_4_chart");
 
         if (!element) {
@@ -1327,7 +1325,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -1353,7 +1351,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initChartsWidget5 = function() {
+    var _initChartsWidget5 = function () {
         var element = document.getElementById("kt_charts_widget_5_chart");
 
         if (!element) {
@@ -1451,7 +1449,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -1472,7 +1470,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initChartsWidget6 = function() {
+    var _initChartsWidget6 = function () {
         var element = document.getElementById("kt_charts_widget_6_chart");
 
         if (!element) {
@@ -1578,7 +1576,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -1605,7 +1603,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initChartsWidget7 = function() {
+    var _initChartsWidget7 = function () {
         var element = document.getElementById("kt_charts_widget_7_chart");
 
         if (!element) {
@@ -1725,7 +1723,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -1751,7 +1749,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initChartsWidget8 = function() {
+    var _initChartsWidget8 = function () {
         var element = document.getElementById("kt_charts_widget_8_chart");
 
         if (!element) {
@@ -1768,7 +1766,7 @@ var KTWidgets = function() {
             }, {
                 name: 'Expenses',
                 data: [60, 60, 40, 40, 30, 30]
-            }, ],
+            },],
             chart: {
                 type: 'area',
                 height: 300,
@@ -1886,7 +1884,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -1913,8 +1911,132 @@ var KTWidgets = function() {
         chart.render();
     }
 
+    var _initChartsWidget9 = function () {
+        var element = document.getElementById("kt_charts_widget_9_chart");
+
+        if (!element) {
+            return;
+        }
+
+        var options = {
+            series: [{
+                name: 'Net Profit',
+                data: [20, 30, 45, 35, 25]
+            }, {
+                name: 'Revenue',
+                data: [-20, -30, -45, -35, -25]
+            }],
+            chart: {
+                type: 'bar',
+                stacked: true,
+                height: 350,
+                toolbar: {
+                    show: false
+                }
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: ['17%'],
+                    endingShape: 'rounded'
+                },
+            },
+            legend: {
+                show: false
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                width: 0,
+                colors: ['transparent']
+            },
+            xaxis: {
+                lines: {
+                    show: false,
+                },
+                categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                axisBorder: {
+                    show: false,
+                },
+                axisTicks: {
+                    show: false
+                },
+                labels: {
+                    style: {
+                        colors: KTApp.getSettings()['colors']['gray']['gray-500'],
+                        fontSize: '12px',
+                        fontFamily: KTApp.getSettings()['font-family']
+                    }
+                }
+            },
+            yaxis: {
+                lines: {
+                    show: false,
+                },
+                min: -50,
+                max: 50,
+                labels: {
+                    style: {
+                        colors: KTApp.getSettings()['colors']['gray']['gray-500'],
+                        fontSize: '12px',
+                        fontFamily: KTApp.getSettings()['font-family']
+                    }
+                }
+            },
+            fill: {
+                opacity: 1
+            },
+            states: {
+                normal: {
+                    filter: {
+                        type: 'none',
+                        value: 0
+                    }
+                },
+                hover: {
+                    filter: {
+                        type: 'none',
+                        value: 0
+                    }
+                },
+                active: {
+                    allowMultipleDataPointsSelection: false,
+                    filter: {
+                        type: 'none',
+                        value: 0
+                    }
+                }
+            },
+            tooltip: {
+                style: {
+                    fontSize: '12px',
+                    fontFamily: KTApp.getSettings()['font-family']
+                },
+                y: {
+                    formatter: function (val) {
+                        return "$" + val + " thousands"
+                    }
+                }
+            },
+            colors: [KTApp.getSettings()['colors']['theme']['base']['info'], KTApp.getSettings()['colors']['theme']['base']['primary']],
+            grid: {
+                borderColor: KTApp.getSettings()['colors']['gray']['gray-200'],
+                strokeDashArray: 4,
+                yaxis: {
+                    lines: {
+                        show: true
+                    }
+                }
+            }
+        };
+
+        var chart = new ApexCharts(element, options);
+        chart.render();
+    }
+
     // Mixed widgets
-    var _initMixedWidget1 = function() {
+    var _initMixedWidget1 = function () {
         var element = document.getElementById("kt_mixed_widget_1_chart");
         var height = parseInt(KTUtil.css(element, 'height'));
 
@@ -2033,7 +2155,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 },
@@ -2053,7 +2175,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initMixedWidget2 = function() {
+    var _initMixedWidget2 = function () {
         var element = document.getElementById("kt_mixed_widget_2_chart");
         var height = parseInt(KTUtil.css(element, 'height'));
 
@@ -2181,7 +2303,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 },
@@ -2201,7 +2323,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initMixedWidget3 = function() {
+    var _initMixedWidget3 = function () {
         var element = document.getElementById("kt_mixed_widget_3_chart");
         var height = parseInt(KTUtil.css(element, 'height'));
 
@@ -2329,7 +2451,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 },
@@ -2349,7 +2471,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initMixedWidget4 = function() {
+    var _initMixedWidget4 = function () {
         var element = document.getElementById("kt_mixed_widget_4_chart");
         var height = parseInt(KTUtil.css(element, 'height'));
 
@@ -2451,7 +2573,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 },
@@ -2479,7 +2601,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initMixedWidget5 = function() {
+    var _initMixedWidget5 = function () {
         var element = document.getElementById("kt_mixed_widget_5_chart");
         var height = parseInt(KTUtil.css(element, 'height'));
 
@@ -2581,7 +2703,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 },
@@ -2609,7 +2731,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initMixedWidget6 = function() {
+    var _initMixedWidget6 = function () {
         var element = document.getElementById("kt_mixed_widget_6_chart");
         var height = parseInt(KTUtil.css(element, 'height'));
 
@@ -2711,7 +2833,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 },
@@ -2739,7 +2861,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initMixedWidget13 = function() {
+    var _initMixedWidget13 = function () {
         var element = document.getElementById("kt_mixed_widget_13_chart");
         var height = parseInt(KTUtil.css(element, 'height'));
 
@@ -2856,7 +2978,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -2873,7 +2995,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initMixedWidget14 = function() {
+    var _initMixedWidget14 = function () {
         var element = document.getElementById("kt_mixed_widget_14_chart");
         var height = parseInt(KTUtil.css(element, 'height'));
 
@@ -2904,7 +3026,10 @@ var KTWidgets = function() {
                             fontSize: "30px",
                             fontWeight: '700',
                             offsetY: 12,
-                            show: true
+                            show: true,
+                            formatter: function (val) {
+                                return val + '%';
+                            }
                         }
                     },
                     track: {
@@ -2924,7 +3049,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initMixedWidget15 = function() {
+    var _initMixedWidget15 = function () {
         var element = document.getElementById("kt_mixed_widget_15_chart");
         var height = parseInt(KTUtil.css(element, 'height'));
 
@@ -3052,7 +3177,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -3069,7 +3194,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initMixedWidget16 = function() {
+    var _initMixedWidget16 = function () {
         var element = document.getElementById("kt_mixed_widget_16_chart");
         var height = parseInt(KTUtil.css(element, 'height'));
 
@@ -3134,7 +3259,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initMixedWidget17 = function() {
+    var _initMixedWidget17 = function () {
         var element = document.getElementById("kt_mixed_widget_17_chart");
         var color = KTUtil.hasAttr(element, 'data-color') ? KTUtil.attr(element, 'data-color') : 'warning';
         var height = parseInt(KTUtil.css(element, 'height'));
@@ -3158,7 +3283,7 @@ var KTWidgets = function() {
                     enabled: false
                 },
                 sparkline: {
-                	enabled: true
+                    enabled: true
                 }
             },
             plotOptions: {},
@@ -3252,7 +3377,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -3269,7 +3394,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initMixedWidget18 = function() {
+    var _initMixedWidget18 = function () {
         var element = document.getElementById("kt_mixed_widget_18_chart");
         var height = parseInt(KTUtil.css(element, 'height'));
 
@@ -3328,7 +3453,7 @@ var KTWidgets = function() {
     }
 
     // Tiles
-    var _initTilesWidget1 = function() {
+    var _initTilesWidget1 = function () {
         var element = document.getElementById("kt_tiles_widget_1_chart");
         var color = KTUtil.hasAttr(element, 'data-color') ? KTUtil.attr(element, 'data-color') : 'primary';
         var height = parseInt(KTUtil.css(element, 'height'));
@@ -3457,7 +3582,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -3478,15 +3603,16 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initTilesWidget2 = function() {
+    var _initTilesWidget2 = function () {
         var element = document.getElementById("kt_tiles_widget_2_chart");
+        var height = parseInt(KTUtil.css(element, 'height'));
 
         if (!element) {
             return;
         }
 
-        var strokeColor = KTUtil.colorDarken(KTApp.getSettings()['colors']['theme']['base']['danger'], 20);
-        var fillColor = KTUtil.colorDarken(KTApp.getSettings()['colors']['theme']['base']['danger'], 10);
+        var strokeColor = KTUtil.changeColor(KTApp.getSettings()['colors']['theme']['base']['danger']);
+        var fillColor = KTUtil.changeColor(KTApp.getSettings()['colors']['theme']['base']['danger']);
 
         var options = {
             series: [{
@@ -3495,7 +3621,7 @@ var KTWidgets = function() {
             }],
             chart: {
                 type: 'area',
-                height: 75,
+                height: height,
                 zoom: {
                     enabled: false
                 },
@@ -3610,8 +3736,9 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initTilesWidget5 = function() {
+    var _initTilesWidget5 = function () {
         var element = document.getElementById("kt_tiles_widget_5_chart");
+        var height = parseInt(KTUtil.css(element, 'height'));
 
         if (!element) {
             return;
@@ -3627,7 +3754,7 @@ var KTWidgets = function() {
             }],
             chart: {
                 type: 'bar',
-                height: 75,
+                height: height,
                 zoom: {
                     enabled: false
                 },
@@ -3710,7 +3837,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initTilesWidget8 = function() {
+    var _initTilesWidget8 = function () {
         var element = document.getElementById("kt_tiles_widget_8_chart");
         var height = parseInt(KTUtil.css(element, 'height'));
         var color = KTUtil.hasAttr(element, 'data-color') ? KTUtil.attr(element, 'data-color') : 'danger';
@@ -3827,7 +3954,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -3848,7 +3975,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initTilesWidget17 = function() {
+    var _initTilesWidget17 = function () {
         var element = document.getElementById("kt_tiles_widget_17_chart");
 
         if (!element) {
@@ -3977,7 +4104,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initTilesWidget20 = function() {
+    var _initTilesWidget20 = function () {
         var element = document.getElementById("kt_tiles_widget_20_chart");
 
         if (!element) {
@@ -4018,7 +4145,7 @@ var KTWidgets = function() {
                         }
                     },
                     track: {
-                        background: KTUtil.colorLighten(KTApp.getSettings()['colors']['theme']['base']['primary'], 7),
+                        background: KTUtil.changeColor(KTApp.getSettings()['colors']['theme']['base']['primary'], -7),
                         strokeWidth: '100%'
                     }
                 }
@@ -4034,7 +4161,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initMixedWidget21 = function() {
+    var _initMixedWidget21 = function () {
         var element = document.getElementById("kt_tiles_widget_21_chart");
         var height = parseInt(KTUtil.css(element, 'height'));
         var color = KTUtil.hasAttr(element, 'data-color') ? KTUtil.attr(element, 'data-color') : 'info';
@@ -4058,7 +4185,7 @@ var KTWidgets = function() {
                     enabled: false
                 },
                 sparkline: {
-                	enabled: true
+                    enabled: true
                 }
             },
             plotOptions: {},
@@ -4152,7 +4279,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -4169,7 +4296,7 @@ var KTWidgets = function() {
         chart.render();
     }
 
-    var _initMixedWidget23 = function() {
+    var _initMixedWidget23 = function () {
         var element = document.getElementById("kt_tiles_widget_23_chart");
         var height = parseInt(KTUtil.css(element, 'height'));
         var color = KTUtil.hasAttr(element, 'data-color') ? KTUtil.attr(element, 'data-color') : 'primary';
@@ -4193,7 +4320,7 @@ var KTWidgets = function() {
                     enabled: false
                 },
                 sparkline: {
-                	enabled: true
+                    enabled: true
                 }
             },
             plotOptions: {},
@@ -4287,7 +4414,7 @@ var KTWidgets = function() {
                     fontFamily: KTApp.getSettings()['font-family']
                 },
                 y: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         return "$" + val + " thousands"
                     }
                 }
@@ -4304,10 +4431,127 @@ var KTWidgets = function() {
         chart.render();
     }
 
+    // Forms
+    var _initFormsWidget1 = function() {
+        var inputEl = KTUtil.getById("kt_forms_widget_1_input");
+
+        if (inputEl) {
+            autosize(inputEl);
+        }
+    }
+
+    var _initFormsWidget2 = function() {
+        var formEl = KTUtil.getById("kt_forms_widget_2_form");
+        var editorId = 'kt_forms_widget_2_editor';
+
+        // init editor
+        var options = {
+            modules: {
+                toolbar: {
+                    container: "#kt_forms_widget_2_editor_toolbar"
+                }
+            },
+            placeholder: 'Type message...',
+            theme: 'snow'
+        };
+
+        if (!formEl) {
+            return;
+        }
+
+        // Init editor
+        var editorObj = new Quill('#' + editorId, options);
+    }
+
+    var _initFormsWidget3 = function() {
+        var inputEl = KTUtil.getById("kt_forms_widget_3_input");
+
+        if (inputEl) {
+            autosize(inputEl);
+        }
+    }
+
+    var _initFormsWidget4 = function() {
+        var inputEl = KTUtil.getById("kt_forms_widget_4_input");
+
+        if (inputEl) {
+            autosize(inputEl);
+        }
+    }
+
+    var _initFormsWidget5 = function() {
+        var inputEl = KTUtil.getById("kt_forms_widget_5_input");
+
+        if (inputEl) {
+            autosize(inputEl);
+        }
+    }
+
+    var _initFormsWidget6 = function() {
+        var inputEl = KTUtil.getById("kt_forms_widget_6_input");
+
+        if (inputEl) {
+            autosize(inputEl);
+        }
+    }
+
+    var _initFormsWidget7 = function() {
+        var inputEl = KTUtil.getById("kt_forms_widget_7_input");
+
+        if (inputEl) {
+            autosize(inputEl);
+        }
+    }
+
+    var _initFormsWidget8 = function() {
+        var inputEl = KTUtil.getById("kt_forms_widget_8_input");
+
+        if (inputEl) {
+            autosize(inputEl);
+        }
+    }
+
+    var _initFormsWidget9 = function() {
+        var inputEl = KTUtil.getById("kt_forms_widget_9_input");
+
+        if (inputEl) {
+            autosize(inputEl);
+        }
+    }
+
+    var _initFormsWidget10 = function() {
+        var inputEl = KTUtil.getById("kt_forms_widget_10_input");
+
+        if (inputEl) {
+            autosize(inputEl);
+        }
+    }
+
+    var _initFormsWidget11 = function() {
+        var inputEl = KTUtil.getById("kt_forms_widget_11_input");
+
+        if (inputEl) {
+            autosize(inputEl);
+        }
+    }
+
+    var _initFormsWidget12 = function() {
+        var inputEl = KTUtil.getById("kt_forms_widget_12_input");
+
+        if (inputEl) {
+            autosize(inputEl);
+        }
+    }
+
+    // Advance Tables
     var _initAdvancedTableGroupSelection = function(element) {
         var table = KTUtil.getById(element);
 
-        KTUtil.on(table, 'thead th .checkbox > input', 'change', function(e) {
+        if (!table) {
+            return;
+        }
+
+        KTUtil.on(table, 'thead th .checkbox > input', 'change', function (e) {
             var checkboxes = KTUtil.findAll(table, 'tbody td .checkbox > input');
 
             for (var i = 0, len = checkboxes.length; i < len; i++) {
@@ -4316,9 +4560,68 @@ var KTWidgets = function() {
         });
     }
 
+    var _initPriceSlider = function (element) {
+        // init slider
+        var slider = document.getElementById(element);
+        if (typeof slider === 'undefined') {
+            return;
+        }
+
+        if (!slider) {
+            return;
+        }
+
+        noUiSlider.create(slider, {
+            start: [20, 60],
+            connect: true,
+            range: {
+                'min': 0,
+                'max': 100
+            }
+        });
+    }
+
+    // Education Show More Demo
+    var _initEducationShowMoreBtn = function() {
+        var el = KTUtil.getById('kt_app_education_more_feeds_btn');
+
+        if (!el) {
+            return;
+        }
+
+        KTUtil.addEvent(el, 'click', function(e) {
+            var elements = document.getElementsByClassName('education-more-feeds');
+
+            if (!elements || elements.length <= 0) {
+                return;
+            }
+
+            KTUtil.btnWait(el, 'spinner spinner-right spinner-white pr-15', 'Please wait...', true);
+
+            setTimeout(function() {
+                KTUtil.btnRelease(el);
+                KTUtil.addClass(el, 'd-none');
+
+                var item;
+
+                for (var i = 0, len = elements.length; i < len; i++) {
+                    item = elements[0];
+                    KTUtil.removeClass(elements[i], 'd-none');
+
+                    var textarea = KTUtil.find(item, 'textarea');
+                    if (textarea) {
+                        autosize(textarea);
+                    }
+                }
+
+                KTUtil.scrollTo(item);
+            }, 1000);
+        });
+    }
+
     // Public methods
     return {
-        init: function() {
+        init: function () {
             // General Controls
             _initDaterangepicker();
 
@@ -4339,6 +4642,7 @@ var KTWidgets = function() {
             _initChartsWidget6();
             _initChartsWidget7();
             _initChartsWidget8();
+            _initChartsWidget9();
 
             // Mixed Widgets
             _initMixedWidget1();
@@ -4369,6 +4673,25 @@ var KTWidgets = function() {
             _initAdvancedTableGroupSelection('kt_advance_table_widget_2');
             _initAdvancedTableGroupSelection('kt_advance_table_widget_3');
             _initAdvancedTableGroupSelection('kt_advance_table_widget_4');
+
+            // Form Widgets
+            _initPriceSlider('kt_price_slider');
+
+            // Forms widgets
+            _initFormsWidget1();
+            _initFormsWidget2();
+            _initFormsWidget3();
+            _initFormsWidget4();
+            _initFormsWidget5();
+            _initFormsWidget6();
+            _initFormsWidget7();
+            _initFormsWidget8();
+            _initFormsWidget9();
+            _initFormsWidget10();
+            _initFormsWidget11();
+
+            // Education App
+            _initEducationShowMoreBtn();
         }
     }
 }();
@@ -4378,6 +4701,6 @@ if (typeof module !== 'undefined') {
     module.exports = KTWidgets;
 }
 
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
     KTWidgets.init();
 });

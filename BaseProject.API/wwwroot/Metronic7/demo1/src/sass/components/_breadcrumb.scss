@@ -2,7 +2,6 @@
 // Breadcrumb
 //
 
-
 .breadcrumb {
     align-items: center;
 
@@ -27,23 +26,34 @@
         border-radius: 0;
     }
 
-    &.breadcrumb-dot {
+    &.breadcrumb-line {
         .breadcrumb-item {
-            display: flex;
-            align-items: center;
-
             &:before {
                 display: none;
             }
 
             &:after {
-                display: block;
-                content: " ";
-    			width: 4px;
-    			height: 4px;
-    			border-radius: 4px;
-    			background: $gray-400;
-    			margin-left: $breadcrumb-item-padding;
+                content: "-";
+                padding-left: $breadcrumb-item-padding;
+            }
+
+            &:last-child {
+                &:after {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    &.breadcrumb-dot {
+        .breadcrumb-item {
+            &:before {
+                display: none;
+            }
+
+            &:after {
+                content: "\2022";
+                padding-left: $breadcrumb-item-padding;
             }
 
             &:last-child {

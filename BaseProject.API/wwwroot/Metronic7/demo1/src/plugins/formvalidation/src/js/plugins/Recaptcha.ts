@@ -112,9 +112,6 @@ export default class Recaptcha extends Plugin<RecaptchaOptions> {
                         this.captchaStatus = 'Valid';
                         // Mark the captcha as valid, so the library will remove the error message
                         this.core.updateFieldStatus(Recaptcha.CAPTCHA_FIELD, 'Valid');
-                    } else {
-                        // Revalidate the captcha, so it will be sent to our backend verification
-                        this.core.revalidateField(Recaptcha.CAPTCHA_FIELD);
                     }
                 },
                 'error-callback': () => {

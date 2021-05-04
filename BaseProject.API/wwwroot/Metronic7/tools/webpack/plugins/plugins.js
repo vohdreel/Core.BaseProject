@@ -44,21 +44,22 @@ window.Sticky = require('sticky-js');
 window.ApexCharts = require('apexcharts/dist/apexcharts.min.js');
 
 // FormValidation - Best premium validation library for JavaScript. Zero dependencies. Learn more: https://formvalidation.io/
-window.FormValidation = require("@/src/plugins/formvalidation/dist/amd/index.js");
+window.FormValidation = require("@/src/plugins/formvalidation/dist/js/FormValidation.full.min.js");
 window.FormValidation.plugins.Bootstrap = require("@/src/plugins/formvalidation/dist/amd/plugins/Bootstrap.js").default;
-
-// jQuery Form - The jQuery Form Plugin allows you to easily and unobtrusively upgrade HTML forms to use AJAX: http://jquery.malsup.com/form/
-require('jquery-form/dist/jquery.form.min.js');
 
 // jQuery BlockUI - The jQuery BlockUI Plugin lets you simulate synchronous behavior when using AJAX: http://malsup.com/jquery/block/
 require('block-ui/jquery.blockUI.js');
 
+// Tempus Dominus - The Tempus Dominus provides a flexible datetimepicker widget in the Bootstrap style: https://tempusdominus.github.io/bootstrap-4/
+require('tempusdominus-bootstrap-4/build/js/tempusdominus-bootstrap-4');
+require('@/src/js/vendors/plugins/tempusdominus-bootstrap-4.init.js');
+
+// JQuery Mask Plugin - is a jQuery plugin which create an input mask. An input mask helps the user with the input by ensuring a predefined format: https://igorescobar.github.io/jQuery-Mask-Plugin/
+require('jquery-mask-plugin');
+
 // Bootstrap Datepicker - Bootstrap-datepicker provides a flexible datepicker widget in the Bootstrap style: https://bootstrap-datepicker.readthedocs.io/en/latest/
 require('bootstrap-datepicker/dist/js/bootstrap-datepicker.js');
 require('@/src/js/vendors/plugins/bootstrap-datepicker.init.js');
-
-// Bootstrap Datetime Picker :https://eonasdan.github.io/bootstrap-datetimepicker/
-require('bootstrap-datetime-picker/js/bootstrap-datetimepicker.js');
 
 // Bootstrap Timepicker - Easily select a time for a text input using your mouse or keyboards arrow keys: https://jdewit.github.io/bootstrap-timepicker/
 require('bootstrap-timepicker/js/bootstrap-timepicker.js');
@@ -157,10 +158,8 @@ require('counterup/jquery.counterup.js');
 require('es6-promise-polyfill/promise.min.js');
 
 // Sweetalert2 - a beautiful, responsive, customizable and accessible (WAI-ARIA) replacement for JavaScript's popup boxes: https://sweetalert2.github.io/
-window.swal = require('sweetalert2/dist/sweetalert2.min.js');
+window.Swal = window.swal = require('sweetalert2/dist/sweetalert2.min.js');
 require('@/src/js/vendors/plugins/sweetalert2.init.js');
 
 // JQuery Repeater - Create a repeatable group of input elements: https://github.com/DubFriend/jquery.repeater
-require('jquery.repeater/src/lib.js');
-require('jquery.repeater/src/jquery.input.js');
-require('jquery.repeater/src/repeater.js');
+require('jquery.repeater');

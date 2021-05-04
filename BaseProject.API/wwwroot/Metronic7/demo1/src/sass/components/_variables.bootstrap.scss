@@ -15,14 +15,24 @@ $white:    											#ffffff !default;
 
 // Gray colors
 $gray-100: 											#F3F6F9 !default;
-$gray-200: 											#ECF0F3 !default;
-$gray-300: 											#E5EAEE !default;
-$gray-400: 											#D6D6E0 !default;
+$gray-200: 											#EBEDF3 !default;
+$gray-300: 											#E4E6EF !default;
+$gray-400: 											#D1D3E0 !default;
 $gray-500: 											#B5B5C3 !default;
-$gray-600: 											#80808F !default;
-$gray-700: 											#464E5F !default;
-$gray-800: 											#1B283F !default;
-$gray-900: 											#212121 !default;
+$gray-600: 											#7E8299 !default;
+$gray-700: 											#5E6278 !default;
+$gray-800: 											#3F4254 !default;
+$gray-900: 											#181C32 !default;
+
+// Dark colors
+$dark:          									$gray-900 !default;
+$dark-75:          									$gray-800 !default; // Custom variable
+$dark-65:          									$gray-700 !default; // Custom variable
+$dark-50:          									$gray-600 !default; // Custom variable
+$dark-25:          									$gray-400 !default; // Custom variable
+
+// Text muted
+$text-muted:                  						$gray-500 !default; // Custom variable
 
 // Gray colors list
 $grays: (
@@ -39,62 +49,55 @@ $grays: (
 
 // Bootstrap standard & extended colors
 // Dark colors
-$dark:          									$gray-900 !default;
-$dark-hover:          								#111111 !default; // Custom variable
+$dark:          									$dark !default; // Bootstrap variable
+$dark-hover:          								darken($dark, 3%) !default; // Custom variable
 $dark-light:          							    $gray-400 !default; // Custom variable
 $dark-inverse:         								$white !default; // Custom variable
 
-$dark-75:          									$gray-700 !default;
-$dark-75-hover:          							$dark !default; // Custom variable
-$dark-75-light:          							$gray-300 !default; // Custom variable
-$dark-75-inverse:         							$white !default; // Custom variable
-
-$dark-50:          									$gray-600 !default;
-
 // Primary colors
-$primary:       									#3699FF !default;
+$primary:       									#3699FF !default; // Bootstrap variable
 $primary-hover:    									#187DE4 !default; // Custom variable
 $primary-light:    									#E1F0FF !default; // Custom variable
 $primary-inverse:  									$white !default;  // Custom variable
 
 // Secondary colors
-$secondary:     									$gray-300 !default;
-$secondary-hover:  									$gray-400 !default; // Custom variable
+$secondary:     									$gray-300 !default; // Bootstrap variable
+$secondary-hover:  									darken($gray-300, 4%) !default; // Custom variable
 $secondary-light:  									$gray-200 !default; // Custom variable
 $secondary-inverse:									$dark-75 !default; // Custom variable
 
 // Success colors
-$success:       									#1BC5BD !default;
+$success:       									#1BC5BD !default; // Bootstrap variable
 $success-hover:    									#0BB7AF !default; // Custom variable
 $success-light:    									#C9F7F5 !default; // Custom variable
 $success-inverse:  									$white !default; // Custom variable
 
 // Inco colors
-$info:         		 								#8950FC !default;
+$info:         		 								#8950FC !default; // Bootstrap variable
 $info-hover:   		 								#7337EE !default; // Custom variable
 $info-light:   		 								#EEE5FF !default; // Custom variable
 $info-inverse: 		 								$white !default; // Custom variable
 
 // Warning colors
-$warning:       									#FFA800 !default;
+$warning:       									#FFA800 !default; // Bootstrap variable
 $warning-hover:    									#EE9D01 !default; // Custom variable
 $warning-light:    									#FFF4DE !default; // Custom variable
 $warning-inverse:  									$white !default; // Custom variable
 
 // Danger colors
-$danger:        									#F64E60 !default;
+$danger:        									#F64E60 !default; // Bootstrap variable
 $danger-hover:     									#EE2D41 !default; // Custom variable
 $danger-light:     									#FFE2E5 !default; // Custom variable
 $danger-inverse:   									$white !default; // Custom variable
 
 // Light colors
-$light:         									$gray-100 !default;
+$light:         									$gray-100 !default; // Bootstrap variable
 $light-hover:         								$gray-300 !default; // Custom variable
 $light-light:         								$gray-100 !default; // Custom variable
 $light-inverse:        								$gray-600 !default; // Custom variable
 
 // White colors
-$white:    											$white !default;
+$white:    											$white !default; // Bootstrap variable
 $white-hover:    									$gray-100 !default; // Custom variable
 $white-light:    									$white !default;  // Custom variable
 $white-inverse:    									$dark-75 !default; // Custom variable
@@ -109,8 +112,7 @@ $theme-colors: (
     "warning":    $warning,
     "danger":     $danger,
     "light":      $light,
-    "dark":       $dark,
-    "dark-75":    $dark-75
+    "dark":       $dark
 ) !default;
 
 // Extended hover colors for Bootstrap theme colors
@@ -123,8 +125,7 @@ $theme-hover-colors: (
     "warning":    $warning-hover,
     "danger":     $danger-hover,
     "light":      $light-hover,
-    "dark":       $dark-hover,
-    "dark-75":    $dark-75-hover
+    "dark":       $dark-hover
 ) !default;  // Custom variable
 
 // Extended inverse colors for Bootstrap theme colors
@@ -137,8 +138,7 @@ $theme-inverse-colors: (
     "warning":    $warning-inverse,
     "danger":     $danger-inverse,
     "light":      $light-inverse,
-    "dark":       $dark-inverse,
-    "dark-75":    $dark-75-inverse
+    "dark":       $dark-inverse
 ) !default;  // Custom variable
 
 // Extended outline colors for Bootstrap theme colors
@@ -151,8 +151,7 @@ $theme-outline-inverse-colors: (
     "warning":    $warning,
     "danger":     $danger,
     "light":      $dark-75,
-    "dark":       $dark,
-    "dark-75":    $dark-75
+    "dark":       $dark
 ) !default;  // Custom variable
 
 // Extended light colors for Bootstrap theme colors
@@ -165,8 +164,7 @@ $theme-light-colors: (
     "warning":    $warning-light,
     "danger":     $danger-light,
     "light":      $light-light,
-    "dark":       $dark-light,
-    "dark-75":    $dark-75-light
+    "dark":       $dark-light
 ) !default;  // Custom variable
 
 // Extended shadow colors for Bootstrap theme colors
@@ -179,8 +177,25 @@ $theme-shadow-colors: (
     "warning":    $warning,
     "danger":     $danger,
     "light":      $dark,
+    "dark":       $dark
+) !default;  // Custom variable
+
+// Extended theme text colors
+$theme-text-colors: (
+    "white":      $white,
+	"primary":    $primary,
+    "secondary":  $dark,
+    "success":    $success,
+    "info":       $info,
+    "warning":    $warning,
+    "danger":     $danger,
+    "light":      $light,
     "dark":       $dark,
-    "dark-75":    $dark-75
+    "dark-75":    $dark-75,
+    "dark-65":    $dark-65,
+    "dark-50":    $dark-50,
+    "dark-25":    $dark-25,
+    "muted":      $text-muted
 ) !default;  // Custom variable
 
 // Social Network Colors Used With Boostrap Buttons(see: https://primarycolors.net/)
@@ -265,7 +280,7 @@ $spacers: (
 	25: ($spacer * 6.25), 	// 87.5px
 	26: ($spacer * 6.5), 	// 91px
 	27: ($spacer * 6.75), 	// 94.5px
-	38: ($spacer * 7), 		// 99px
+	28: ($spacer * 7), 		// 99px
 	29: ($spacer * 7.25),   // 102.5px
 	30: ($spacer * 7.5), 	// 106px
 	31: ($spacer * 7.75), 	// 109.5px
@@ -383,11 +398,11 @@ $headings-font-weight:                              500 !default;
 $headings-line-height:                              1.2 !default;
 $headings-color:                                    null !default;
 
-$display1-size:                                     5.5rem !default;
-$display2-size:                                     4.5rem !default;
-$display3-size:                                     3.5rem !default;
-$display4-size:                                     2.5rem !default;
-$display5-size:                                     2.25rem !default;
+$display1-size:                                     5.5rem !default;  // 71.5px
+$display2-size:                                     4.5rem !default;  // 58.5px
+$display3-size:                                     3.5rem !default;  // 45.5px
+$display4-size:                                     2.5rem !default;  // 32.5px
+$display5-size:                                     2.25rem !default; // 29.5px
 
 // Font Sizes
 $font-sizes: (
@@ -423,9 +438,6 @@ $font-weight-bolder:          						600 !default;
 $font-weight-boldest:          						700 !default;
 
 $line-height-base:                                  1.5 !default;
-
-// Text muted
-$text-muted:                  						$gray-500 !default; // Custom variable
 
 
 // Transition
@@ -515,6 +527,9 @@ $input-solid-bg-focus:                              $gray-200; // Custom variabl
 $input-solid-placeholder-color:                     $input-placeholder-color;  // Custom variable
 $input-solid-color:                              	$dark-75; // Custom variable
 
+$custom-control-indicator-checked-box-shadow:       none !default;
+$custom-control-indicator-active-box-shadow:        none !default;
+
 // Forms
 $form-group-margin-bottom:                          1.75rem !default;
 $form-label-font-size:                              1rem !default; // Custom variable
@@ -589,6 +604,8 @@ $modal-content-border-color:        				rgba($black, .2) !default;
 $modal-content-border-width:        				0 !default;
 $modal-content-border-radius:       				$border-radius !default;
 $modal-content-inner-border-radius: 				$border-radius !default;
+
+$modal-content-box-shadow:       				    0 .25rem .5rem rgba($black, .05) !default;
 $modal-content-box-shadow-xs:       				0 .25rem .5rem rgba($black, .1) !default;
 $modal-content-box-shadow-sm-up:   					0 .5rem 1rem rgba($black, .1) !default;
 
@@ -759,3 +776,22 @@ $pagination-disabled-border-color:                  $gray-300 !default;
 //
 // Define alert colors, border radius, and padding.
 $alert-box-shadow:                					$card-box-shadow !default; // Custom variable
+
+
+// Navs
+
+$nav-link-px:                                       1.5rem;
+$nav-link-py:                                       0.75rem;
+$nav-btn-px:                                        1rem;
+$nav-section-py:                                    0.5rem;
+$nav-elem-space:                                    0.25rem;
+
+$nav-link-bg-hover:                                 $gray-100;
+$nav-link-bg-active:                                $gray-200;
+
+$nav-header-py:                                     1rem;
+$nav-footer-py:                                     1rem;
+
+$nav-font-size:                                     1rem;
+$nav-icon-size:                                     1.25rem;
+$nav-icon-width:                                    2rem;

@@ -14,6 +14,7 @@ gulp.task('localhost', function(cb) {
   connect.server({
     root: '../' + demo + '/dist',
     livereload: true,
+    // port: 8081,
   });
   cb();
 });

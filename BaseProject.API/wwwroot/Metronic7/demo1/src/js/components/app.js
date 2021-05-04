@@ -6,14 +6,13 @@ var KTApp = function() {
     var settings = {};
 
     var initTooltip = function(el) {
-        var skin = el.data('skin') ? 'tooltip-' + el.data('skin') : '';
+        var theme = el.data('theme') ? 'tooltip-' + el.data('theme') : '';
         var width = el.data('width') == 'auto' ? 'tooltop-auto-width' : '';
-        var triggerValue = el.data('trigger') ? el.data('trigger') : 'hover';
-        var placement = el.data('placement') ? el.data('placement') : 'left';
+        var trigger = el.data('trigger') ? el.data('trigger') : 'hover';
 
         $(el).tooltip({
-            trigger: triggerValue,
-            template: '<div class="tooltip ' + skin + ' ' + width + '" role="tooltip">\
+            trigger: trigger,
+            template: '<div class="tooltip ' + theme + ' ' + width + '" role="tooltip">\
                 <div class="arrow"></div>\
                 <div class="tooltip-inner"></div>\
             </div>'
@@ -64,14 +63,7 @@ var KTApp = function() {
             KTUtil.scrollInit(this, {
                 mobileNativeScroll: true,
                 handleWindowResize: true,
-                rememberPosition: (el.data('remember-position') == 'true' ? true : false),
-                height: function() {
-                    if (KTUtil.isBreakpointDown('lg') && el.data('mobile-height')) {
-                        return el.data('mobile-height');
-                    } else {
-                        return el.data('height');
-                    }
-                }
+                rememberPosition: (el.data('remember-position') == 'true' ? true : false)
             });
         });
     }
@@ -311,24 +303,6 @@ var KTApp = function() {
 
         unblockPage: function() {
             return KTApp.unblock('body');
-        },
-
-        progress: function(target, options) {
-            var color = (options && options.color) ? options.color : 'light';
-            var alignment = (options && options.alignment) ? options.alignment : 'right';
-            var size = (options && options.size) ? ' spinner-' + options.size : '';
-            var classes = 'spinner ' + 'spinner-' + skin + ' spinner-' + alignment + size;
-
-            KTApp.unprogress(target);
-            KTUtil.attr(target, 'disabled', true);
-
-            $(target).addClass(classes);
-            $(target).data('progress-classes', classes);
-        },
-
-        unprogress: function(target) {
-            $(target).removeClass($(target).data('progress-classes'));
-            KTUtil.removeAttr(target, 'disabled');
         },
 
         getSettings: function() {

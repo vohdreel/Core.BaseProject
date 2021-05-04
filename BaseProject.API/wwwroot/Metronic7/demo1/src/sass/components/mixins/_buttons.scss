@@ -37,7 +37,7 @@
 
     // Hover & focus state
     @if ($hover-color != null or $hover-border != null or $hover-icon != null or $hover-background != null) {
-        &:hover:not(.btn-text),
+        &:hover:not(.btn-text):not(:disabled):not(.disabled),
         &:focus:not(.btn-text),
         &.focus:not(.btn-text) {
             @if ($hover-color != null) {
@@ -46,15 +46,15 @@
 
             @if ($hover-icon != null) {
                 i {
-            		color: $hover-color;
+            		color: $hover-icon;
             	}
 
             	.svg-icon {
-            		@include svg-icon-color($hover-color);
+            		@include svg-icon-color($hover-icon);
             	}
 
                 &.dropdown-toggle:after {
-                    color: $hover-color;
+                    color: $hover-icon;
                 }
             }
 
@@ -113,15 +113,15 @@
 
             @if ($active-icon != null) {
                 i {
-            		color: $active-color;
+            		color: $active-icon;
             	}
 
             	.svg-icon {
-            		@include svg-icon-color($active-color);
+            		@include svg-icon-color($active-icon);
             	}
 
                 &.dropdown-toggle:after {
-                    color: $active-color;
+                    color: $active-icon;
                 }
             }
 
@@ -146,7 +146,7 @@
     }
 
     @if ($hover-box-shadow != null) {
-        &:hover:not(.btn-text),
+        &:hover:not(.btn-text):not(:disabled):not(.disabled),
         &:focus:not(.btn-text),
         &.focus:not(.btn-text) {
             box-shadow: $hover-box-shadow;

@@ -3,7 +3,7 @@
 // Class definition
 
 var KTBootstrapNotifyDemo = function () {
-    
+
     // Private functions
 
     // basic demo
@@ -27,27 +27,27 @@ var KTBootstrapNotifyDemo = function () {
                 content.target = '_blank';
             }
 
-            var notify = $.notify(content, { 
+            var notify = $.notify(content, {
                 type: $('#kt_notify_state').val(),
                 allow_dismiss: $('#kt_notify_dismiss').prop('checked'),
                 newest_on_top: $('#kt_notify_top').prop('checked'),
                 mouse_over:  $('#kt_notify_pause').prop('checked'),
                 showProgressbar:  $('#kt_notify_progress').prop('checked'),
-                spacing: $('#kt_notify_spacing').val(),                    
+                spacing: $('#kt_notify_spacing').val(),
                 timer: $('#kt_notify_timer').val(),
                 placement: {
-                    from: $('#kt_notify_placement_from').val(), 
+                    from: $('#kt_notify_placement_from').val(),
                     align: $('#kt_notify_placement_align').val()
                 },
                 offset: {
-                    x: $('#kt_notify_offset_x').val(), 
+                    x: $('#kt_notify_offset_x').val(),
                     y: $('#kt_notify_offset_y').val()
                 },
                 delay: $('#kt_notify_delay').val(),
                 z_index: $('#kt_notify_zindex').val(),
                 animate: {
-                    enter: 'animated ' + $('#kt_notify_animate_enter').val(),
-                    exit: 'animated ' + $('#kt_notify_animate_exit').val()
+                    enter: 'animate__animated animate__' + $('#kt_notify_animate_enter').val(),
+                    exit: 'animate__animated animate__' + $('#kt_notify_animate_exit').val()
                 }
             });
 
@@ -87,6 +87,6 @@ var KTBootstrapNotifyDemo = function () {
     };
 }();
 
-jQuery(document).ready(function() {    
+jQuery(document).ready(function() {
     KTBootstrapNotifyDemo.init();
 });

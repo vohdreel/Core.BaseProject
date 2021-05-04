@@ -56,6 +56,12 @@
             display: block;
         }
     }
+
+    .content {
+        .content-img {
+            min-height: 450px;
+        }
+    }
 }
 
 // Desktop view
@@ -64,6 +70,12 @@
         .login-aside {
             width: 100%;
             max-width: 600px;
+        }
+
+        .content {
+            .content-img {
+                min-height: 600px !important;
+            }
         }
 
         .login-form {
@@ -87,7 +99,10 @@
 @include media-breakpoint-down(md) {
     .login.login-2 {
         .content {
-            background-size: 600px !important;
+            .content-img {
+                min-height: 470px !important;
+                background-size: 700px;
+            }
         }
 
         .login-form {
@@ -101,7 +116,10 @@
 @include media-breakpoint-down(xs) {
     .login.login-2 {
         .content {
-            background-size: 400px !important;
+            .content-img {
+                min-height: 280px !important;
+                background-size: 400px;
+            }
         }
 
         .login-form {

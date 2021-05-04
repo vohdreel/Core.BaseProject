@@ -6,7 +6,7 @@
 
 export interface Emitter {
     fns: {
-        [event: string]: Array<(...arg: any[]) => any>,
+        [event: string]: ((...arg: any[]) => any)[],
     };
     clear(): void;
     emit(event: string, ...args: any[]): void;

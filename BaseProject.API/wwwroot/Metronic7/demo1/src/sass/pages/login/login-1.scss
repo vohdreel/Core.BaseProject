@@ -9,12 +9,11 @@
 
 .login.login-1 {
     .login-aside {
-        background: #F2C98A;
-
-        h3 {
-            color: #986923;
+        .aside-img {
+            min-height: 450px;
         }
     }
+
     // Form modes
     .login-signin,
     .login-signup,
@@ -110,7 +109,8 @@
 // Mobile mode
 @include media-breakpoint-down(xs) {
     .login.login-1 {
-        .login-aside {
+        .aside-img {
+            min-height: 300px !important;
             background-size: 400px;
         }
 

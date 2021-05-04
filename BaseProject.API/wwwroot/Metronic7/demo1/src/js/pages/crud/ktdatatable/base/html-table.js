@@ -15,6 +15,9 @@ var KTDatatableHtmlTableDemo = function() {
 				input: $('#kt_datatable_search_query'),
 				key: 'generalSearch'
 			},
+			layout: {
+				class: 'datatable-bordered'
+			},
 			columns: [
 				{
 					field: 'DepositPaid',

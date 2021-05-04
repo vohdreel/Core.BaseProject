@@ -45,10 +45,11 @@
 		padding-right: 0.35rem;
 		vertical-align: middle;
 		line-height: 1;
+		display: inline-flex;
 
 		&:after,
 		&:before {
-			line-height: 0;
+			//line-height: 0;
 		}
 	}
 
@@ -143,7 +144,7 @@
 	}
 
 	// Fixed Height
-	&.btn-fh {
+	&.btn-fixed-height {
 		padding-top: 0;
 		padding-bottom: 0;
 		display: flex;
@@ -544,33 +545,6 @@
 		}
 	}
 
-	// Hover Text Style
-	.btn.btn-hover-text-#{$name} {
-		$btn-background: null;
-		$btn-border: null;
-		$btn-color: null;
-		$btn-icon: null;
-		$btn-box-shadow: null;
-
-		$btn-hover-background: null;
-		$btn-hover-border: null;
-		$btn-hover-color: $value !important;
-		$btn-hover-icon: $value !important;
-		$btn-hover-box-shadow: null;
-
-		$btn-active-background: $btn-hover-background;
-		$btn-active-border: $btn-hover-border;
-		$btn-active-color: $btn-hover-color;
-		$btn-active-icon: $btn-hover-icon;
-		$btn-active-box-shadow: $btn-hover-box-shadow;
-
-		@include button-custom-variant(
-			$btn-background, $btn-border, $btn-color, $btn-icon, $btn-box-shadow,
-			$btn-hover-background, $btn-hover-border, $btn-hover-color, $btn-hover-icon, $btn-hover-box-shadow,
-			$btn-active-background, $btn-active-border, $btn-active-color, $btn-active-icon, $btn-active-box-shadow
-		);
-	}
-
 	// Hover Background Style
 	.btn.btn-hover-bg-#{$name} {
 		$btn-background: null;
@@ -581,33 +555,6 @@
 
 		$btn-hover-background: $value !important;
 		$btn-hover-border: $value !important;
-		$btn-hover-color: null;
-		$btn-hover-icon: null;
-		$btn-hover-box-shadow: null;
-
-		$btn-active-background: $btn-hover-background;
-		$btn-active-border: $btn-hover-border;
-		$btn-active-color: $btn-hover-color;
-		$btn-active-icon: $btn-hover-icon;
-		$btn-active-box-shadow: $btn-hover-box-shadow;
-
-		@include button-custom-variant(
-			$btn-background, $btn-border, $btn-color, $btn-icon, $btn-box-shadow,
-			$btn-hover-background, $btn-hover-border, $btn-hover-color, $btn-hover-icon, $btn-hover-box-shadow,
-			$btn-active-background, $btn-active-border, $btn-active-color, $btn-active-icon, $btn-active-box-shadow
-		);
-	}
-
-	// Text Style
-	.btn.btn-text-#{$name} {
-		$btn-background: null;
-		$btn-border: null;
-		$btn-color: $value;
-		$btn-icon: $value;
-		$btn-box-shadow: null;
-
-		$btn-hover-background: null;
-		$btn-hover-border: null;
 		$btn-hover-color: null;
 		$btn-hover-icon: null;
 		$btn-hover-box-shadow: null;
@@ -693,6 +640,123 @@
 		$btn-hover-color: null;
 		$btn-hover-icon: null;
 		$btn-hover-box-shadow: 0px 9px 16px 0px rgba(theme-shadow-color($name), 0.3) !important;
+
+		$btn-active-background: $btn-hover-background;
+		$btn-active-border: $btn-hover-border;
+		$btn-active-color: $btn-hover-color;
+		$btn-active-icon: $btn-hover-icon;
+		$btn-active-box-shadow: $btn-hover-box-shadow;
+
+		@include button-custom-variant(
+			$btn-background, $btn-border, $btn-color, $btn-icon, $btn-box-shadow,
+			$btn-hover-background, $btn-hover-border, $btn-hover-color, $btn-hover-icon, $btn-hover-box-shadow,
+			$btn-active-background, $btn-active-border, $btn-active-color, $btn-active-icon, $btn-active-box-shadow
+		);
+	}
+}
+
+// Theme text colors
+@each $name, $value in $theme-text-colors {
+	//	@include button-custom-variant(
+	//		$background, $border, $color, $icon, $box-shadow,
+	//		$hover-background, $hover-border, $hover-color, $hover-icon, $hover-box-shadow,
+	//		$active-background, $active-border, $active-color, $active-icon, $active-box-shadow
+	//  );
+
+	// Text Style
+	.btn.btn-text-#{$name} {
+		$btn-background: null;
+		$btn-border: null;
+		$btn-color: $value;
+		$btn-icon: null;
+		$btn-box-shadow: null;
+
+		$btn-hover-background: null;
+		$btn-hover-border: null;
+		$btn-hover-color: null;
+		$btn-hover-icon: null;
+		$btn-hover-box-shadow: null;
+
+		$btn-active-background: $btn-hover-background;
+		$btn-active-border: $btn-hover-border;
+		$btn-active-color: $btn-hover-color;
+		$btn-active-icon: $btn-hover-icon;
+		$btn-active-box-shadow: $btn-hover-box-shadow;
+
+		@include button-custom-variant(
+			$btn-background, $btn-border, $btn-color, $btn-icon, $btn-box-shadow,
+			$btn-hover-background, $btn-hover-border, $btn-hover-color, $btn-hover-icon, $btn-hover-box-shadow,
+			$btn-active-background, $btn-active-border, $btn-active-color, $btn-active-icon, $btn-active-box-shadow
+		);
+	}
+
+	// Icon Style
+	.btn.btn-icon-#{$name} {
+		$btn-background: null;
+		$btn-border: null;
+		$btn-color: null;
+		$btn-icon: $value;
+		$btn-box-shadow: null;
+
+		$btn-hover-background: null;
+		$btn-hover-border: null;
+		$btn-hover-color: null;
+		$btn-hover-icon: null;
+		$btn-hover-box-shadow: null;
+
+		$btn-active-background: $btn-hover-background;
+		$btn-active-border: $btn-hover-border;
+		$btn-active-color: $btn-hover-color;
+		$btn-active-icon: $btn-hover-icon;
+		$btn-active-box-shadow: $btn-hover-box-shadow;
+
+		@include button-custom-variant(
+			$btn-background, $btn-border, $btn-color, $btn-icon, $btn-box-shadow,
+			$btn-hover-background, $btn-hover-border, $btn-hover-color, $btn-hover-icon, $btn-hover-box-shadow,
+			$btn-active-background, $btn-active-border, $btn-active-color, $btn-active-icon, $btn-active-box-shadow
+		);
+	}
+
+	// Hover Text Style
+	.btn.btn-hover-text-#{$name} {
+		$btn-background: null;
+		$btn-border: null;
+		$btn-color: null;
+		$btn-icon: null;
+		$btn-box-shadow: null;
+
+		$btn-hover-background: null;
+		$btn-hover-border: null;
+		$btn-hover-color: $value !important;
+		$btn-hover-icon: null;
+		$btn-hover-box-shadow: null;
+
+		$btn-active-background: $btn-hover-background;
+		$btn-active-border: $btn-hover-border;
+		$btn-active-color: $btn-hover-color;
+		$btn-active-icon: $btn-hover-icon;
+		$btn-active-box-shadow: $btn-hover-box-shadow;
+
+		@include button-custom-variant(
+			$btn-background, $btn-border, $btn-color, $btn-icon, $btn-box-shadow,
+			$btn-hover-background, $btn-hover-border, $btn-hover-color, $btn-hover-icon, $btn-hover-box-shadow,
+			$btn-active-background, $btn-active-border, $btn-active-color, $btn-active-icon, $btn-active-box-shadow
+		);
+	}
+
+	// Hover Icon Style
+	.btn.btn-hover-icon-#{$name} {
+		$btn-background: null;
+		$btn-border: null;
+		$btn-color: null;
+		$btn-icon: null;
+		$btn-box-shadow: null;
+
+		$btn-hover-background: null;
+		$btn-hover-border: null;
+		$btn-hover-color: null;
+		$btn-hover-icon: $value !important;
+		$btn-hover-box-shadow: null;
 
 		$btn-active-background: $btn-hover-background;
 		$btn-active-border: $btn-hover-border;

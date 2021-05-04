@@ -59,8 +59,8 @@
 							Extension.unselectedRows = Extension.remove(Extension.unselectedRows, id);
 						});
 						var storage = {};
-						storage['selectedRows'] = $.unique(Extension.selectedRows);
-						storage['unselectedRows'] = $.unique(Extension.unselectedRows);
+						storage['selectedRows'] = Extension.selectedRows.filter(Extension.unique);
+						storage['unselectedRows'] = Extension.unselectedRows.filter(Extension.unique);
 						datatable.stateKeep('checkbox', storage);
 					});
 					$(datatable).on(pfx + 'datatable-on-uncheck', function(e, ids) {
@@ -70,8 +70,9 @@
 							Extension.selectedRows = Extension.remove(Extension.selectedRows, id);
 						});
 						var storage = {};
-						storage['selectedRows'] = $.unique(Extension.selectedRows);
-						storage['unselectedRows'] = $.unique(Extension.unselectedRows);
+						storage['selectedRows'] = Extension.selectedRows.filter(Extension.unique);
+						storage['unselectedRows'] = Extension.unselectedRows.filter(Extension.unique);
+						storage['unselectedRows'] = Extension.unselectedRows.filter(Extension.unique);
 						datatable.stateKeep('checkbox', storage);
 					});
 				}
@@ -98,7 +99,7 @@
 							}));
 						}
 						var storage = {};
-						storage['selectedRows'] = $.unique(Extension.selectedRows);
+						storage['selectedRows'] = Extension.selectedRows.filter(Extension.unique);
 						datatable.stateKeep('checkbox', storage);
 					}
 
@@ -208,11 +209,11 @@
 							selectedAllRows = Extension.remove(selectedAllRows, parseInt(id));
 						});
 					}
-					return $.unique(selectedAllRows);
+					return selectedAllRows.filter(Extension.unique);
 				}
 
 				// else return single checked selected rows
-				return Extension.selectedRows;
+				return Extension.selectedRows.filter(Extension.unique);
 			},
 
 			remove: function(array, element) {

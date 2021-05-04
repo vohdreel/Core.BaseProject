@@ -51,9 +51,34 @@
     }
 }
 
-@mixin radio-size($base, $tick) {
-	top: 1px;
+@mixin radio-accent-theme($bg-color, $checked-border-color) {
+	// Default state
+	> span {
+        &:after {
+            background-color: $bg-color;
+        }
+    }
 
+	// Focus state
+	> input:focus ~ span {
+        border-color: $checked-border-color;
+
+        &:after {
+            background-color: $bg-color;
+        }
+    }
+
+	// Checked state
+    > input:checked ~ span {
+        border-color: $checked-border-color;
+
+        &:after {
+            background-color: $bg-color;
+        }
+    }
+}
+
+@mixin radio-size($base, $tick) {
 	> span {
         height: $base;
         width: $base;
@@ -62,11 +87,5 @@
             width: $tick;
             height: $tick;
 		}
-	}
-
-	// Single mode
-    &.radio-single {
-        width: $base;
-        height: $base;
 	}
 }

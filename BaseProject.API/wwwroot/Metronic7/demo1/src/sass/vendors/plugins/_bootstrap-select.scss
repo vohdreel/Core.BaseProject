@@ -7,6 +7,7 @@
 $bootstrap-select-general-padding: 10px 15px;
 $bootstrap-select-title-padding: 10px 15px;
 
+// Base
  .bootstrap-select {
     > .dropdown-toggle {
         position: relative;
@@ -16,6 +17,7 @@ $bootstrap-select-title-padding: 10px 15px;
 
         &:focus {
             outline: none !important;
+            border-color: $input-focus-border-color !important;
         }
 
         &:after {
@@ -34,26 +36,25 @@ $bootstrap-select-title-padding: 10px 15px;
         &.btn-secondary {
             background: $white !important;
             color: $input-plaintext-color;
-            border-color: $input-border-color;
+            border-color: $input-border-color !important;
             box-shadow: none;
 
-            &:active,
-            &:focus,
+            &.focus,
             &.active {
-                border-color: $input-focus-border-color !important;
+                border-color: $input-border-color !important;
             }
 
             &.disabled,
             &:disabled {
-                background: $input-disabled-bg;
-                border-color: $input-disabled-bg
+                background: $input-disabled-bg !important;
+                opacity: 1;
             }
 
             .filter-option {
-                color: $dark-50;
+                color: $input-color;
 
                 .bs-icon {
-                    color: $dark-50;
+                    color: $input-color;
                     margin-right: 0.1rem;
                 }
             }
@@ -211,8 +212,7 @@ $bootstrap-select-title-padding: 10px 15px;
         > .dropdown-toggle {
             &.btn-light,
             &.btn-secondary {
-                border-color: $input-focus-border-color;
-                box-shadow: none;
+                border-color: $input-focus-border-color !important;
             }
         }
     }
@@ -238,6 +238,22 @@ $bootstrap-select-title-padding: 10px 15px;
     }
 
     .dropdown-menu {
-        margin-top: 1px;
+        max-width: 100% !important;
+        border-top: none !important;
+        border: 0;
+        box-shadow: $dropdown-box-shadow;
+
+        &.show {
+            width: auto;
+        }
     }
+}
+
+// Display inside content
+.content {
+     .bootstrap-select {
+         .dropdown-menu {
+             z-index: $zindex-dropdown - 5;
+         }
+     }
 }

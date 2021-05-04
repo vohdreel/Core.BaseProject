@@ -44,9 +44,6 @@ define(["require", "exports", "../core/Plugin", "../utils/fetch"], function (req
                             _this.captchaStatus = 'Valid';
                             _this.core.updateFieldStatus(Recaptcha.CAPTCHA_FIELD, 'Valid');
                         }
-                        else {
-                            _this.core.revalidateField(Recaptcha.CAPTCHA_FIELD);
-                        }
                     },
                     'error-callback': function () {
                         _this.captchaStatus = 'Invalid';
