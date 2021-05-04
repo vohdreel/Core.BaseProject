@@ -387,11 +387,10 @@ namespace BaseProject.API.Controllers
                     //await _emailService.SendEmailForForgotPassword(options);
 
                     options = _emailService.ReturnForgotPasswordBody(options);
-                    var client = new SendGridClient("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");
+                    var client = new SendGridClient(_config.GetValue<string>("SendGridApiKey"));
                     var from = new EmailAddress("management.globalempregos@gmail.com", "Global Empregos");
                     var subject = options.Subject;
                     var to = new EmailAddress(user.Email);
-                    //var plainTextContent = "and easy to do anywhere, even with C#";
                     var htmlContent = options.Body;
                     var msg = MailHelper.CreateSingleEmail(from, to, subject, htmlContent, htmlContent);
                     var response = await client.SendEmailAsync(msg);

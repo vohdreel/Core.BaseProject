@@ -20,6 +20,8 @@ using BaseProject.Util.SystemEnumerations;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using System.Dynamic;
+using DeviceDetectorNET;
 
 namespace BaseProject.API.Controllers
 {
@@ -187,6 +189,9 @@ namespace BaseProject.API.Controllers
                                 token,
                                TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment")));
 
+
+
+
                     return Json("Logged");
                 }
 
@@ -232,9 +237,22 @@ namespace BaseProject.API.Controllers
                     //O User estará vazio até que um JWT gerado pelo sistema seja encontrado na requisição
                     HttpContext.Session.SetString("JWToken", token);
 
-                    //HttpContext.Response.Cookies
-                    //   .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
+                    HttpContext.Response.Cookies
+                       .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
 
+                    dynamic resultData = new ExpandoObject();
+
+                    resultData.idCandidato = 1;
+                    resultData.ok = true;
+                    resultData.message = "Logged in";
+
+                    DeviceDetector detector = new DeviceDetector(HttpContext.Request.Headers["User-Agent"].ToString());
+                    detector.Parse();
+
+                    if (detector.GetOs().Match.Name == "iOS")
+                        resultData.token = token;
+
+                    return resultData;
 
                     return Json("Logged");
                 }

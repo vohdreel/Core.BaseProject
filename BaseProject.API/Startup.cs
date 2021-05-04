@@ -262,22 +262,18 @@ namespace BaseProject.API
 
         public void RegistrarDependencias(IServiceCollection services)
         {
-            //#region Servicos
+            #region Servicos
 
-            //services.AddScoped<IServiceDocumento, ServiceDocumento>();
-            //services.AddScoped<IServiceCandidato, ServiceCandidato>();
+            services.AddScoped<IServiceMachine, ServiceMachine>();
 
-            //#endregion
+            #endregion
 
-            //#region Repositório
-            //services.AddScoped<IRepositoryDocumento, RepositoryDocumento>();
-            //services.AddScoped<IRepositoryCandidato, RepositoryCandidato>();
+            #region Repositório
 
-
-            //#endregion
+            services.AddScoped<IRepositoryMachine, RepositoryMachine>();
 
 
-
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
