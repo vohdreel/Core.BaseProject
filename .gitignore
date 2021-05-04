@@ -2,10 +2,10 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/Global.DAO/bin
-/Global.API/obj
+/BaseProject.DAO/bin
+/BaseProject.API/obj
 /.vs
-/Global.DAO/obj
-/Global.API/bin
-/Global.Util/obj
-/Global.Util/bin
+/BaseProject.DAO/obj
+/BaseProject.API/bin
+/BaseProject.Util/obj
+/BaseProject.Util/bin
