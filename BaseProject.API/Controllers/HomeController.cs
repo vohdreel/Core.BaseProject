@@ -189,9 +189,6 @@ namespace BaseProject.API.Controllers
                                 token,
                                TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment")));
 
-
-
-
                     return Json("Logged");
                 }
 
@@ -235,10 +232,9 @@ namespace BaseProject.API.Controllers
                     var roles = await _userManager.GetRolesAsync(user);
                     var token = TokenService.GenerateToken(user, roles.ToList());
                     //O User estará vazio até que um JWT gerado pelo sistema seja encontrado na requisição
-                    HttpContext.Session.SetString("JWToken", token);
 
                     HttpContext.Response.Cookies
-                       .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment"), HttpContext.Request.Headers["User-Agent"].ToString()));
+                       .Append("access_token", token, TokenService.GenerateCookies(_config.GetProperty<Environment>("ApiConfig", "Environment")));
 
                     dynamic resultData = new ExpandoObject();
 
@@ -252,9 +248,8 @@ namespace BaseProject.API.Controllers
                     if (detector.GetOs().Match.Name == "iOS")
                         resultData.token = token;
 
-                    return resultData;
+                    return Json(resultData);
 
-                    return Json("Logged");
                 }
 
             }
@@ -273,10 +268,8 @@ namespace BaseProject.API.Controllers
                 CookieOptions cookieOptions = TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment"));
                 cookieOptions.Expires = DateTime.Now.AddDays(-1);
                 HttpContext.Response.Cookies.Append(cookie.Key, "", TokenService.GenerateCookies(_config.GetSection("ApiConfig").GetValue<Environment>("Environment")));
-                //HttpContext.Response.Cookies.Delete(cookie.Key);
             }
 
-            HttpContext.Session.Remove("JWToken");
             return Json("Logged Out");
         }
 

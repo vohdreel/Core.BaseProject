@@ -55,7 +55,6 @@ namespace Gyan.Web.Identity.Data.Authentication
             {
                 cookie.Secure = true;
                 cookie.SameSite = SameSiteMode.None;
-
             }
             return cookie;
         }

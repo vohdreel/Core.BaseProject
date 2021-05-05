@@ -47,6 +47,15 @@ namespace BaseProject.API.Areas.Mobile.Controllers
 
         }
 
+        [HttpGet("ForbiddenTest")]
+        [Authorize(Roles = "Unexistent")]
+        public int ForbiddenTest()
+        {
+            return 0;
+
+        }
+
+
         [HttpGet("UnitProcedure")]
         [Authorize]
         public BattleUnit[] Procedure()

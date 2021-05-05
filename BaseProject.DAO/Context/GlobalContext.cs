@@ -31,6 +31,9 @@ namespace BaseProject.DAO.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Machine>(entity =>
             {
                 entity.Property(e => e.Name).IsUnicode(false);

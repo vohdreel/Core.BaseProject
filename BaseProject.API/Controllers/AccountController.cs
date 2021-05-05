@@ -388,7 +388,7 @@ namespace BaseProject.API.Controllers
 
                     options = _emailService.ReturnForgotPasswordBody(options);
                     var client = new SendGridClient(_config.GetValue<string>("SendGridApiKey"));
-                    var from = new EmailAddress("management.globalempregos@gmail.com", "Global Empregos");
+                    var from = new EmailAddress(_config.GetValue<string>("SendGridDefaultAddress"), "noreply");
                     var subject = options.Subject;
                     var to = new EmailAddress(user.Email);
                     var htmlContent = options.Body;
